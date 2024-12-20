@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add any custom CSS styles here */
 .home {
   text-align: center;
 }
