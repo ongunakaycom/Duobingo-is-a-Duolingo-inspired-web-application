@@ -51,5 +51,5 @@ export default {
 </script>
 
 <style scoped>
-@import './AppHeader.css';
+@import 'language-selection.css';
 </style>
