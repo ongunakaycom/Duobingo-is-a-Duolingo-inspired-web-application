@@ -1,30 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES6",                // ES6 is generally recommended over ES5 for modern JS features
-    "module": "ESNext",             // Keep ESNext if you're working with ES Modules
-    "moduleResolution": "node",     // Node module resolution strategy for better compatibility
-    "baseUrl": "./",                // To resolve base paths from the root
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]              // Path aliasing for cleaner imports in your project
-    },
-    "lib": [
-      "ESNext",                      // Use the latest ECMAScript standard
-      "DOM",                          // Includes DOM-related types (e.g., `document`, `window`)
-      "DOM.Iterable",                 // For support with iterable DOM objects (e.g., NodeList, etc.)
-      "ScriptHost"                    // Enables support for ScriptHost environments (Node.js scripts)
-    ],
-    "esModuleInterop": true,         // Ensures compatibility with CommonJS and ES Modules
-    "skipLibCheck": true,            // Skips type checking of declaration files to improve build speed
-    "strict": true,                  // Enables strict type-checking options for better type safety
-    "resolveJsonModule": true,       // Allows importing `.json` files as modules
-    "isolatedModules": true,         // Ensures every file is treated as an isolated module
-    "allowSyntheticDefaultImports": true, // Allows default imports for modules without a default export
-    "noEmit": true                   // Optionally, disable emitting output files (useful for type-checking)
+      "@/*": ["src/*"]
+    }
   },
   "include": [
-    "src/**/*"                        // Include all TypeScript files in the `src` directory
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.vue"
   ],
   "exclude": [
-    "node_modules"                    // Exclude `node_modules` folder
+    "node_modules"
   ]
 }

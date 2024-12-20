@@ -1,29 +1,25 @@
 <template>
-    <div class="home">
-      <div class="jumbotron">
-        <h1 class="display-4">Welcome to Duolingo</h1>
-        <p class="lead">Learn a new language with fun and interactive lessons.</p>
-        <hr class="my-4">
-        <p>Choose from a variety of languages and start your journey today!</p>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Home'
-  };
-  </script>
-  
-  <style scoped>
-  /* Add any custom CSS styles here  */
-  .home {
-    text-align: center;
+  <div class="home">
+    <LandingJumbotron />
+    <LandingFeatures />
+  </div>
+</template>
+
+<script>
+import LandingJumbotron from '@/components/LandingJumbotron.vue';
+import LandingFeatures from '@/components/LandingFeatures.vue';
+
+export default {
+  name: 'Home',
+  components: {
+    LandingJumbotron,
+    LandingFeatures
   }
-  
-  .jumbotron {
-    margin-top: 50px;
-    padding: 50px;
-  }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+.home {
+  text-align: center;
+}
+</style>
