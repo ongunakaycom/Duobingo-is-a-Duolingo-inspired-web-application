@@ -1,0 +1,42 @@
+.language-selection {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .language-selection h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .language-selection p {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .language-selection .form-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+  
+  .language-selection .form-select:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  .language-selection .form-select option {
+    padding: 10px;
+  }
+  
