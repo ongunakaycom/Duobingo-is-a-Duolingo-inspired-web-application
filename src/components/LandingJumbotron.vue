@@ -19,7 +19,5 @@ export default {
   margin-top: 50px;
   padding: 50px;
   background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

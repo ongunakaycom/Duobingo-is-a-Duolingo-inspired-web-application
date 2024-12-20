@@ -27,25 +27,48 @@ export default {
 <style scoped>
 .features {
   text-align: center;
-  padding: 20px;
+  padding: 50px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+}
+
+.features h2 {
+  font-size: 2.5rem;
+  color: #343a40;
+  margin-bottom: 40px;
 }
 
 .feature-list {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
 }
 
 .feature-item {
   max-width: 300px;
   text-align: left;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
-  .jumbotron {
-    text-align: center;
-    margin-top: 50px;
-    padding: 50px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+
+.feature-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.feature-item h3 {
+  font-size: 1.75rem;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+.feature-item p {
+  color: #6c757d;
+  font-size: 1.125rem;
+}
 </style>
