@@ -13,6 +13,7 @@
     "core-js": "^3.8.3",
     "jquery": "^3.7.1",
     "portal-vue": "^3.0.0",
+    "process": "^0.11.10",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
@@ -27,6 +28,10 @@
     "webpack-dev-server": "^5.0.4"
   },
   "eslintConfig": {
+    "env": {
+      "node": true,
+      "browser": true
+    },    
     "extends": [
       "plugin:vue/vue3-essential",
       "eslint:recommended"

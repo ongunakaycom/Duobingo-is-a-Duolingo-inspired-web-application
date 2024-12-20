@@ -1,12 +1,15 @@
 const webpack = require('webpack');
 
 module.exports = {
-  outputDir: 'dist', 
-  publicPath: '/', 
   configureWebpack: {
+    resolve: {
+      alias: {
+        process: 'process/browser',  // Polyfill for process
+      },
+    },
     plugins: [
       new webpack.ProvidePlugin({
-        process: 'process/browser',
+        process: 'process/browser',  // Provide process polyfill for usage
       }),
     ],
   },
