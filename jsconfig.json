@@ -1,28 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "ESNext",
+    "target": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable",
-      "ScriptHost"
-    ],
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "noEmit": true
+    }
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.vue"
   ],
   "exclude": [
     "node_modules"
