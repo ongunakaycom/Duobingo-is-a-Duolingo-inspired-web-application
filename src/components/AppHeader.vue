@@ -52,4 +52,25 @@ export default {
 
 <style scoped>
 @import 'language-selection.css';
+
+/* Add the following styles */
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-nav {
+  display: grid;
+  grid-template-columns: repeat(1, auto);
+}
+
+.nav-item {
+  display: block;
+}
 </style>
