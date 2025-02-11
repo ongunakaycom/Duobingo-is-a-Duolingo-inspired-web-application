@@ -10,7 +10,7 @@
 
     <!-- Right Grid -->
     <div class="right-grid">
-      <img src="/src/assets/duo-banner.png" alt="Duolingo Banner" class="right-grid-image" />
+      <img src="../assets/duo-banner.png" alt="Duolingo Banner" class="right-grid-image" />
     </div>
   </div>
 </template>
