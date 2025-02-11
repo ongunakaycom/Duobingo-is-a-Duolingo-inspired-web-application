@@ -18,22 +18,22 @@
             <!-- Language Selection Dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="flag-icon">{{ selectedLanguageFlag }}</span> {{ selectedLanguage }}
+                SITE LANGUAGE: {{ selectedLanguage.toUpperCase() }}
               </a>
               <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('English', '🇺🇸')">
+                  <a class="dropdown-item" href="#" @click="changeLanguage('English', '🇺🇸')" :class="{ 'active': selectedLanguage === 'English' }">
                     <span class="flag-icon">🇺🇸</span> ENGLISH
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Spanish', '🇪🇸')">
+                  <a class="dropdown-item" href="#" @click="changeLanguage('Spanish', '🇪🇸')" :class="{ 'active': selectedLanguage === 'Spanish' }">
                     <span class="flag-icon">🇪🇸</span> SPANISH
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', '🇹🇷')">
+                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', '🇹🇷')" :class="{ 'active': selectedLanguage === 'Turkish' }">
                     <span class="flag-icon">🇹🇷</span> TURKISH
                   </a>
                 </li>
@@ -100,10 +100,18 @@ export default {
   color: rgb(175, 175, 175); /* Font color */
   font-size: 12px; /* Adjusted font size */
   font-weight: 700; /* Font weight */
+  text-transform: uppercase; /* Ensure text is always uppercase */
 }
 
 /* Style for flag icons */
 .flag-icon {
   font-size: 12px; /* Match font size with text */
+  margin-right: 5px; /* Add spacing between flag and text */
+}
+
+/* Highlight the selected language in the dropdown */
+.dropdown-item.active {
+  background-color: #f8f9fa; /* Light background for active item */
+  font-weight: bold; /* Bold text for active item */
 }
 </style>
