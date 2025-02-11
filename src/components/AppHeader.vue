@@ -62,7 +62,7 @@
 export default {
   data() {
     return {
-      selectedLanguage: 'English' // Default selected language
+      selectedLanguage: 'English' // Default selected language is English
     };
   },
   methods: {
