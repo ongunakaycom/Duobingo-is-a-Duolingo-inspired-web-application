@@ -10,8 +10,9 @@
         <hr class="divider" />
         <p>Choose from a variety of languages and start your journey today!</p>
         <div class="buttons">
-          <button class="btn-get-started">get started</button>
-          <button class="btn-have-account">i already have an account</button>
+          <button class="btn-get-started">GET STARTED</button>
+          <br />
+          <button class="btn-have-account">I ALREADY HAVE ACCOUNT</button>
         </div>
       </div>
     </div>
@@ -78,7 +79,9 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px;
+  margin-bottom: 10px; /* Add margin to separate buttons */
+  display: block; /* Ensure the button is a block element */
+  width: 100%; /* Make the button full width */
 }
 
 .btn-have-account {
@@ -88,6 +91,8 @@ export default {
   border: 1px solid rgb(88, 204, 2); /* Updated color */
   border-radius: 5px;
   cursor: pointer;
+  display: block; /* Ensure the button is a block element */
+  width: 100%; /* Make the button full width */
 }
 
 .btn-get-started:hover {
