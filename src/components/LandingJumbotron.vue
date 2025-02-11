@@ -10,8 +10,8 @@
         <hr class="divider" />
         <p>Choose from a variety of languages and start your journey today!</p>
         <div class="buttons">
-          <button class="btn-get-started">Get Started</button>
-          <button class="btn-have-account">I already have an account</button>
+          <button class="btn-get-started">get started</button>
+          <button class="btn-have-account">i already have an account</button>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@ export default {
 .image {
   max-width: 100%;
   height: auto;
-  width:400px;
+  width: 400px;
 }
 
 .text-section {
@@ -72,7 +72,7 @@ export default {
 }
 
 .btn-get-started {
-  background-color: #28a745;
+  background-color: rgb(88, 204, 2); /* Updated color */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -83,15 +83,15 @@ export default {
 
 .btn-have-account {
   background-color: white;
-  color: #28a745;
+  color: rgb(88, 204, 2); /* Updated color */
   padding: 10px 20px;
-  border: 1px solid #28a745;
+  border: 1px solid rgb(88, 204, 2); /* Updated color */
   border-radius: 5px;
   cursor: pointer;
 }
 
 .btn-get-started:hover {
-  background-color: #218838;
+  background-color: rgb(70, 160, 2); /* Darker shade for hover */
 }
 
 .btn-have-account:hover {
