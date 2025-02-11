@@ -80,4 +80,11 @@ export default {
 .navbar-brand img {
   height: 40px; /* Adjust height as needed */
 }
+
+/* Style for the [SITE LANGUAGE] text */
+.nav-link.dropdown-toggle {
+  color: rgb(175, 175, 175); /* Font color */
+  font-size: 15px; /* Font size */
+  font-weight: 700; /* Font weight */
+}
 </style>
