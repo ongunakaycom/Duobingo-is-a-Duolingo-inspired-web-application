@@ -1,6 +1,6 @@
 <template>
   <footer class="footer mt-auto py-3" style="background-color: rgb(88, 204, 2);">
-    <div class="container">
+    <div class="container" style="max-width: 1024px;">
       <div class="row">
         <!-- Column 1: About Us -->
         <div class="col">
