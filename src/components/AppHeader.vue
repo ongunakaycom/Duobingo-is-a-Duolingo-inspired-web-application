@@ -18,13 +18,25 @@
             <!-- Language Selection Dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                SITE LANGUAGE: {{ selectedLanguage }}
+                <span class="flag-icon">{{ selectedLanguageFlag }}</span> {{ selectedLanguage }}
               </a>
               <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#" @click="changeLanguage('English')">ENGLISH</a></li>
-                <li><a class="dropdown-item" href="#" @click="changeLanguage('Spanish')">SPANISH</a></li>
-                <li><a class="dropdown-item" href="#" @click="changeLanguage('Turkish')">TURKISH</a></li>
+                <li>
+                  <a class="dropdown-item" href="#" @click="changeLanguage('English', '🇺🇸')">
+                    <span class="flag-icon">🇺🇸</span> ENGLISH
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" @click="changeLanguage('Spanish', '🇪🇸')">
+                    <span class="flag-icon">🇪🇸</span> SPANISH
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', '🇹🇷')">
+                    <span class="flag-icon">🇹🇷</span> TURKISH
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
@@ -38,13 +50,15 @@
 export default {
   data() {
     return {
-      selectedLanguage: 'English' // Default selected language
+      selectedLanguage: 'English', // Default selected language
+      selectedLanguageFlag: '🇺🇸' // Default flag for English
     };
   },
   methods: {
     // Change language function
-    changeLanguage(language) {
+    changeLanguage(language, flag) {
       this.selectedLanguage = language;
+      this.selectedLanguageFlag = flag;
       // You can store the selected language in a global state (like Vuex)
       // or you can implement routing or localization if needed.
     }
@@ -84,7 +98,12 @@ export default {
 /* Style for the [SITE LANGUAGE] text */
 .nav-link.dropdown-toggle {
   color: rgb(175, 175, 175); /* Font color */
-  font-size: 15px; /* Font size */
+  font-size: 12px; /* Adjusted font size */
   font-weight: 700; /* Font weight */
+}
+
+/* Style for flag icons */
+.flag-icon {
+  font-size: 12px; /* Match font size with text */
 }
 </style>
