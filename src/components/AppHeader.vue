@@ -115,7 +115,12 @@ export default {
 .dropdown-item:hover {
   color: black !important; /* Black text for active and hover states */
   background-color: #f8f9fa; /* Light background for active item */
-  font-weight: 400; /* Bold text for active item */
+  font-weight: 700; /* Bold text for active item */
   font-size: 12px;
+}
+
+.dropdown-item{
+  font-size:12px;
+  font-weight: 700;
 }
 </style>
