@@ -1,4 +1,20 @@
 <template>
+  <div class="grid-container">
+    <!-- Left Grid -->
+    <div class="left-grid">
+      <p class="left-grid-text">free. fun. effective.</p>
+      <p class="left-grid-description">
+        Learning with Duolingo is fun, and research shows that it works! With quick, bite-sized lessons, you’ll earn points and unlock new levels while gaining real-world communication skills.
+      </p>
+    </div>
+
+    <!-- Right Grid -->
+    <div class="right-grid">
+      <img src="src/assets/duo-banner-1.png" alt="Duolingo Banner" class="right-grid-image" />
+    </div>
+  </div>
+
+  <!-- Features Section -->
   <div class="features">
     <h2>Why Choose Duolingo?</h2>
     <div class="feature-list">
@@ -20,11 +36,51 @@
 
 <script>
 export default {
-  name: 'LandingFeatures'
+  name: 'LandingPage'
 };
 </script>
 
 <style scoped>
+/* Grid Container */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 50px;
+  background-color: #ffffff;
+}
+
+/* Left Grid */
+.left-grid {
+  text-align: left;
+}
+
+.left-grid-text {
+  font-size: 48px;
+  color: rgb(88, 204, 2);
+  margin-bottom: 20px;
+  text-transform: lowercase;
+}
+
+.left-grid-description {
+  font-size: 17px;
+  color: rgb(119, 119, 119);
+  line-height: 1.6;
+}
+
+/* Right Grid */
+.right-grid {
+  text-align: center;
+}
+
+.right-grid-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Features Section */
 .features {
   text-align: center;
   padding: 50px;
