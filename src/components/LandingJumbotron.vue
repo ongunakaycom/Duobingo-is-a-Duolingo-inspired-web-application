@@ -11,7 +11,6 @@
         <p>Choose from a variety of languages and start your journey today!</p>
         <div class="buttons">
           <button class="btn-get-started">GET STARTED</button>
-          <br />
           <button class="btn-have-account">I ALREADY HAVE ACCOUNT</button>
         </div>
       </div>
