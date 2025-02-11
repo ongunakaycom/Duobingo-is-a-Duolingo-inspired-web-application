@@ -1,9 +1,11 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
       <div class="container d-flex justify-content-between">
         <!-- Logo and Branding -->
-        <a class="navbar-brand" href="#">Duolingo</a>
+        <a class="navbar-brand" href="#">
+          <img src="@/assets/Duolingo_logo.svg.png" alt="Duolingo Logo" style="height: 40px;">
+        </a>
 
         <!-- Mobile Toggle Button -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +53,6 @@ export default {
 </script>
 
 <style scoped>
-@import 'language-selection.css';
-
 /* Add the following styles */
 .container {
   max-width: 1024px;
@@ -63,14 +63,21 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  background-color: white; /* Set background to white */
 }
 
 .navbar-nav {
   display: grid;
   grid-template-columns: repeat(1, auto);
+  gap: 10px; /* Add gap between grid items */
 }
 
 .nav-item {
   display: block;
+}
+
+/* Ensure the logo fits well */
+.navbar-brand img {
+  height: 40px; /* Adjust height as needed */
 }
 </style>

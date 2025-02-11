@@ -44,6 +44,7 @@ export default {
 .image {
   max-width: 100%;
   height: auto;
+  width:400px;
 }
 
 .text-section {
