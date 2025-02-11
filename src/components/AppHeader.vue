@@ -18,37 +18,13 @@
             <!-- Language Selection Dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="d-flex align-items-center">
-                  <img :src="getFlag(selectedLanguage)" alt="Flag" class="flag-icon me-2" />
-                  <span>SITE LANGUAGE: {{ selectedLanguage }}</span>
-                </div>
+                SITE LANGUAGE: {{ selectedLanguage }}
               </a>
               <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('English')">
-                    <div class="d-flex align-items-center">
-                      <img src="@/assets/flags/us-flag.png" alt="US Flag" class="flag-icon me-2" />
-                      <span>ENGLISH</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Spanish')">
-                    <div class="d-flex align-items-center">
-                      <img src="@/assets/flags/es-flag.png" alt="Spanish Flag" class="flag-icon me-2" />
-                      <span>SPANISH</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish')">
-                    <div class="d-flex align-items-center">
-                      <img src="@/assets/flags/tr-flag.png" alt="Turkish Flag" class="flag-icon me-2" />
-                      <span>TURKISH</span>
-                    </div>
-                  </a>
-                </li>
+                <li><a class="dropdown-item" href="#" @click="changeLanguage('English')">ENGLISH</a></li>
+                <li><a class="dropdown-item" href="#" @click="changeLanguage('Spanish')">SPANISH</a></li>
+                <li><a class="dropdown-item" href="#" @click="changeLanguage('Turkish')">TURKISH</a></li>
               </ul>
             </li>
           </ul>
@@ -62,26 +38,15 @@
 export default {
   data() {
     return {
-      selectedLanguage: 'English' // Default selected language is English
+      selectedLanguage: 'English' // Default selected language
     };
   },
   methods: {
     // Change language function
     changeLanguage(language) {
       this.selectedLanguage = language;
-    },
-    // Get flag based on language
-    getFlag(language) {
-      switch (language) {
-        case 'English':
-          return require('@/assets/flags/us-flag.png');
-        case 'Spanish':
-          return require('@/assets/flags/es-flag.png');
-        case 'Turkish':
-          return require('@/assets/flags/tr-flag.png');
-        default:
-          return '';
-      }
+      // You can store the selected language in a global state (like Vuex)
+      // or you can implement routing or localization if needed.
     }
   }
 };
@@ -121,24 +86,5 @@ export default {
   color: rgb(175, 175, 175); /* Font color */
   font-size: 15px; /* Font size */
   font-weight: 700; /* Font weight */
-}
-
-/* Flag icon styling */
-.flag-icon {
-  width: 20px; /* Adjust flag size */
-  height: auto;
-}
-
-/* Dropdown item styling */
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  color: rgb(175, 175, 175); /* Font color */
-  font-size: 14px; /* Font size */
-  font-weight: 400; /* Font weight */
-}
-
-.dropdown-item img {
-  margin-right: 8px; /* Space between flag and text */
 }
 </style>
