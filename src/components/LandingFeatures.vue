@@ -2,7 +2,7 @@
   <div class="grid-container">
     <!-- Left Grid -->
     <div class="left-grid">
-      <p class="left-grid-text">free. fun. effective.</p>
+      <h2 class="left-grid-text">free. fun. effective.</h2>
       <p class="left-grid-description">
         Learning with Duolingo is fun, and research shows that it works! With quick, bite-sized lessons, you’ll earn points and unlock new levels while gaining real-world communication skills.
       </p>
