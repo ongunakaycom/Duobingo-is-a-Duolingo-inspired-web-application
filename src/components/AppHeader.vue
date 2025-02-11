@@ -23,18 +23,18 @@
               <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('English', '🇺🇸')" :class="{ 'active': selectedLanguage === 'English' }">
-                    <span class="flag-icon">🇺🇸</span> ENGLISH
+                  <a class="dropdown-item" href="#" @click="changeLanguage('English', 'us-flag.png')" :class="{ 'active': selectedLanguage === 'English' }">
+                    <img :src="require(`@/assets/${selectedLanguage === 'English' ? 'us-flag.png' : 'us-flag.png'}`)" alt="US Flag" class="flag-icon" /> ENGLISH
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Spanish', '🇪🇸')" :class="{ 'active': selectedLanguage === 'Spanish' }">
-                    <span class="flag-icon">🇪🇸</span> SPANISH
+                  <a class="dropdown-item" href="#" @click="changeLanguage('German', 'german-flag.png')" :class="{ 'active': selectedLanguage === 'German' }">
+                    <img :src="require(`@/assets/${selectedLanguage === 'German' ? 'german-flag.png' : 'german-flag.png'}`)" alt="German Flag" class="flag-icon" /> GERMAN
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', '🇹🇷')" :class="{ 'active': selectedLanguage === 'Turkish' }">
-                    <span class="flag-icon">🇹🇷</span> TURKISH
+                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', 'tr-flag.png')" :class="{ 'active': selectedLanguage === 'Turkish' }">
+                    <img :src="require(`@/assets/${selectedLanguage === 'Turkish' ? 'tr-flag.png' : 'tr-flag.png'}`)" alt="Turkish Flag" class="flag-icon" /> TURKISH
                   </a>
                 </li>
               </ul>
@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       selectedLanguage: 'English', // Default selected language
-      selectedLanguageFlag: '🇺🇸' // Default flag for English
+      selectedLanguageFlag: 'us-flag.png' // Default flag for English
     };
   },
   methods: {
@@ -105,12 +105,15 @@ export default {
 
 /* Style for flag icons */
 .flag-icon {
-  font-size: 12px; /* Match font size with text */
-  margin-right: 5px; /* Add spacing between flag and text */
+  width: 20px; /* Adjust flag size */
+  height: auto;
+  margin-right: 8px; /* Add spacing between flag and text */
 }
 
 /* Highlight the selected language in the dropdown */
-.dropdown-item.active {
+.dropdown-item.active,
+.dropdown-item:hover {
+  color: black !important; /* Black text for active and hover states */
   background-color: #f8f9fa; /* Light background for active item */
   font-weight: bold; /* Bold text for active item */
 }
