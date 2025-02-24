@@ -11,7 +11,7 @@
         <p>Choose from a variety of languages and start your journey today!</p>
         <div class="buttons">
           <button class="btn-get-started">GET STARTED</button>
-          <button class="btn-have-account">I ALREADY HAVE ACCOUNT</button>
+          <button class="btn-have-account" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
         </div>
       </div>
     </div>
@@ -19,8 +19,36 @@
 </template>
 
 <script>
+import axios from '../axios'; // Import the axios instance
+
 export default {
-  name: 'LandingJumbotron'
+  name: 'LandingJumbotron',
+  data() {
+    return {
+      email: '', // Store the email input
+      password: '', // Store the password input
+    };
+  },
+  methods: {
+    async handleLogin() {
+      try {
+        // Send login request to the backend
+        const response = await axios.post('/api/auth/login', {
+          email: this.email,
+          password: this.password,
+        });
+
+        // Handle successful login (e.g., store the JWT token)
+        localStorage.setItem('token', response.data.token);
+        alert('Login successful!');
+        // Redirect to the main page after successful login (optional)
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error('Login failed', error);
+        alert('Invalid credentials!');
+      }
+    },
+  },
 };
 </script>
 
