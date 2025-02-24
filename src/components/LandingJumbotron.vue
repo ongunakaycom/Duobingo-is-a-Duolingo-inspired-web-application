@@ -9,8 +9,12 @@
         <p class="lead">Learn a new language with fun and interactive lessons.</p>
         <hr class="divider" />
         <p>Choose from a variety of languages and start your journey today!</p>
+        
+        <!-- Signup Section -->
         <div class="buttons">
-          <button class="btn-get-started">GET STARTED</button>
+          <input v-model="email" type="email" placeholder="Enter your email" class="input" />
+          <input v-model="password" type="password" placeholder="Enter your password" class="input" />
+          <button class="btn-get-started" @click="handleSignUp">CREATE ACCOUNT</button>
           <button class="btn-have-account" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
         </div>
       </div>
@@ -30,6 +34,24 @@ export default {
     };
   },
   methods: {
+    async handleSignUp() {
+      try {
+        // Send signup request to the backend
+        const response = await axios.post('/api/auth/signup', {
+          email: this.email,
+          password: this.password,
+        });
+
+        // Handle successful signup (e.g., store the JWT token)
+        localStorage.setItem('token', response.data.token);
+        alert('Account created successfully!');
+        // Redirect to the dashboard after successful signup (optional)
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error('Signup failed', error);
+        alert(error.response.data.message || 'Error creating account!');
+      }
+    },
     async handleLogin() {
       try {
         // Send login request to the backend
@@ -99,6 +121,14 @@ export default {
   margin-top: 30px;
 }
 
+.input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
 .btn-get-started {
   background-color: rgb(88, 204, 2); /* Updated color */
   color: white;
@@ -106,24 +136,24 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 10px; /* Add margin to separate buttons */
-  display: block; /* Ensure the button is a block element */
-  width: 100%; /* Make the button full width */
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
 }
 
 .btn-have-account {
   background-color: white;
-  color: rgb(88, 204, 2); /* Updated color */
+  color: rgb(88, 204, 2);
   padding: 10px 20px;
-  border: 1px solid rgb(88, 204, 2); /* Updated color */
+  border: 1px solid rgb(88, 204, 2);
   border-radius: 5px;
   cursor: pointer;
-  display: block; /* Ensure the button is a block element */
-  width: 100%; /* Make the button full width */
+  display: block;
+  width: 100%;
 }
 
 .btn-get-started:hover {
-  background-color: rgb(70, 160, 2); /* Darker shade for hover */
+  background-color: rgb(70, 160, 2);
 }
 
 .btn-have-account:hover {
