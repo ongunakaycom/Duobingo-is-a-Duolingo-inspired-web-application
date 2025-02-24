@@ -9,13 +9,18 @@
         <p class="lead">Learn a new language with fun and interactive lessons.</p>
         <hr class="divider" />
         <p>Choose from a variety of languages and start your journey today!</p>
-        
+
         <!-- Signup Section -->
         <div class="buttons">
           <input v-model="email" type="email" placeholder="Enter your email" class="input" />
           <input v-model="password" type="password" placeholder="Enter your password" class="input" />
           <button class="btn-get-started" @click="handleSignUp">CREATE ACCOUNT</button>
           <button class="btn-have-account" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
+        </div>
+
+        <!-- Bootstrap Alert for Success/Failure -->
+        <div v-if="alert.show" :class="['alert', `alert-${alert.type}`, 'mt-3']" role="alert">
+          {{ alert.message }}
         </div>
       </div>
     </div>
@@ -31,6 +36,11 @@ export default {
     return {
       email: '', // Store the email input
       password: '', // Store the password input
+      alert: {
+        show: false, // Whether to show the alert
+        message: '', // Alert message
+        type: '', // Bootstrap alert variant (e.g., 'success', 'danger')
+      },
     };
   },
   methods: {
@@ -44,12 +54,12 @@ export default {
 
         // Handle successful signup (e.g., store the JWT token)
         localStorage.setItem('token', response.data.token);
-        alert('Account created successfully!');
+        this.showAlert('Account created successfully!', 'success');
         // Redirect to the dashboard after successful signup (optional)
         this.$router.push('/dashboard');
       } catch (error) {
         console.error('Signup failed', error);
-        alert(error.response.data.message || 'Error creating account!');
+        this.showAlert(error.response?.data?.message || 'Error creating account!', 'danger');
       }
     },
     async handleLogin() {
@@ -62,13 +72,23 @@ export default {
 
         // Handle successful login (e.g., store the JWT token)
         localStorage.setItem('token', response.data.token);
-        alert('Login successful!');
+        this.showAlert('Login successful!', 'success');
         // Redirect to the main page after successful login (optional)
         this.$router.push('/dashboard');
       } catch (error) {
         console.error('Login failed', error);
-        alert('Invalid credentials!');
+        this.showAlert('Invalid credentials!', 'danger');
       }
+    },
+    showAlert(message, type) {
+      this.alert.message = message;
+      this.alert.type = type;
+      this.alert.show = true;
+
+      // Optionally, hide the alert after a few seconds
+      setTimeout(() => {
+        this.alert.show = false;
+      }, 5000);
     },
   },
 };
@@ -143,9 +163,9 @@ export default {
 
 .btn-have-account {
   background-color: white;
-  color: rgb(88, 204, 2);
+  color: rgb(88, 204, 2); /* Updated color */
   padding: 10px 20px;
-  border: 1px solid rgb(88, 204, 2);
+  border: 1px solid rgb(88, 204, 2); /* Updated color */
   border-radius: 5px;
   cursor: pointer;
   display: block;
@@ -153,10 +173,29 @@ export default {
 }
 
 .btn-get-started:hover {
-  background-color: rgb(70, 160, 2);
+  background-color: rgb(70, 160, 2); /* Darker shade for hover */
 }
 
 .btn-have-account:hover {
   background-color: #f8f9fa;
+}
+
+.alert {
+  font-size: 1.25rem;
+  margin-top: 20px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.mt-3 {
+  margin-top: 1rem;
 }
 </style>
