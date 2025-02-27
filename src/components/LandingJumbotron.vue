@@ -46,10 +46,10 @@ export default {
   methods: {
     async handleSignUp() {
       try {
-        // Send signup request to the backend
+        // Send signup request to the backend with dynamic user input
         const response = await axios.post('/api/auth/signup', {
-          email: this.email,
-          password: this.password,
+          email: this.email,  // Email from form input
+          password: this.password,  // Password from form input
         });
 
         // Handle successful signup (e.g., store the JWT token)
@@ -64,10 +64,10 @@ export default {
     },
     async handleLogin() {
       try {
-        // Send login request to the backend
+        // Send login request to the backend with dynamic user input
         const response = await axios.post('/api/auth/login', {
-          email: this.email,
-          password: this.password,
+          email: this.email,  // Email from form input
+          password: this.password,  // Password from form input
         });
 
         // Handle successful login (e.g., store the JWT token)
