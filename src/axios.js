@@ -1,46 +1,69 @@
 import axios from 'axios';
 
-// Create an axios instance
+// Create an axios instance to centralize API requests
 const axiosInstance = axios.create({
-  baseURL: '/api/proxy', // Use the proxy base URL (this will go through your proxy server)
+  baseURL: '/api/proxy', // Proxy URL to forward requests to backend
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,  // Ensure cookies are sent with requests if needed
+  withCredentials: true, // Ensure cookies are sent with requests if needed
 });
 
-// Add interceptors to handle token inclusion in requests and responses
+// Request interceptor: Attach JWT token (if available) to request headers
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token'); // Get the token from localStorage
   
   if (token) {
-    // If a token exists, add it to the Authorization header
+    // Attach token to Authorization header if it exists
     config.headers['Authorization'] = `Bearer ${token}`;
   }
 
   return config;  // Return modified config
 }, (error) => {
-  return Promise.reject(error);  // Reject the request if an error occurs
+  return Promise.reject(error);  // Reject request on error
 });
 
+// Response interceptor: Optionally handle responses globally
 axiosInstance.interceptors.response.use((response) => {
-  // Handle response if necessary (e.g., logging success)
-  return response;  // Simply return the response object
+  return response;  // Return successful response
 }, (error) => {
-  // Handle any response errors (e.g., show notifications or retry logic)
-  console.error('Error in response:', error);
-  return Promise.reject(error);  // Reject the error
+  console.error('Error in response:', error);  // Handle response errors globally
+  return Promise.reject(error);  // Reject on error
 });
 
-// Make a signup request as an example
-const signup = (email, password) => {
-  axiosInstance.post('/auth/signup', { email, password }) // Use relative path since the baseURL already includes '/api/proxy'
+// Sign-up function to handle user registration
+const signUp = (email, password) => {
+  return axiosInstance.post('/auth/signup', { email, password })
     .then(response => {
       console.log('Signup successful:', response.data);
+      // Optionally, save the token to localStorage
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      return response.data; // Return the response data (can be used in components)
     })
     .catch(error => {
-      console.error('Error signing up:', error);
+      console.error('Error signing up:', error.response?.data || error);
+      throw error; // Re-throw the error to be handled by the component
     });
 };
 
-export default axiosInstance;
+// Login function to handle user authentication
+const login = (email, password) => {
+  return axiosInstance.post('/auth/login', { email, password })
+    .then(response => {
+      console.log('Login successful:', response.data);
+      // Optionally, save the token to localStorage
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      return response.data; // Return the response data (can be used in components)
+    })
+    .catch(error => {
+      console.error('Error logging in:', error.response?.data || error);
+      throw error; // Re-throw the error to be handled by the component
+    });
+};
+
+// Export axios instance and helper functions
+export { axiosInstance, signUp, login };
