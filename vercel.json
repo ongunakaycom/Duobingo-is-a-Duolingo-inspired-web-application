@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "https://duolingo-vue-backend.vercel.app/api/proxy/$1"
+      }
+    ]
+  }
+  
