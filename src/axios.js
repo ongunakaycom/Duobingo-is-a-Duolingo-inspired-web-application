@@ -1,4 +1,3 @@
-// axios.js
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -6,7 +5,7 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, 
+  withCredentials: true, // Ensure cookies or other credentials are sent with requests
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -17,6 +16,16 @@ axiosInstance.interceptors.request.use((config) => {
   }
 
   return config; 
+}, (error) => {
+  return Promise.reject(error);
+});
+
+axiosInstance.interceptors.response.use((response) => {
+  // Handle response if necessary (e.g., log success)
+  return response;
+}, (error) => {
+  // Handle response error (e.g., show notification or retry logic)
+  return Promise.reject(error);
 });
 
 export default axiosInstance;
