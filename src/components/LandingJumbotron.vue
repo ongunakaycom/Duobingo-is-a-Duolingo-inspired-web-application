@@ -33,7 +33,8 @@
 
 
 <script>
-import axios from '../axios'; // Import the axios instance
+import { axiosInstance } from '../axios'; 
+
 
 export default {
   name: 'LandingJumbotron',
@@ -50,41 +51,42 @@ export default {
   },
   methods: {
     async handleSignUp() {
-      try {
-        // Send signup request to the backend with dynamic user input
-        const response = await axios.post('/api/auth/signup', {
-          email: this.email,  // Email from form input
-          password: this.password,  // Password from form input
-        });
+  try {
+    // Send signup request using the custom axios instance
+    const response = await axiosInstance.post('/auth/signup', {
+      email: this.email,  // Email from form input
+      password: this.password,  // Password from form input
+    });
 
-        // Handle successful signup (e.g., store the JWT token)
-        localStorage.setItem('token', response.data.token);
-        this.showAlert('Account created successfully!', 'success');
-        // Redirect to the dashboard after successful signup (optional)
-        this.$router.push('/dashboard');
-      } catch (error) {
-        console.error('Signup failed', error);
-        this.showAlert(error.response?.data?.message || 'Error creating account!', 'danger');
-      }
-    },
-    async handleLogin() {
-      try {
-        // Send login request to the backend with dynamic user input
-        const response = await axios.post('/api/auth/login', {
-          email: this.email,  // Email from form input
-          password: this.password,  // Password from form input
-        });
+    // Handle successful signup (e.g., store the JWT token)
+    localStorage.setItem('token', response.data.token);
+    this.showAlert('Account created successfully!', 'success');
+    // Redirect to the dashboard after successful signup (optional)
+    this.$router.push('/dashboard');
+  } catch (error) {
+    console.error('Signup failed', error);
+    this.showAlert(error.response?.data?.message || 'Error creating account!', 'danger');
+  }
+},
 
-        // Handle successful login (e.g., store the JWT token)
-        localStorage.setItem('token', response.data.token);
-        this.showAlert('Login successful!', 'success');
-        // Redirect to the main page after successful login (optional)
-        this.$router.push('/dashboard');
-      } catch (error) {
-        console.error('Login failed', error);
-        this.showAlert('Invalid credentials!', 'danger');
-      }
-    },
+async handleLogin() {
+  try {
+    // Send login request using the custom axios instance
+    const response = await axiosInstance.post('/auth/login', {
+      email: this.email,  // Email from form input
+      password: this.password,  // Password from form input
+    });
+
+    // Handle successful login (e.g., store the JWT token)
+    localStorage.setItem('token', response.data.token);
+    this.showAlert('Login successful!', 'success');
+    // Redirect to the main page after successful login (optional)
+    this.$router.push('/dashboard');
+  } catch (error) {
+    console.error('Login failed', error);
+    this.showAlert('Invalid credentials!', 'danger');
+  }
+},
     showAlert(message, type) {
       this.alert.message = message;
       this.alert.type = type;
