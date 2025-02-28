@@ -1,23 +1,21 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://duolingo-vue-backend.vercel.app/', // ✅ Backend API URL
+  baseURL: 'https://duolingo-clone-server.vercel.app/api/proxy', 
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // ✅ Ensures authentication & cookies work across domains
+  withCredentials: true, 
 });
 
-// Add a request interceptor to attach the token (if any)
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // Get token from localStorage
+  const token = localStorage.getItem('token'); 
 
-  // ✅ Include Authorization token if available
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return config;
+  return config; 
 });
 
 export default axiosInstance;
