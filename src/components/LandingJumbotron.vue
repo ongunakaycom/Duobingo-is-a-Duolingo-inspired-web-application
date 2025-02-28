@@ -11,12 +11,16 @@
         <p>Choose from a variety of languages and start your journey today!</p>
 
         <!-- Signup Section -->
-        <div class="buttons">
-          <input v-model="email" type="email" placeholder="Enter your email" class="input" />
-          <input v-model="password" type="password" placeholder="Enter your password" class="input" />
-          <button class="btn-get-started" @click="handleSignUp">CREATE ACCOUNT</button>
-          <button class="btn-have-account" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
-        </div>
+        <form @submit.prevent="handleSignUp">
+          <div class="buttons">
+            <input v-model="email" type="email" placeholder="Enter your email" class="input" required />
+            <input v-model="password" type="password" placeholder="Enter your password" class="input" required />
+            <button type="submit" class="btn-get-started">CREATE ACCOUNT</button>
+          </div>
+        </form>
+
+        <!-- Login Section -->
+        <button class="btn-have-account" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
 
         <!-- Bootstrap Alert for Success/Failure -->
         <div v-if="alert.show" :class="['alert', `alert-${alert.type}`, 'mt-3']" role="alert">
@@ -26,6 +30,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from '../axios'; // Import the axios instance
