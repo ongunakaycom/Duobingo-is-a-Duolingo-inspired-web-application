@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   withCredentials: true, // ✅ Ensures authentication & cookies work across domains
 });
 
-// Add a request interceptor to attach the token and frontend domain to every request
+// Add a request interceptor to attach the token (if any)
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token'); // Get token from localStorage
 
@@ -16,10 +16,6 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-
-  // ✅ Explicitly allow frontend domain in request headers
-  config.headers['Access-Control-Allow-Origin'] = 'https://duobingo-is-a-duolingo-inspired-web-application.vercel.app';
-  config.headers['Access-Control-Allow-Credentials'] = 'true';
 
   return config;
 });
