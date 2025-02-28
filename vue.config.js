@@ -16,11 +16,19 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'https://duolingo-clone-server.vercel.app/api/proxy',  // Proxy URL (Vercel Proxy)
-        changeOrigin: true,  // Ensures the request origin is changed to the target URL
-        secure: false,       // Disable SSL verification for development
+        target: 'https://duolingo-clone-server.vercel.app/api/proxy', // Proxy to the Vercel server
+        changeOrigin: true,  // Ensure the origin of the request is rewritten to match the target URL
+        secure: true,        // Enable SSL verification for production (set to false if you're working in a dev environment with self-signed certs)
         pathRewrite: {
-          '^/api': '',  // Removes '/api' prefix from the request path
+          '^/api': '',       // Remove the '/api' prefix before forwarding the request
+        },
+        onProxyReq: (proxyReq, req, res) => {
+          // Optionally, log the request or add custom headers before forwarding
+          console.log('Request sent to target:', req.url);
+        },
+        onError: (err, req, res) => {
+          // Optionally, handle errors in the proxying process
+          res.status(500).send('Proxy Error: ' + err.message);
         },
       },
     },
