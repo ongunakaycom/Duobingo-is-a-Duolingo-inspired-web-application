@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an axios instance to centralize API requests
 const axiosInstance = axios.create({
-  baseURL: 'https://vercel.com/ongun-akays-projects/duolingo-clone-server', // Updated backend URL to prevent CORS issues
+  baseURL: '/api/proxy', // Proxy URL to forward requests to backend
   headers: {
     'Content-Type': 'application/json',
   },
