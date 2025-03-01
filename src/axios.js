@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an axios instance to centralize API requests
 const axiosInstance = axios.create({
-  baseURL: '/api/proxy', // Proxy URL to forward requests to backend
+  baseURL: 'https://duolingo-vue-backend.vercel.app', // Set the correct backend URL
   headers: {
     'Content-Type': 'application/json',
   },
