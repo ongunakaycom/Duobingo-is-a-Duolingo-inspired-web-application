@@ -54,7 +54,6 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 1024px;
   width: 100%;
   padding: 0 16px;
   margin: 0 auto;
