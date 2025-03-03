@@ -116,6 +116,7 @@ async handleLogin() {
 .image-section {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .image {
@@ -126,6 +127,7 @@ async handleLogin() {
 
 .text-section {
   text-align: left;
+  width: 100%;
 }
 
 .title {
@@ -204,5 +206,34 @@ async handleLogin() {
 
 .mt-3 {
   margin-top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* Single column layout for mobile */
+    gap: 20px;
+  }
+
+  .text-section {
+    text-align: center; /* Center text for better readability */
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input,
+  .btn-get-started,
+  .btn-have-account {
+    width: 100%; /* Make inputs and buttons full width */
+    max-width: 400px; /* Set a max width for better UX */
+  }
+
+  .btn-have-account {
+    margin-top: 10px;
+  }
 }
 </style>
