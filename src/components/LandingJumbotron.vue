@@ -23,7 +23,7 @@
             <input v-model="password" type="password" class="form-control" placeholder="Enter your password" required />
           </div>
           <!-- Updated Button with custom class -->
-          <button type="submit" class="btn btn-custom w-100">CREATE ACCOUNT</button>
+          <button type="submit" class="btn btn-get-started w-100">CREATE ACCOUNT</button>
         </form>
 
 
@@ -99,15 +99,22 @@ export default {
 .container {
   max-width: 1024px;
 }
+.btn-get-started {
+    background-color: #58cc02;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: block;
+    width: 100%;
+}  
 
 /* Mobile-friendly adjustments */
 @media (max-width: 768px) {
   .text-center {
     text-align: center;
-  }
-  .btn-custom {
-  background-color: #58cc02;
-  color: white;
-}  
+  } 
 }
 </style>
