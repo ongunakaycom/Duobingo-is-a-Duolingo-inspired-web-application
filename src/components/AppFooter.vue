@@ -1,9 +1,8 @@
 <template> 
   <footer class="footer mt-auto py-4" style="background-color: #58cc02;">
-    <div class="container text-white py-4 px-3">
-      <div class="d-flex flex-wrap justify-content-between">
+    <div class="container-fluid d-flex justify-content-center">
+      <div class="footer-container text-white py-4 px-3">
         
-        <!-- About Us -->
         <div class="footer-section">
           <h5 class="fw-bold">About Us</h5>
           <ul class="list-unstyled">
@@ -20,7 +19,6 @@
           </ul>
         </div>
 
-        <!-- Products -->
         <div class="footer-section">
           <h5 class="fw-bold">Products</h5>
           <ul class="list-unstyled">
@@ -32,7 +30,6 @@
           </ul>
         </div>
 
-        <!-- Apps -->
         <div class="footer-section">
           <h5 class="fw-bold">Apps</h5>
           <ul class="list-unstyled">
@@ -41,7 +38,6 @@
           </ul>
         </div>
 
-        <!-- Help and Support -->
         <div class="footer-section">
           <h5 class="fw-bold">Help & Support</h5>
           <ul class="list-unstyled">
@@ -52,7 +48,6 @@
           </ul>
         </div>
 
-        <!-- Privacy & Social -->
         <div class="footer-section">
           <h5 class="fw-bold">Privacy & Terms</h5>
           <ul class="list-unstyled">
@@ -62,7 +57,7 @@
           </ul>
 
           <h5 class="fw-bold mt-3">Follow Us</h5>
-          <ul class="list-unstyled d-flex gap-3">
+          <ul class="list-unstyled d-flex gap-3 justify-content-center">
             <li><a href="#" class="text-white text-decoration-none">Instagram</a></li>
             <li><a href="#" class="text-white text-decoration-none">TikTok</a></li>
             <li><a href="#" class="text-white text-decoration-none">Twitter</a></li>
@@ -82,9 +77,26 @@ export default {
 </script>
 
 <style scoped>
+.footer-container {
+  max-width: 1024px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
 .footer-section {
   flex: 1;
   min-width: 200px;
   margin-bottom: 20px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer-section {
+    width: 100%;
+    text-align: center;
+  }
 }
 </style>
