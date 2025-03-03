@@ -22,8 +22,10 @@
           <div class="mb-3">
             <input v-model="password" type="password" class="form-control" placeholder="Enter your password" required />
           </div>
-          <button type="submit" class="btn btn-success w-100">CREATE ACCOUNT</button>
+          <!-- Updated Button with custom class -->
+          <button type="submit" class="btn btn-custom w-100">CREATE ACCOUNT</button>
         </form>
+
 
         <!-- Login Button -->
         <button class="btn btn-outline-success w-100" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
@@ -103,5 +105,9 @@ export default {
   .text-center {
     text-align: center;
   }
+  .btn-custom {
+  background-color: #58cc02;
+  color: white;
+}  
 }
 </style>
