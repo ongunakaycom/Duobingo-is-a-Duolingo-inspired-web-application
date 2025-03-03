@@ -1,10 +1,10 @@
 <template> 
   <footer class="footer mt-auto py-4" style="background-color: #58cc02;">
-    <div class="container-fluid text-white">
-      <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+    <div class="container text-white py-4 px-3">
+      <div class="d-flex flex-wrap justify-content-between">
         
         <!-- About Us -->
-        <div class="col">
+        <div class="footer-section">
           <h5 class="fw-bold">About Us</h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white text-decoration-none">Courses</a></li>
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Products -->
-        <div class="col">
+        <div class="footer-section">
           <h5 class="fw-bold">Products</h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white text-decoration-none">Lingo</a></li>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Apps -->
-        <div class="col">
+        <div class="footer-section">
           <h5 class="fw-bold">Apps</h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white text-decoration-none">Android</a></li>
@@ -42,7 +42,7 @@
         </div>
 
         <!-- Help and Support -->
-        <div class="col">
+        <div class="footer-section">
           <h5 class="fw-bold">Help & Support</h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- Privacy & Social -->
-        <div class="col">
+        <div class="footer-section">
           <h5 class="fw-bold">Privacy & Terms</h5>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white text-decoration-none">Community Guidelines</a></li>
@@ -62,7 +62,7 @@
           </ul>
 
           <h5 class="fw-bold mt-3">Follow Us</h5>
-          <ul class="list-unstyled d-flex gap-2">
+          <ul class="list-unstyled d-flex gap-3">
             <li><a href="#" class="text-white text-decoration-none">Instagram</a></li>
             <li><a href="#" class="text-white text-decoration-none">TikTok</a></li>
             <li><a href="#" class="text-white text-decoration-none">Twitter</a></li>
@@ -80,3 +80,11 @@ export default {
   name: 'FooterComponent',
 };
 </script>
+
+<style scoped>
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 20px;
+}
+</style>
