@@ -1,6 +1,6 @@
 <template>
-  <div class="footer-container"> 
-    <div class="container"> <!-- Primary container wrapping all content securely -->
+  <div class="footer container"> 
+    <div class="container">
       <footer class="footer mt-auto py-4">
         <div class="row">
         
