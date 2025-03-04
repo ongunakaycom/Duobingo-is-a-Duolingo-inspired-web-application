@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style scoped>
-.footer-container {
+.footer {
   background-color: #58cc02; /* Moved background color here so it wraps everything */
   padding: 20px 0;
 }
