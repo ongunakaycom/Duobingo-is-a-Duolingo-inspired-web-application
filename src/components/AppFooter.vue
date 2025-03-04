@@ -58,12 +58,8 @@ export default {
 .footer {
   background-color: #58cc02; /* Moved background color here so it wraps everything */
   padding: 20px 0;
+  text-align: center;
 }
-
-.footer {
-  margin-bottom: 20px;
-}
-
 /* Mobile: Center align text */
 @media (max-width: 768px) {
   .footer {
