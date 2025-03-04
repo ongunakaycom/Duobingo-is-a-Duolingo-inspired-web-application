@@ -60,13 +60,13 @@ export default {
   padding: 20px 0;
 }
 
-.footer-section {
+.footer {
   margin-bottom: 20px;
 }
 
 /* Mobile: Center align text */
 @media (max-width: 768px) {
-  .footer-section {
+  .footer {
     text-align: center;
   }
 }
