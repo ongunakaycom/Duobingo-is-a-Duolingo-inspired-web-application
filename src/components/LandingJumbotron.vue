@@ -2,7 +2,7 @@
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-12 col-md-6 text-center">
-        <img src="../assets/duo.png" alt="Language Learning" class="img-fluid w-75" />
+        <img :src="duoImage" alt="Language Learning" class="img-fluid w-75" />
       </div>
 
       <div class="col-12 col-md-6">
@@ -34,12 +34,14 @@
               required
             />
           </div>
-          <button type="submit" class="btn btn-get-started w-100">
+
+          <button type="submit" class="btn btn-get-started w-100" :disabled="isLoading">
+            <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
             {{ isLoginMode ? 'LOGIN' : 'CREATE ACCOUNT' }}
           </button>
         </form>
 
-        <button class="btn btn-outline-success w-100" @click="toggleMode">
+        <button class="btn btn-outline-success w-100" @click="toggleMode" :disabled="isLoading">
           {{ isLoginMode ? "I DON'T HAVE AN ACCOUNT" : "I ALREADY HAVE AN ACCOUNT" }}
         </button>
 
@@ -56,7 +58,8 @@
 </template>
 
 <script>
-import { login, signUp } from '../axios';
+import { login, signUp } from '@/axios';
+import duoImage from '@/assets/duo.png';
 
 export default {
   data() {
@@ -69,7 +72,8 @@ export default {
         message: '',
         type: '',
       },
-      isLoading: false
+      isLoading: false,
+      duoImage,
     };
   },
   methods: {
@@ -77,9 +81,8 @@ export default {
       this.isLoginMode = !this.isLoginMode;
     },
     async handleAuth() {
+      this.isLoading = true;
       try {
-        this.isLoading = true;
-
         const fn = this.isLoginMode ? login : signUp;
         const { token } = await fn(this.email, this.password);
 
@@ -87,9 +90,8 @@ export default {
           localStorage.setItem('token', token);
           this.showAlert(this.isLoginMode ? 'Login successful!' : 'Signup successful!', 'success');
 
-          // Show alert briefly before transitioning
           setTimeout(() => {
-            window.location.reload(); // reload App.vue and show Dashboard via token check
+            this.$emit('authenticated'); // 🔁 Notify parent component (App.vue)
           }, 1000);
         }
       } catch (err) {
@@ -98,6 +100,7 @@ export default {
       } finally {
         this.isLoading = false;
       }
+    }
     },
     showAlert(message, type) {
       this.alert = { show: true, message, type };
@@ -106,4 +109,3 @@ export default {
   }
 };
 </script>
-
