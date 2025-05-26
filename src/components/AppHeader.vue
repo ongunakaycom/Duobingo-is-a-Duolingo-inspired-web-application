@@ -18,7 +18,7 @@
             <!-- Language Selection Dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                SITE LANGUAGE: {{ selectedLanguage.toUpperCase() }}
+                LANGUAGE: {{ selectedLanguage.toUpperCase() }}
               </a>
               <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
