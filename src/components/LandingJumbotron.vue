@@ -1,51 +1,32 @@
-<template> 
+<template>
   <div class="container py-5">
     <div class="row align-items-center">
-      <!-- Image Section -->
       <div class="col-12 col-md-6 text-center">
-        <img src="../assets/duo.png" alt="Language Learning" class="img-fluid w-75" />
+        <img src="../assets/duo.png" alt="Language Learning" class="img-fluid w-75">
       </div>
 
-      <!-- Text & Form Section -->
       <div class="col-12 col-md-6">
         <h1 class="fw-bold text-dark">Practice and master new languages.</h1>
         <p class="lead">Learn a new language with fun and interactive lessons.</p>
         <hr />
         <p>Choose from a variety of languages and start your journey today!</p>
 
-        <!-- Auth Form -->
         <form @submit.prevent="handleAuth" class="mb-3">
           <div class="mb-3">
-            <input
-              v-model="email"
-              type="email"
-              class="form-control"
-              placeholder="Enter your email"
-              required
-              autocomplete="email"
-            />
+            <input v-model="email" type="email" autocomplete="email" class="form-control" placeholder="Enter your email" required />
           </div>
           <div class="mb-3">
-            <input
-              v-model="password"
-              type="password"
-              class="form-control"
-              placeholder="Enter your password"
-              required
-              :autocomplete="isLoginMode ? 'current-password' : 'new-password'"
-            />
+            <input v-model="password" type="password" autocomplete="current-password" class="form-control" placeholder="Enter your password" required />
           </div>
           <button type="submit" class="btn btn-get-started w-100">
             {{ isLoginMode ? 'LOGIN' : 'CREATE ACCOUNT' }}
           </button>
         </form>
 
-        <!-- Toggle Mode -->
         <button class="btn btn-outline-success w-100" @click="toggleMode">
           {{ isLoginMode ? "I DON'T HAVE AN ACCOUNT" : "I ALREADY HAVE ACCOUNT" }}
         </button>
 
-        <!-- Alert -->
         <div v-if="alert.show" :class="['alert', `alert-${alert.type}`, 'mt-3']" role="alert">
           {{ alert.message }}
         </div>
@@ -53,3 +34,42 @@
     </div>
   </div>
 </template>
+
+<script>
+import { login, signUp } from '../axios';
+
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      isLoginMode: false,
+      alert: {
+        show: false,
+        message: '',
+        type: '',
+      },
+    };
+  },
+  methods: {
+    toggleMode() {
+      this.isLoginMode = !this.isLoginMode;
+    },
+    async handleAuth() {
+      try {
+        const authFunction = this.isLoginMode ? login : signUp;
+        const response = await authFunction(this.email, this.password);
+        this.showAlert(this.isLoginMode ? 'Login successful!' : 'Account created!', 'success');
+        this.$router.push('/dashboard');
+      } catch (error) {
+        const msg = error.response?.data?.message || 'Something went wrong!';
+        this.showAlert(msg, 'danger');
+      }
+    },
+    showAlert(message, type) {
+      this.alert = { message, type, show: true };
+      setTimeout(() => this.alert.show = false, 5000);
+    },
+  },
+};
+</script>
