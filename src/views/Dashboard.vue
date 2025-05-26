@@ -1,63 +1,24 @@
 <template>
-  <div class="container py-4">
-    <h1 class="mb-4 text-success fw-bold">Welcome to Duobingo 🎉</h1>
+  <div class="container py-5">
+    <h2 class="mb-4">Welcome to Duobingo Dashboard 🎯</h2>
 
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4" v-for="lang in languages" :key="lang.name">
+        <div class="card h-100 shadow-sm">
+          <img :src="lang.flag" class="card-img-top" :alt="`${lang.name} flag`" style="height: 150px; object-fit: cover;">
           <div class="card-body">
-            <h5 class="card-title">Your Language Progress</h5>
-            <p class="card-text">Spanish — Level 3</p>
+            <h5 class="card-title">{{ lang.name }}</h5>
+            <p class="card-text">Progress: {{ lang.progress }}%</p>
             <div class="progress">
               <div
-                class="progress-bar bg-success"
+                class="progress-bar"
                 role="progressbar"
-                style="width: 60%;"
-                aria-valuenow="60"
+                :style="{ width: lang.progress + '%' }"
+                :aria-valuenow="lang.progress"
                 aria-valuemin="0"
                 aria-valuemax="100"
-              >
-                60%
-              </div>
+              ></div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0">
-          <div class="card-body">
-            <h5 class="card-title">Daily Streak</h5>
-            <p class="display-6 text-warning">🔥 5 Days</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-sm-6 col-lg-4">
-        <div class="card text-white bg-primary h-100">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Start New Lesson</h5>
-            <button class="btn btn-light mt-3">Go</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-6 col-lg-4">
-        <div class="card text-white bg-success h-100">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Practice Skills</h5>
-            <button class="btn btn-light mt-3">Review</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-6 col-lg-4">
-        <div class="card text-white bg-info h-100">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Check Leaderboard</h5>
-            <button class="btn btn-light mt-3">View</button>
           </div>
         </div>
       </div>
@@ -68,11 +29,32 @@
 <script>
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+      languages: [
+        {
+          name: 'English',
+          flag: require('@/assets/us-flag.png'),
+          progress: 75,
+        },
+        {
+          name: 'German',
+          flag: require('@/assets/german-flag.png'),
+          progress: 45,
+        },
+        {
+          name: 'Turkish',
+          flag: require('@/assets/tr-flag.png'),
+          progress: 20,
+        },
+      ],
+    };
+  },
 };
 </script>
 
 <style scoped>
-.card {
-  border-radius: 1rem;
+.card-img-top {
+  border-bottom: 1px solid #ddd;
 }
 </style>

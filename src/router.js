@@ -1,7 +1,8 @@
-/*eslint-env browser*/
+/* eslint-env browser */
 
-import { createRouter, createWebHashHistory } from 'vue-router'; // 
-import Home from './views/Home.vue'; 
+import { createRouter, createWebHashHistory } from 'vue-router';
+import Home from './views/Home.vue';
+import Dashboard from './views/Dashboard.vue'; // 👈 Import the Dashboard component
 
 const routes = [
   {
@@ -9,11 +10,15 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  // 
+  {
+    path: '/dashboard',       // 👈 Add this route
+    name: 'Dashboard',
+    component: Dashboard
+  }
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // 
+  history: createWebHashHistory(),
   routes
 });
 
