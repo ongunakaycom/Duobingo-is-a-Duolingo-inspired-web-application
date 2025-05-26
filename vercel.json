@@ -2,8 +2,13 @@
   "version": 2,
   "routes": [
     {
-      "src": "/api/proxy/(.*)",
-      "dest": "/api/proxy"
+      "src": "/api/(.*)",
+      "dest": "https://duolingo-vue-backend.vercel.app/api/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "https://duobingo-is-a-duolingo-inspired-web-application.vercel.app",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+      }
     }
   ]
 }
