@@ -11,26 +11,27 @@
         <h1 class="fw-bold text-dark">Learn, practice and master new languages with Lingo.</h1>
         <p class="lead">Learn a new language with fun and interactive lessons.</p>
         <hr />
-
         <p>Choose from a variety of languages and start your journey today!</p>
 
-        <!-- Signup Form -->
-        <form @submit.prevent="handleSignUp" class="mb-3">
+        <!-- Auth Form -->
+        <form @submit.prevent="handleAuth" class="mb-3">
           <div class="mb-3">
             <input v-model="email" type="email" class="form-control" placeholder="Enter your email" required />
           </div>
           <div class="mb-3">
             <input v-model="password" type="password" class="form-control" placeholder="Enter your password" required />
           </div>
-          <!-- Updated Button with custom class -->
-          <button type="submit" class="btn btn-get-started w-100">CREATE ACCOUNT</button>
+          <button type="submit" class="btn btn-get-started w-100">
+            {{ isLoginMode ? 'LOGIN' : 'CREATE ACCOUNT' }}
+          </button>
         </form>
 
+        <!-- Toggle Mode -->
+        <button class="btn btn-outline-success w-100" @click="toggleMode">
+          {{ isLoginMode ? "I DON'T HAVE AN ACCOUNT" : "I ALREADY HAVE ACCOUNT" }}
+        </button>
 
-        <!-- Login Button -->
-        <button class="btn btn-outline-success w-100" @click="handleLogin">I ALREADY HAVE ACCOUNT</button>
-
-        <!-- Bootstrap Alert -->
+        <!-- Alert -->
         <div v-if="alert.show" :class="['alert', `alert-${alert.type}`, 'mt-3']" role="alert">
           {{ alert.message }}
         </div>
@@ -48,6 +49,7 @@ export default {
     return {
       email: '',
       password: '',
+      isLoginMode: false, // Toggle state
       alert: {
         show: false,
         message: '',
@@ -56,30 +58,23 @@ export default {
     };
   },
   methods: {
-    async handleSignUp() {
-      try {
-        const response = await axiosInstance.post('/auth/signup', {
-          email: this.email,
-          password: this.password,
-        });
-        localStorage.setItem('token', response.data.token);
-        this.showAlert('Account created successfully!', 'success');
-        this.$router.push('/dashboard');
-      } catch (error) {
-        this.showAlert(error.response?.data?.message || 'Error creating account!', 'danger');
-      }
+    toggleMode() {
+      this.isLoginMode = !this.isLoginMode;
     },
-    async handleLogin() {
+    async handleAuth() {
       try {
-        const response = await axiosInstance.post('/auth/login', {
+        const endpoint = this.isLoginMode ? '/auth/login' : '/auth/signup';
+        const response = await axiosInstance.post(endpoint, {
           email: this.email,
           password: this.password,
         });
+
         localStorage.setItem('token', response.data.token);
-        this.showAlert('Login successful!', 'success');
+        this.showAlert(this.isLoginMode ? 'Login successful!' : 'Account created successfully!', 'success');
         this.$router.push('/dashboard');
       } catch (error) {
-        this.showAlert('Invalid credentials!', 'danger');
+        const msg = error.response?.data?.message || 'An error occurred!';
+        this.showAlert(msg, 'danger');
       }
     },
     showAlert(message, type) {
@@ -95,26 +90,23 @@ export default {
 </script>
 
 <style scoped>
-/* Ensure responsiveness */
 .container {
   max-width: 1024px;
 }
 .btn-get-started {
-    background-color: #58cc02;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    display: block;
-    width: 100%;
-}  
-
-/* Mobile-friendly adjustments */
+  background-color: #58cc02;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+}
 @media (max-width: 768px) {
   .text-center {
     text-align: center;
-  } 
+  }
 }
 </style>
