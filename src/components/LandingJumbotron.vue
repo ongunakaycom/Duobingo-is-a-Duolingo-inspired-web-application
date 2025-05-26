@@ -63,12 +63,13 @@ export default {
     return {
       email: '',
       password: '',
-      isLoginMode: true, // default to login
+      isLoginMode: true,
       alert: {
         show: false,
         message: '',
         type: '',
       },
+      isLoading: false
     };
   },
   methods: {
@@ -77,22 +78,32 @@ export default {
     },
     async handleAuth() {
       try {
+        this.isLoading = true;
+
         const fn = this.isLoginMode ? login : signUp;
         const { token } = await fn(this.email, this.password);
 
         if (token) {
+          localStorage.setItem('token', token);
           this.showAlert(this.isLoginMode ? 'Login successful!' : 'Signup successful!', 'success');
-          this.$router.push('/dashboard');
+
+          // Show alert briefly before transitioning
+          setTimeout(() => {
+            window.location.reload(); // reload App.vue and show Dashboard via token check
+          }, 1000);
         }
       } catch (err) {
         const message = err?.response?.data?.error || 'Authentication failed';
         this.showAlert(message, 'danger');
+      } finally {
+        this.isLoading = false;
       }
     },
     showAlert(message, type) {
       this.alert = { show: true, message, type };
       setTimeout(() => (this.alert.show = false), 5000);
-    },
-  },
+    }
+  }
 };
 </script>
+
