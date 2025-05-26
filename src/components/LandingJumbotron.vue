@@ -8,7 +8,7 @@
 
       <!-- Text & Form Section -->
       <div class="col-12 col-md-6">
-        <h1 class="fw-bold text-dark">test, practice and master new languages with Lingo.</h1>
+        <h1 class="fw-bold text-dark">Practice and master new languages.</h1>
         <p class="lead">Learn a new language with fun and interactive lessons.</p>
         <hr />
         <p>Choose from a variety of languages and start your journey today!</p>
