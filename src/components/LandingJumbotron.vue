@@ -88,10 +88,13 @@ export default {
 
         if (token) {
           localStorage.setItem('token', token);
-          this.showAlert(this.isLoginMode ? 'Login successful!' : 'Signup successful!', 'success');
+          this.showAlert(
+            this.isLoginMode ? 'Login successful!' : 'Signup successful!',
+            'success'
+          );
 
           setTimeout(() => {
-            this.$emit('authenticated'); // 🔁 Notify parent component (App.vue)
+            this.$emit('authenticated'); // Notify parent component (App.vue)
           }, 1000);
         }
       } catch (err) {
@@ -100,12 +103,11 @@ export default {
       } finally {
         this.isLoading = false;
       }
-    }
     },
     showAlert(message, type) {
       this.alert = { show: true, message, type };
       setTimeout(() => (this.alert.show = false), 5000);
-    }
-  }
+    },
+  },
 };
 </script>
