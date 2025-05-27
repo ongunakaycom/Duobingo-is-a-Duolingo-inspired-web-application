@@ -8,8 +8,9 @@ import { createI18n } from 'vue-i18n';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Import LanguageDropdown globally
-import LanguageDropdown from '@/components/LanguageDropdown.vue';
+import LanguageDropdown from '@/components/LanguageSelection.vue';
+
+
 
 // Locale messages
 import en from './locales/en.json';
