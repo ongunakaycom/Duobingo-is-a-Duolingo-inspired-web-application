@@ -8,6 +8,7 @@ import 'bootstrap'; // Bootstrap JS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'flag-icon-css/css/flag-icon.min.css';
 
+
 // Locale files
 import en from './locales/en.json';
 import es from './locales/es.json';
