@@ -8,7 +8,7 @@
         </a>
 
         <!-- Language Selector (only on /dashboard) -->
-        <LanguageSelection v-if="isDashboard" />
+        <LanguageSelection />
       </div>
     </nav>
   </header>
