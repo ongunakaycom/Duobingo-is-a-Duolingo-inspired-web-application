@@ -27,14 +27,23 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-const emit = defineEmits(['languageChanged']);
+import { useLanguageStore } from '@/store/language';
 
 const { locale } = useI18n();
+const languageStore = useLanguageStore();
 
-const currentLang = computed(() => locale.value);
+// Keep i18n in sync with Pinia state
+watch(
+  () => languageStore.current,
+  (newLang) => {
+    locale.value = newLang;
+  },
+  { immediate: true }
+);
+
+const currentLang = computed(() => languageStore.current);
 
 const languages = [
   { code: 'en', label: 'ENGLISH', flag: '🇺🇸' },
@@ -48,9 +57,7 @@ const currentFlag = computed(() => {
 
 const changeLanguage = (code) => {
   if (code !== currentLang.value) {
-    locale.value = code;
-    localStorage.setItem('lang', code);
-    emit('languageChanged', code);
+    languageStore.setLanguage(code);
   }
 };
 </script>
