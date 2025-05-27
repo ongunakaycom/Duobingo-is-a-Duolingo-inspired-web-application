@@ -27,14 +27,14 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useLanguageStore } from '@/store/language';
+import { Dropdown } from 'bootstrap'; // Import Bootstrap's dropdown constructor
 
 const { locale } = useI18n();
 const languageStore = useLanguageStore();
 
-// Keep i18n in sync with Pinia state
 watch(
   () => languageStore.current,
   (newLang) => {
@@ -60,7 +60,16 @@ const changeLanguage = (code) => {
     languageStore.setLanguage(code);
   }
 };
+
+// Bootstrap dropdown init
+onMounted(() => {
+  const dropdownElement = document.getElementById('languageDropdown');
+  if (dropdownElement) {
+    new Dropdown(dropdownElement); // Activates the dropdown
+  }
+});
 </script>
+
 
 <style scoped>
 .dropdown-item.active {
