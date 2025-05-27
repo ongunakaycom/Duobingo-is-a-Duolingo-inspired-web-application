@@ -7,31 +7,32 @@
           <img src="@/assets/Duolingo_logo.svg.png" alt="Duobingo Logo" class="logo" />
         </a>
 
-        <!-- Language Selector (only on /dashboard) -->
-        <LanguageSelection />
+        <!-- Global Language Selector -->
+        <LanguageDropdown />
       </div>
     </nav>
   </header>
 </template>
 
 <script setup>
-import { useRouter, useRoute } from 'vue-router';
-import LanguageSelection from '@/components/LanguageSelection.vue';
+import { useRouter, useRoute } from 'vue-router'
 
-const router = useRouter();
-const route = useRoute();
+// Optional: If not globally registered
+// import LanguageDropdown from '@/components/LanguageDropdown.vue'
 
-const isAuthenticated = !!localStorage.getItem('token');
+const router = useRouter()
+const route = useRoute()
+
+const isAuthenticated = !!localStorage.getItem('token')
 
 const handleLogoClick = () => {
   if (isAuthenticated && route.path !== '/dashboard') {
-    router.push('/dashboard');
+    router.push('/dashboard')
   } else if (!isAuthenticated && route.path !== '/') {
-    router.push('/');
+    router.push('/')
   }
-};
+}
 </script>
-
 
 <style scoped>
 .logo {

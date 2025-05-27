@@ -1,13 +1,17 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+
 import router from './router';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 
-import 'bootstrap'; // Bootstrap JS
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Locale files
+// Import LanguageDropdown globally
+import LanguageDropdown from '@/components/LanguageDropdown.vue';
+
+// Locale messages
 import en from './locales/en.json';
 import es from './locales/es.json';
 
@@ -16,16 +20,19 @@ const i18n = createI18n({
   legacy: false,
   locale: localStorage.getItem('lang') || 'en',
   fallbackLocale: 'en',
-  messages: { en, es }
+  messages: { en, es },
 });
 
+// Create Vue app
 const app = createApp(App);
 
-const pinia = createPinia(); // ✅ create Pinia instance
+// Register global components
+app.component('LanguageDropdown', LanguageDropdown);
 
-// Apply plugins
-app.use(pinia); // ✅ use Pinia
+// Use plugins
+app.use(createPinia());
 app.use(router);
 app.use(i18n);
 
+// Mount the app
 app.mount('#app');
