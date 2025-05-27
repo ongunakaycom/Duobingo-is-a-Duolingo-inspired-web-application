@@ -1,19 +1,22 @@
 <template>
   <div class="home">
-    <LandingJumbotron />
-    <LandingFeatures />
+    <AppHeader />
+    <LandingWrapper />
+    <AppFooter />
   </div>
 </template>
 
 <script>
-import LandingJumbotron from '@/components/LandingJumbotron.vue';
-import LandingFeatures from '@/components/LandingFeatures.vue';
+import AppHeader from '@/components/AppHeader.vue';
+import AppFooter from '@/components/AppFooter.vue';
+import LandingWrapper from '@/components/LandingWrapper.vue';
 
 export default {
   name: 'Home',
   components: {
-    LandingJumbotron,
-    LandingFeatures
+    AppHeader,
+    AppFooter,
+    LandingWrapper
   }
 };
 </script>
