@@ -93,9 +93,9 @@ export default {
             'success'
           );
 
-          setTimeout(() => {
-            this.$emit('authenticated'); // Notify parent component (App.vue)
-          }, 1000);
+        setTimeout(() => {
+          this.$router.push('/dashboard');
+        }, 1000);
         }
       } catch (err) {
         const message = err?.response?.data?.error || 'Authentication failed';
