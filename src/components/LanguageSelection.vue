@@ -1,25 +1,35 @@
 <template>
   <div class="dropdown">
-    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+    <button
+      class="btn dropdown-toggle"
+      type="button"
+      id="languageDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
       {{ currentFlag }} {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
       <li
         v-for="lang in languages"
         :key="lang.code"
-        class="dropdown-item"
-        :class="{ active: currentLang === lang.code }"
-        @click="changeLanguage(lang.code)"
       >
-        {{ lang.flag }} {{ lang.label }}
+        <button
+          class="dropdown-item"
+          :class="{ active: currentLang === lang.code }"
+          @click="changeLanguage(lang.code)"
+        >
+          {{ lang.flag }} {{ lang.label }}
+        </button>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup>
-import { computed, watch, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 const emit = defineEmits(['languageChanged']);
 
 const { locale } = useI18n();
@@ -37,12 +47,13 @@ const currentFlag = computed(() => {
 });
 
 const changeLanguage = (code) => {
-  locale.value = code;
-  localStorage.setItem('lang', code);
-  emit('languageChanged', code); // 🔔 Notify parent
+  if (code !== currentLang.value) {
+    locale.value = code;
+    localStorage.setItem('lang', code);
+    emit('languageChanged', code);
+  }
 };
 </script>
-
 
 <style scoped>
 .dropdown-item.active {

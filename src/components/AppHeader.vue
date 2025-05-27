@@ -3,15 +3,11 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
       <div class="container d-flex justify-content-between align-items-center">
         <!-- Logo -->
-        <a
-          class="navbar-brand"
-          href="#"
-          @click.prevent="handleLogoClick"
-        >
+        <a class="navbar-brand" href="#" @click.prevent="handleLogoClick">
           <img src="@/assets/Duolingo_logo.svg.png" alt="Duobingo Logo" class="logo" />
         </a>
 
-        <!-- Language Selector (Only show on /dashboard) -->
+        <!-- Language Selector (only on /dashboard) -->
         <LanguageSelection v-if="isDashboard" />
       </div>
     </nav>
@@ -35,7 +31,6 @@ const handleLogoClick = () => {
   } else if (!isAuthenticated.value && route.path !== '/') {
     router.push('/');
   }
-  // Do nothing if already on the correct route
 };
 </script>
 
