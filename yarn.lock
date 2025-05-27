@@ -1068,6 +1068,27 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@intlify/core-base@11.1.5":
+  version "11.1.5"
+  resolved "https://registry.npmjs.org/@intlify/core-base/-/core-base-11.1.5.tgz"
+  integrity sha512-xGRkISwV/2Trqb8yVQevlHm5roaQqy+75qwUzEQrviaQF0o4c5VDhjBW7WEGEoKFx09HSgq7NkvK/DAyuerTDg==
+  dependencies:
+    "@intlify/message-compiler" "11.1.5"
+    "@intlify/shared" "11.1.5"
+
+"@intlify/message-compiler@11.1.5":
+  version "11.1.5"
+  resolved "https://registry.npmjs.org/@intlify/message-compiler/-/message-compiler-11.1.5.tgz"
+  integrity sha512-YLSBbjD7qUdShe3ZAat9Hnf9E8FRpN6qmNFD/x5Xg5JVXjsks0kJ90Zj6aAuyoppJQA/YJdWZ8/bB7k3dg2TjQ==
+  dependencies:
+    "@intlify/shared" "11.1.5"
+    source-map-js "^1.0.2"
+
+"@intlify/shared@11.1.5":
+  version "11.1.5"
+  resolved "https://registry.npmjs.org/@intlify/shared/-/shared-11.1.5.tgz"
+  integrity sha512-+I4vRzHm38VjLr/CAciEPJhGYFzWWW4HMTm+6H3WqknXLh0ozNX9oC8ogMUwTSXYR/wGUb1/lTpNziiCH5MybQ==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz"
@@ -1729,7 +1750,7 @@
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
 
-"@vue/devtools-api@^6.5.1":
+"@vue/devtools-api@^6.5.0", "@vue/devtools-api@^6.5.1":
   version "6.6.1"
   resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.6.1.tgz"
   integrity sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==
@@ -5949,7 +5970,7 @@ sonic-forest@^1.0.0:
   dependencies:
     tree-dump "^1.0.0"
 
-source-map-js@^1.2.0:
+source-map-js@^1.0.2, source-map-js@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.0.tgz"
   integrity sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==
@@ -6450,6 +6471,15 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.npmjs.org/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
+vue-i18n@^11.1.5:
+  version "11.1.5"
+  resolved "https://registry.npmjs.org/vue-i18n/-/vue-i18n-11.1.5.tgz"
+  integrity sha512-XCwuaEA5AF97g1frvH/EI1zI9uo1XKTf2/OCFgts7NvUWRsjlgeHPrkJV+a3gpzai2pC4quZ4AnOHFO8QK9hsg==
+  dependencies:
+    "@intlify/core-base" "11.1.5"
+    "@intlify/shared" "11.1.5"
+    "@vue/devtools-api" "^6.5.0"
+
 vue-loader@^17.0.0:
   version "17.4.2"
   resolved "https://registry.npmjs.org/vue-loader/-/vue-loader-17.4.2.tgz"
@@ -6479,7 +6509,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@*, "vue@^2 || ^3.2.13", vue@^3.0.4, vue@^3.2.0, vue@^3.4.27, vue@3.4.27:
+vue@*, "vue@^2 || ^3.2.13", vue@^3.0.0, vue@^3.0.4, vue@^3.2.0, vue@^3.4.27, vue@3.4.27:
   version "3.4.27"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.27.tgz"
   integrity sha512-8s/56uK6r01r1icG/aEOHqyMVxd1bkYcSe9j8HcKtr/xTOFWvnzIVTehNW+5Yt89f+DLBe4A569pnZLS5HzAMA==
