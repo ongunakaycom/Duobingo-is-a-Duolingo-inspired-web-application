@@ -20,6 +20,7 @@
 <script setup>
 import { computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+const emit = defineEmits(['languageChanged']);
 
 const { locale } = useI18n();
 
@@ -32,24 +33,14 @@ const languages = [
 
 const currentFlag = computed(() => {
   const found = languages.find((l) => l.code === currentLang.value);
-  console.log('Current language:', currentLang.value);
-  console.log('Resolved flag:', found?.flag);
   return found?.flag || '🌐';
 });
 
 const changeLanguage = (code) => {
-  console.log('Changing language to:', code);
   locale.value = code;
   localStorage.setItem('lang', code);
+  emit('languageChanged', code); // 🔔 Notify parent
 };
-
-onMounted(() => {
-  console.log('Mounted with locale:', locale.value);
-});
-
-watch(locale, (newVal) => {
-  console.log('Locale changed to:', newVal);
-});
 </script>
 
 
