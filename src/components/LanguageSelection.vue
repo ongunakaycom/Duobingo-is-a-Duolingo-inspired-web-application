@@ -21,7 +21,7 @@
 import { computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { locale, t } = useI18n();
+const { locale } = useI18n();
 
 const currentLang = computed(() => locale.value);
 
@@ -43,16 +43,15 @@ const changeLanguage = (code) => {
   localStorage.setItem('lang', code);
 };
 
-// Debug current locale value on mount
 onMounted(() => {
   console.log('Mounted with locale:', locale.value);
 });
 
-// Reactively log changes
 watch(locale, (newVal) => {
   console.log('Locale changed to:', newVal);
 });
 </script>
+
 
 <style scoped>
 .dropdown-item.active {
