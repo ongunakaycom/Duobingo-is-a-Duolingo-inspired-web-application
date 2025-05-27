@@ -1,17 +1,27 @@
 <template>
   <div id="app">
-    <LandingJumbotron v-if="!isAuthenticated" @authenticated="onAuthenticated" />
-    <Dashboard v-else @logout="logout" />
+    <AppHeader />
+
+    <div class="main-content">
+      <LandingWrapper v-if="!isAuthenticated" @authenticated="onAuthenticated" />
+      <Dashboard v-else @logout="logout" />
+    </div>
+
+    <AppFooter />
   </div>
 </template>
 
 <script>
-import LandingJumbotron from './components/LandingJumbotron.vue';
+import AppHeader from './components/AppHeader.vue';
+import AppFooter from './components/AppFooter.vue';
+import LandingWrapper from './components/LandingWrapper.vue';
 import Dashboard from './components/Dashboard.vue';
 
 export default {
   components: {
-    LandingJumbotron,
+    AppHeader,
+    AppFooter,
+    LandingWrapper,
     Dashboard
   },
   data() {
@@ -20,7 +30,6 @@ export default {
     };
   },
   created() {
-    // Check token on load
     this.isAuthenticated = !!localStorage.getItem('token');
   },
   methods: {
@@ -34,3 +43,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.main-content {
+  min-height: 80vh; /* Adjust as needed */
+}
+</style>
