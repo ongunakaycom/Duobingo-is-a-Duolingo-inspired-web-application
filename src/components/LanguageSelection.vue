@@ -7,7 +7,7 @@
       data-bs-toggle="dropdown"
       aria-expanded="false"
     >
-      <span :class="['flag-icon', `flag-icon-${currentFlag}`]"></span>
+      <img :src="currentFlag" alt="Flag" class="flag-icon" />
       {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
     </button>
     <ul class="dropdown-menu" aria-labelledby="languageDropdown">
@@ -17,13 +17,14 @@
           :class="{ active: currentLang === lang.code }"
           @click="changeLanguage(lang.code)"
         >
-          <span :class="['flag-icon', `flag-icon-${lang.flag}`]"></span>
+          <img :src="lang.flag" alt="Flag" class="flag-icon" />
           {{ lang.label }}
         </button>
       </li>
     </ul>
   </div>
 </template>
+
 
 <script setup>
 import { computed, watch, onMounted } from 'vue';
@@ -45,9 +46,10 @@ watch(
 const currentLang = computed(() => languageStore.current);
 
 const languages = [
-  { code: 'en', label: 'English', flag: 'us' },
-  { code: 'es', label: 'Español', flag: 'es' }
+  { code: 'en', label: 'English', flag: 'https://flagcdn.com/us.svg' },
+  { code: 'es', label: 'Español', flag: 'https://flagcdn.com/es.svg' }
 ];
+
 
 const currentFlag = computed(() => {
   const found = languages.find((l) => l.code === currentLang.value);
@@ -75,9 +77,10 @@ onMounted(() => {
 }
 
 .flag-icon {
-  width: 1.5em;
-  height: 1em;
-  background-size: cover;
-  border-radius: 0.125rem;
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
 }
+
 </style>
