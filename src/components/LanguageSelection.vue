@@ -1,25 +1,29 @@
 <template>
-  <div class="language-dropdown">
+  <div class="language-dropdown" @keydown.esc="isOpen = false">
     <button
       class="dropdown-toggle"
       @click="toggleDropdown"
-      @blur="handleBlur"
+      @blur="onBlur"
+      :aria-expanded="isOpen.toString()"
+      aria-haspopup="listbox"
     >
       <img :src="currentFlag" alt="Flag" class="flag-icon" />
       <span class="language-label">{{ $t('site_language') }}: {{ currentLang.toUpperCase() }}</span>
       <svg class="dropdown-chevron" :class="{ 'rotate-180': isOpen }" viewBox="0 0 20 20">
-        <path fill="currentColor" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+        <path fill="currentColor"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
       </svg>
     </button>
 
-    <transition name="dropdown">
+    <transition name="fade">
       <ul
         v-show="isOpen"
         class="dropdown-menu"
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
+        role="listbox"
       >
-        <li v-for="lang in languages" :key="lang.code">
+        <li v-for="lang in languages" :key="lang.code" role="option">
           <button
             class="dropdown-item"
             :class="{ active: currentLang === lang.code }"
@@ -59,12 +63,12 @@ const languages = [
 const currentLang = computed(() => languageStore.current)
 const currentFlag = computed(() => languages.find(l => l.code === currentLang.value)?.flag || '')
 
-const toggleDropdown = () => (isOpen.value = !isOpen.value)
+const toggleDropdown = () => isOpen.value = !isOpen.value
 
-const handleBlur = () => {
+const onBlur = () => {
   setTimeout(() => {
     if (!hovering.value) isOpen.value = false
-  }, 150)
+  }, 100)
 }
 
 const changeLanguage = (code) => {
@@ -83,22 +87,21 @@ watch(() => languageStore.current, (newLang) => {
 .language-dropdown {
   position: relative;
   display: inline-block;
-  z-index: 1000;
 
   .dropdown-toggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: white;
+    border: 1px solid #ccc;
     border-radius: 0.5rem;
-    background-color: transparent;
     cursor: pointer;
-    color: var(--text-color);
     font-weight: 500;
+    color: var(--text-color);
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: #f5f5f5;
     }
 
     &:focus {
@@ -122,11 +125,10 @@ watch(() => languageStore.current, (newLang) => {
     top: calc(100% + 0.5rem);
     right: 0;
     min-width: 200px;
-    padding: 0.5rem 0;
-    list-style: none;
-    background-color: white;
+    background-color: #fff;
     border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
     z-index: 1000;
   }
 
@@ -142,12 +144,12 @@ watch(() => languageStore.current, (newLang) => {
     cursor: pointer;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
+      background-color: #f0f0f0;
     }
 
     &.active {
       font-weight: 600;
-      background-color: rgba(0, 0, 0, 0.03);
+      background-color: #e8e8e8;
     }
 
     .checkmark {
@@ -159,20 +161,19 @@ watch(() => languageStore.current, (newLang) => {
   .flag-icon {
     width: 24px;
     height: 16px;
-    object-fit: cover;
     border-radius: 2px;
+    object-fit: cover;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   }
 }
 
-/* Transition */
-.dropdown-enter-active,
-.dropdown-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: all 0.2s ease;
 }
-.dropdown-enter-from,
-.dropdown-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-  transform: scale(0.95) translateY(-10px);
+  transform: scale(0.95);
 }
 </style>
