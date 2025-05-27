@@ -7,35 +7,16 @@
           <img src="@/assets/Duolingo_logo.svg.png" alt="Duobingo Logo" class="logo" />
         </router-link>
 
-        <!-- Language Dropdown -->
-        <div class="dropdown">
-          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
-          </button>
-          <ul class="dropdown-menu">
-            <li v-for="lang in languages" :key="lang" class="dropdown-item" @click="changeLanguage(lang)">
-              {{ lang.toUpperCase() }}
-            </li>
-          </ul>
-        </div>
+        <!-- Language Selector -->
+        <LanguageSelection />
       </div>
     </nav>
   </header>
 </template>
 
 <script setup>
+import LanguageSelection from '@/components/LanguageSelection.vue';
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-const { locale } = useI18n();
-
-const currentLang = computed(() => locale.value);
-const languages = ['English', 'Spanish', 'Turkish'];
-
-const changeLanguage = (lang) => {
-  locale.value = lang;
-  localStorage.setItem('lang', lang);
-};
 
 const isAuthenticated = computed(() => !!localStorage.getItem('token'));
 </script>

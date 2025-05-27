@@ -3,36 +3,26 @@ import App from './App.vue';
 import router from './router';
 import { createI18n } from 'vue-i18n';
 
-// Import Bootstrap styles and JS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 
-// Define translations
-const messages = {
-  English: {
-    site_language: 'Site Language',
-    greeting: 'Hello'
-  },
-  Spanish: {
-    site_language: 'Idioma del sitio',
-    greeting: 'Hola'
-  },
-  Turkish: {
-    site_language: 'Site Dili',
-    greeting: 'Merhaba'
-  }
-};
+// Import external locale files
+import en from './locales/en.json';
+import es from './locales/es.json';
 
 // Setup i18n instance
 const i18n = createI18n({
   legacy: false,
-  locale: localStorage.getItem('lang') || 'English',
-  fallbackLocale: 'English',
-  messages
+  locale: localStorage.getItem('lang') || 'en',
+  fallbackLocale: 'en',
+  messages: {
+    en,
+    es
+  }
 });
 
 // Create and mount app
 const app = createApp(App);
 app.use(router);
 app.use(i18n);
-app.m
+app.mount('#app');

@@ -1,72 +1,44 @@
 <template>
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container d-flex justify-content-between">
-        <!-- Logo -->
-        <router-link class="navbar-brand" :to="isAuthenticated ? '/dashboard' : '/'">
-          Duobingo
-        </router-link>
-
-        <!-- Mobile Toggle -->
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#nav-collapse"
-          aria-controls="nav-collapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Dropdown -->
-        <div class="collapse navbar-collapse" id="nav-collapse">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                SITE LANGUAGE: {{ selectedLanguage }}
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><button class="dropdown-item" @click="changeLanguage('English')">ENGLISH</button></li>
-                <li><button class="dropdown-item" @click="changeLanguage('Spanish')">SPANISH</button></li>
-                <li><button class="dropdown-item" @click="changeLanguage('Turkish')">TURKISH</button></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+  <div class="dropdown">
+    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
+    </button>
+    <ul class="dropdown-menu">
+      <li
+        v-for="lang in languages"
+        :key="lang.code"
+        class="dropdown-item"
+        :class="{ active: currentLang === lang.code }"
+        @click="changeLanguage(lang.code)"
+      >
+        {{ lang.label }}
+      </li>
+    </ul>
+  </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      selectedLanguage: 'English'
-    };
-  },
-  computed: {
-    isAuthenticated() {
-      return !!localStorage.getItem('token');
-    }
-  },
-  methods: {
-    changeLanguage(language) {
-      this.selectedLanguage = language;
-    }
-  }
+<script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+
+const currentLang = computed(() => locale.value);
+
+const languages = [
+  { code: 'en', label: 'ENGLISH' },
+  { code: 'es', label: 'ESPAÑOL' }
+];
+
+const changeLanguage = (code) => {
+  locale.value = code;
+  localStorage.setItem('lang', code);
 };
 </script>
 
 <style scoped>
-/* Optional custom styles */
+.dropdown-item.active {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
 </style>
