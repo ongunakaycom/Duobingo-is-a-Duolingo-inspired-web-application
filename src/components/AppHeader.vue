@@ -1,40 +1,49 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
-      <div class="container d-flex justify-content-between">
-        <!-- Logo and Branding -->
-        <a class="navbar-brand" href="#">
-          <img src="@/assets/Duolingo_logo.svg.png" alt="Duolingo Logo" style="height: 40px;">
-        </a>
+      <div class="container d-flex justify-content-between align-items-center">
+        <!-- Logo (links to / or /dashboard depending on auth) -->
+        <router-link class="navbar-brand" :to="isAuthenticated ? '/dashboard' : '/'">
+          <img src="@/assets/Duolingo_logo.svg.png" alt="Duobingo Logo" class="logo" />
+        </router-link>
 
-        <!-- Mobile Toggle Button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- Mobile Toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#nav-collapse"
+          aria-controls="nav-collapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar Links -->
+        <!-- Language Dropdown -->
         <div class="collapse navbar-collapse" id="nav-collapse">
           <ul class="navbar-nav ms-auto">
-            <!-- Language Selection Dropdown -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 LANGUAGE: {{ selectedLanguage.toUpperCase() }}
               </a>
-              <!-- Language Dropdown Menu -->
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('English', 'us-flag.png')" :class="{ 'active': selectedLanguage === 'English' }">
-                    <img :src="require(`@/assets/${selectedLanguage === 'English' ? 'us-flag.png' : 'us-flag.png'}`)" alt="US Flag" class="flag-icon" /> ENGLISH
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('German', 'german-flag.png')" :class="{ 'active': selectedLanguage === 'German' }">
-                    <img :src="require(`@/assets/${selectedLanguage === 'German' ? 'german-flag.png' : 'german-flag.png'}`)" alt="German Flag" class="flag-icon" /> GERMAN
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#" @click="changeLanguage('Turkish', 'tr-flag.png')" :class="{ 'active': selectedLanguage === 'Turkish' }">
-                    <img :src="require(`@/assets/${selectedLanguage === 'Turkish' ? 'tr-flag.png' : 'tr-flag.png'}`)" alt="Turkish Flag" class="flag-icon" /> TURKISH
+                <li v-for="lang in languages" :key="lang.name">
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click="changeLanguage(lang.name, lang.flag)"
+                    :class="{ active: selectedLanguage === lang.name }"
+                  >
+                    <img :src="require(`@/assets/${lang.flag}`)" alt="" class="flag-icon" />
+                    {{ lang.name.toUpperCase() }}
                   </a>
                 </li>
               </ul>
@@ -48,78 +57,65 @@
 
 <script>
 export default {
+  name: 'AppHeader',
   data() {
     return {
-      selectedLanguage: 'English', // Default selected language
-      selectedLanguageFlag: 'us-flag.png' // Default flag for English
+      selectedLanguage: 'English',
+      selectedLanguageFlag: 'us-flag.png',
+      languages: [
+        { name: 'English', flag: 'us-flag.png' },
+        { name: 'German', flag: 'german-flag.png' },
+        { name: 'Turkish', flag: 'tr-flag.png' }
+      ]
     };
   },
+  computed: {
+    isAuthenticated() {
+      return !!localStorage.getItem('token');
+    }
+  },
   methods: {
-    // Change language function
     changeLanguage(language, flag) {
       this.selectedLanguage = language;
       this.selectedLanguageFlag = flag;
-      // You can store the selected language in a global state (like Vuex)
-      // or you can implement routing or localization if needed.
+      // Persist language choice as needed
     }
   }
 };
 </script>
 
 <style scoped>
-/* Add the following styles */
-.container {
-  margin: 0 auto;
-}
-
-.navbar {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  background-color: white; /* Set background to white */
+.logo {
+  height: 40px;
+  cursor: pointer;
 }
 
 .navbar-nav {
   display: grid;
-  grid-template-columns: repeat(1, auto);
-  gap: 10px; /* Add gap between grid items */
+  gap: 10px;
 }
 
-.nav-item {
-  display: block;
-}
-
-/* Ensure the logo fits well */
-.navbar-brand img {
-  height: 40px; /* Adjust height as needed */
-}
-
-/* Style for the [SITE LANGUAGE] text */
 .nav-link.dropdown-toggle {
-  color: rgb(175, 175, 175); /* Font color */
-  font-size: 12px; /* Adjusted font size */
-  font-weight: 700; /* Font weight */
-  text-transform: uppercase; /* Ensure text is always uppercase */
+  color: #afafaf;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-/* Style for flag icons */
 .flag-icon {
-  width: 20px; /* Adjust flag size */
+  width: 20px;
   height: auto;
-  margin-right: 8px; /* Add spacing between flag and text */
+  margin-right: 8px;
 }
 
-/* Highlight the selected language in the dropdown */
+.dropdown-item {
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .dropdown-item.active,
 .dropdown-item:hover {
-  color: black !important; /* Black text for active and hover states */
-  background-color: #f8f9fa; /* Light background for active item */
-  font-weight: 400; /* Bold text for active item */
-  font-size: 12px;
-}
-
-.dropdown-item{
-  font-size:12px;
-  font-weight: 400;
+  color: black !important;
+  background-color: #f8f9fa;
 }
 </style>

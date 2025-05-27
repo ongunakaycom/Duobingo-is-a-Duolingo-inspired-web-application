@@ -1,3 +1,4 @@
+// src/router.js
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import Dashboard from './components/Dashboard.vue';
@@ -6,7 +7,15 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter: (to, from, next) => {
+      const isAuthenticated = !!localStorage.getItem('token');
+      if (isAuthenticated) {
+        next('/dashboard'); // redirect logged-in users away from Home
+      } else {
+        next(); // allow access to home if not logged in
+      }
+    }
   },
   {
     path: '/dashboard',
@@ -21,10 +30,9 @@ const router = createRouter({
   routes
 });
 
-// Global navigation guard
+// Global guard for protected routes
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token');
-
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/');
   } else {
