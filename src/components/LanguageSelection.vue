@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown">
     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-      {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
+      {{ currentFlag }} {{ $t('site_language') }}: {{ currentLang.toUpperCase() }}
     </button>
     <ul class="dropdown-menu">
       <li
@@ -11,7 +11,7 @@
         :class="{ active: currentLang === lang.code }"
         @click="changeLanguage(lang.code)"
       >
-        {{ lang.label }}
+        {{ lang.flag }} {{ lang.label }}
       </li>
     </ul>
   </div>
@@ -26,9 +26,13 @@ const { locale } = useI18n();
 const currentLang = computed(() => locale.value);
 
 const languages = [
-  { code: 'en', label: 'ENGLISH' },
-  { code: 'es', label: 'ESPAÑOL' }
+  { code: 'en', label: 'ENGLISH', flag: '🇺🇸' },
+  { code: 'es', label: 'ESPAÑOL', flag: '🇪🇸' }
 ];
+
+const currentFlag = computed(() => {
+  return languages.find((l) => l.code === currentLang.value)?.flag || '🌐';
+});
 
 const changeLanguage = (code) => {
   locale.value = code;
