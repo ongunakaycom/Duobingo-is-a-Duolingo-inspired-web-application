@@ -16,23 +16,22 @@
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { computed } from 'vue';
 import LanguageSelection from '@/components/LanguageSelection.vue';
 
 const router = useRouter();
 const route = useRoute();
 
-const isAuthenticated = computed(() => !!localStorage.getItem('token'));
-const isDashboard = computed(() => route.path === '/dashboard');
+const isAuthenticated = !!localStorage.getItem('token');
 
 const handleLogoClick = () => {
-  if (isAuthenticated.value && route.path !== '/dashboard') {
+  if (isAuthenticated && route.path !== '/dashboard') {
     router.push('/dashboard');
-  } else if (!isAuthenticated.value && route.path !== '/') {
+  } else if (!isAuthenticated && route.path !== '/') {
     router.push('/');
   }
 };
 </script>
+
 
 <style scoped>
 .logo {
