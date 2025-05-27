@@ -3,8 +3,8 @@ import App from './App.vue';
 import router from './router';
 import { createI18n } from 'vue-i18n';
 
+import 'bootstrap'; // includes both JS and popper
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap';
 
 // Import external locale files
 import en from './locales/en.json';
@@ -21,7 +21,7 @@ const i18n = createI18n({
   }
 });
 
-// Create and mount app
+// Create and mount the app
 const app = createApp(App);
 app.use(router);
 app.use(i18n);
