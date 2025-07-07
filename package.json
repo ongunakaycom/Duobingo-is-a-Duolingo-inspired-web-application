@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
     "bootstrap-vue-3": "^0.5.1",
     "core-js": "^3.8.3",
@@ -32,7 +32,7 @@
     "eslint-plugin-vue": "^8.0.3",
     "sass": "^1.89.0",
     "sass-loader": "^16.0.5",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.2.1"
   },
   "engines": {
     "node": "18.x"
