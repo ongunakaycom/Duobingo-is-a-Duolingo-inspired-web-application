@@ -35,7 +35,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "eslintConfig": {
     "env": {
