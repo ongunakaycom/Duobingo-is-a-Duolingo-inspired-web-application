@@ -1,41 +1,41 @@
-# 🎯 Duobingo – Full-Stack DevOps & CI/CD Documentation
+# 🎯 Duobingo – Duolingo-Inspired Language Learning Platform
 
-**Duobingo** is a Duolingo-inspired language learning platform built with **Vue 3** (frontend) and a custom **Node.js + Express + MongoDB** backend. This document outlines the DevOps practices, CI/CD pipeline, hosting setup, and architecture used in the full-stack deployment.
+**Duobingo** is a Duolingo-inspired language learning web application built with **Vue 3** for the frontend and a custom **Node.js + Express + MongoDB** backend. This README covers project setup, architecture, DevOps practices, CI/CD, and hosting.
+
+🌐 **Live App:** [Duobingo on Vercel](https://duobingo-is-a-duolingo-inspired-web-application.vercel.app)
 
 ---
 
-## 🧱 Stack Overview
+## 🧱 Tech Stack
 
-| Layer       | Technology                          |
-|------------|--------------------------------------|
-| Frontend   | Vue 3, Vue Router, Pinia, Axios      |
-| Backend    | Node.js, Express.js, MongoDB Atlas   |
-| Auth       | JWT-based (Bearer Token)             |
-| DB Hosting | MongoDB Atlas (managed by developer) |
-| CI/CD      | GitHub Actions, Vercel               |
-| Hosting    | Frontend via Vercel, Backend via Vercel Functions or custom Node server |
-| API Proxy  | Configured via `vue.config.js` and `vercel.json` |
-
-🌐 Live App: [https://duobingo-is-a-duolingo-inspired-web-application.vercel.app](https://duobingo-is-a-duolingo-inspired-web-application.vercel.app)
+| Layer          | Technology                                       |
+| -------------- | ------------------------------------------------ |
+| Frontend       | Vue 3, Vue Router, Pinia, Axios, Bootstrap 5     |
+| Backend        | Node.js, Express.js, MongoDB Atlas               |
+| Authentication | JWT (Bearer token)                               |
+| CI/CD          | GitHub Actions, Vercel                           |
+| Hosting        | Frontend & Backend via Vercel                    |
+| API Proxy      | Configured via `vue.config.js` and `vercel.json` |
 
 ---
 
 ## 🔐 Authentication
 
-The backend provides `/auth/signup` and `/auth/login` endpoints that return a **JWT token**, stored on the frontend in `localStorage`. Axios uses an interceptor to attach this token to all authenticated requests.
+* Endpoints: `/auth/signup` and `/auth/login` return **JWT tokens**.
+* Tokens are stored in `localStorage` and attached to all requests via Axios interceptors:
 
 ```js
 const token = localStorage.getItem('token');
 if (token) {
   config.headers.Authorization = `Bearer ${token}`;
 }
-````
+```
 
 ---
 
-## 📁 Backend API Structure
+## 📁 Backend API
 
-All requests go through:
+All backend endpoints are prefixed with:
 
 ```
 https://duolingo-vue-backend.vercel.app/api
@@ -43,25 +43,24 @@ https://duolingo-vue-backend.vercel.app/api
 
 Key routes:
 
-* `POST /auth/signup` → Create account
+* `POST /auth/signup` → Register account
 * `POST /auth/login` → Login
-* `GET /lessons`, `POST /progress`, etc. → Language functionality (custom API)
-* MongoDB database connection via `MONGO_URI` (managed by developer)
+* `GET /lessons` / `POST /progress` → Language learning functionality
 
-> Note: MongoDB Atlas credentials and `.env` are not committed. Backend is fully managed and deployed independently.
+> MongoDB Atlas connection uses `MONGO_URI` (kept private in `.env`).
 
 ---
 
-## ⚙️ Local Development Setup
+## ⚙️ Local Development
 
-### 🖥️ Frontend
+### Frontend
 
 ```bash
 pnpm install
 pnpm run serve
 ```
 
-### 🌐 Backend (Node.js + MongoDB)
+### Backend
 
 ```bash
 cd backend
@@ -69,12 +68,13 @@ npm install
 npm run dev
 ```
 
-> Add `.env` file:
+> Create a `.env` file:
 
 ```
 PORT=5000
 MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/duobingo
 JWT_SECRET=yourSecretKey
+NODE_ENV=development
 ```
 
 ---
@@ -88,15 +88,15 @@ const axiosInstance = axios.create({
 });
 ```
 
-* Handles JWT token injection
+* Handles **JWT injection** automatically
 * Centralized error logging
-* Reusable auth helpers: `login()`, `signUp()`
+* Provides reusable methods like `login()` and `signUp()`
 
 ---
 
-## 🌍 Proxy Setup
+## 🌍 Proxy Configuration
 
-### Dev Proxy (`vue.config.js`)
+### Development (`vue.config.js`)
 
 ```js
 '/api': {
@@ -105,7 +105,7 @@ const axiosInstance = axios.create({
 }
 ```
 
-### Prod Proxy (`vercel.json`)
+### Production (`vercel.json`)
 
 ```json
 {
@@ -122,9 +122,9 @@ const axiosInstance = axios.create({
 
 ## 🧪 CI/CD Pipeline
 
-### 🔄 GitHub Actions (Backend Deployment)
+### Backend (GitHub Actions)
 
-You can add a `.github/workflows/backend.yml` for lint/test/deploy:
+`.github/workflows/backend.yml` example:
 
 ```yaml
 name: Deploy Backend
@@ -152,9 +152,9 @@ jobs:
         run: npx vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --confirm
 ```
 
-### ✅ Frontend via Vercel (Auto CI/CD)
+### Frontend
 
-Just push to `main` – Vercel auto-builds and deploys.
+* Frontend automatically deploys via **Vercel CI/CD** when pushing to `main`.
 
 ---
 
@@ -174,59 +174,58 @@ npm run test
 
 ## 🔒 Environment Variables
 
-| Variable     | Usage               |
-| ------------ | ------------------- |
-| `MONGO_URI`  | MongoDB Atlas URI   |
-| `JWT_SECRET` | JWT token signing   |
-| `NODE_ENV`   | dev/production mode |
+| Variable     | Purpose                  |
+| ------------ | ------------------------ |
+| `MONGO_URI`  | MongoDB Atlas connection |
+| `JWT_SECRET` | JWT token signing        |
+| `NODE_ENV`   | Development / Production |
 
-> Use `.env` files locally. Vercel uses its dashboard for env variables.
+> `.env` files are used locally; Vercel manages environment variables in the dashboard.
 
 ---
 
-## 📦 Directory Structure
+## 📦 Project Structure
 
 ```
 duobingo/
 ├── backend/                 # Node.js API + MongoDB logic
-│   ├── routes/
 │   ├── controllers/
 │   ├── models/
+│   ├── routes/
 │   └── index.js
 ├── src/                     # Vue frontend
-│   ├── components/
-│   ├── views/
 │   ├── assets/
+│   ├── components/
 │   ├── locales/
+│   ├── views/
 │   └── axios.js
 ├── public/
 ├── vue.config.js
 ├── vercel.json
+├── package.json
+└── README.md
 ```
 
 ---
 
 ## 📌 Notes
 
-* 🔐 MongoDB backend is **owned and maintained by the developer**.
-* 🌍 Full-stack: You control frontend, backend, authentication, and persistence.
-* 🚀 Vercel serves both static frontend and API proxy via serverless or dedicated API URL.
-* 🧪 Tests and linters are integrated.
-* 🔧 Extensible to Docker/Kubernetes/CI as needed.
+* MongoDB backend is **maintained by the developer**.
+* Full-stack architecture: **frontend, backend, authentication, persistence**.
+* Supports extensibility for **Docker, Kubernetes, advanced CI/CD**.
 
 ---
 
-## About Me
+## 👨‍💻 About Me
 
-I'm Ongun Akay, a Senior Full-Stack Developer with expertise across various technologies.
+**Ongun Akay** – Senior Full-Stack Developer
 
-- 👀 I specialize in full-stack development with extensive experience in frontend and backend technologies.
-- 🌱 Currently, I'm sharpening my skills in advanced concepts of web development.
-- 💞️ I’m always open to exciting collaborations and projects that challenge my abilities.
-- 📫 You can reach me at [info@ongunakay.com](mailto:info@ongunakay.com).
+* Specializes in full-stack development across frontend and backend.
+* Open to collaborations on challenging web projects.
+* Contact: [info@ongunakay.com](mailto:info@ongunakay.com)
 
 ---
 
 ## 📄 License
 
-MIT License – See [`LICENSE`](./LICENSE)
+MIT License – see [`LICENSE`](./LICENSE)
