@@ -1,4 +1,4 @@
-# 🎯 Duobingo – Duolingo-Inspired Language Learning Platform
+# 🎯 Duobingo
 
 **Duobingo** is a Duolingo-inspired language learning web application built with **Vue 3** for the frontend and a custom **Node.js + Express + MongoDB** backend. This README covers project setup, architecture, DevOps practices, CI/CD, and hosting.
 
@@ -21,7 +21,7 @@
 
 ## 🔐 Authentication
 
-* Endpoints: `/auth/signup` and `/auth/login` return **JWT tokens**.
+* Uses **JWT tokens** for authentication.
 * Tokens are stored in `localStorage` and attached to all requests via Axios interceptors:
 
 ```js
@@ -31,23 +31,7 @@ if (token) {
 }
 ```
 
----
-
-## 📁 Backend API
-
-All backend endpoints are prefixed with:
-
-```
-https://duolingo-vue-backend.vercel.app/api
-```
-
-Key routes:
-
-* `POST /auth/signup` → Register account
-* `POST /auth/login` → Login
-* `GET /lessons` / `POST /progress` → Language learning functionality
-
-> MongoDB Atlas connection uses `MONGO_URI` (kept private in `.env`).
+> Exact API endpoints are kept private and configured via environment variables.
 
 ---
 
@@ -72,8 +56,8 @@ npm run dev
 
 ```
 PORT=5000
-MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/duobingo
-JWT_SECRET=yourSecretKey
+MONGO_URI=<your-mongodb-uri>
+JWT_SECRET=<your-jwt-secret>
 NODE_ENV=development
 ```
 
@@ -83,14 +67,16 @@ NODE_ENV=development
 
 ```js
 const axiosInstance = axios.create({
-  baseURL: 'https://duolingo-vue-backend.vercel.app/api',
+  baseURL: process.env.VUE_APP_API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 ```
 
 * Handles **JWT injection** automatically
 * Centralized error logging
-* Provides reusable methods like `login()` and `signUp()`
+* Provides reusable methods for authentication and data fetching
+
+> Base URL is stored in environment variables to avoid exposing the backend publicly.
 
 ---
 
@@ -100,7 +86,7 @@ const axiosInstance = axios.create({
 
 ```js
 '/api': {
-  target: 'https://duolingo-clone-server.vercel.app/api/proxy',
+  target: process.env.VUE_APP_API_PROXY,
   pathRewrite: { '^/api': '' },
 }
 ```
@@ -112,49 +98,20 @@ const axiosInstance = axios.create({
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://duolingo-vue-backend.vercel.app/api/$1"
+      "dest": "/api/$1"
     }
   ]
 }
 ```
 
+> API routes are proxied securely; backend URL is not exposed.
+
 ---
 
 ## 🧪 CI/CD Pipeline
 
-### Backend (GitHub Actions)
-
-`.github/workflows/backend.yml` example:
-
-```yaml
-name: Deploy Backend
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Lint
-        run: npm run lint
-        working-directory: ./backend
-
-      - name: Deploy to Vercel
-        run: npx vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --confirm
-```
-
-### Frontend
-
-* Frontend automatically deploys via **Vercel CI/CD** when pushing to `main`.
+* **Backend**: GitHub Actions deploy to Vercel.
+* **Frontend**: Vercel automatically deploys on push to `main`.
 
 ---
 
@@ -174,11 +131,12 @@ npm run test
 
 ## 🔒 Environment Variables
 
-| Variable     | Purpose                  |
-| ------------ | ------------------------ |
-| `MONGO_URI`  | MongoDB Atlas connection |
-| `JWT_SECRET` | JWT token signing        |
-| `NODE_ENV`   | Development / Production |
+| Variable               | Purpose                         |
+| ---------------------- | ------------------------------- |
+| `MONGO_URI`            | MongoDB connection              |
+| `JWT_SECRET`           | JWT token signing               |
+| `VUE_APP_API_BASE_URL` | Base URL for frontend API calls |
+| `NODE_ENV`             | Development / Production        |
 
 > `.env` files are used locally; Vercel manages environment variables in the dashboard.
 
@@ -189,16 +147,7 @@ npm run test
 ```
 duobingo/
 ├── backend/                 # Node.js API + MongoDB logic
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── index.js
 ├── src/                     # Vue frontend
-│   ├── assets/
-│   ├── components/
-│   ├── locales/
-│   ├── views/
-│   └── axios.js
 ├── public/
 ├── vue.config.js
 ├── vercel.json
@@ -210,7 +159,7 @@ duobingo/
 
 ## 📌 Notes
 
-* MongoDB backend is **maintained by the developer**.
+* Backend API endpoints are **private and not exposed**.
 * Full-stack architecture: **frontend, backend, authentication, persistence**.
 * Supports extensibility for **Docker, Kubernetes, advanced CI/CD**.
 
