@@ -36,7 +36,6 @@ export default {
       return;
     }
 
-    // Decode token if needed (this is optional & depends on your backend)
     const payload = JSON.parse(atob(token.split(".")[1]));
     this.user = { email: payload.email };
   },
