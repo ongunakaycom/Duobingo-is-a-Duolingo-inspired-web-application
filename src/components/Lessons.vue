@@ -395,7 +395,7 @@
 import draggable from 'vuedraggable';
 
 export default {
-  name: "LessonsDashboard",
+  name: "Lessons",
   components: {
     draggable
   },
