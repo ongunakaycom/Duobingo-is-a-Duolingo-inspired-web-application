@@ -2,7 +2,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import Dashboard from './components/Dashboard.vue';
-import Dashboard from './components/Lessons.vue';
+import Lessons from './components/Lessons.vue';
+
 const routes = [
   {
     path: '/',
@@ -26,7 +27,7 @@ const routes = [
   {
     path: '/lessons',
     name: 'Lessons',
-    component: () => import('./components/LessonsDashboard.vue'),
+    component: Lessons,
     meta: { requiresAuth: true }
   }
 ];
