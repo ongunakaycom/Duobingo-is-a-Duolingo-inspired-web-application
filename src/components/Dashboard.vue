@@ -13,9 +13,11 @@
     </div>
 
     <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">🎯 Your Progress</h5>
-        <p class="card-text">Feature coming soon!</p>
+      <div class="card-body text-center">
+        <h5 class="card-title mb-4">🚀 Start Learning</h5>
+        <button class="btn btn-primary btn-lg" @click="startLessons">
+          Start English Lessons Now
+        </button>
       </div>
     </div>
   </div>
@@ -43,6 +45,9 @@ export default {
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/");
+    },
+    startLessons() {
+      this.$router.push("/lessons");
     }
   }
 };
