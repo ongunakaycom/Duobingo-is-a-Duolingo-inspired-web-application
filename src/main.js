@@ -7,6 +7,10 @@ import { createI18n } from 'vue-i18n';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+
+import { BootstrapVue3, BToastPlugin } from 'bootstrap-vue-3';
+import { BootstrapIconsPlugin } from 'bootstrap-vue-3';
 
 import LanguageDropdown from '@/components/LanguageSelection.vue';
 
@@ -26,6 +30,11 @@ const i18n = createI18n({
 
 // Create Vue app
 const app = createApp(App);
+
+// Use BootstrapVue3 plugins
+app.use(BootstrapVue3);
+app.use(BootstrapIconsPlugin);
+app.use(BToastPlugin);
 
 // Register global components
 app.component('LanguageDropdown', LanguageDropdown);

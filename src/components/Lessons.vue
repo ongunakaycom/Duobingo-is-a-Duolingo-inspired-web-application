@@ -256,13 +256,13 @@
                       </b-button>
                     </div>
                     <div v-else>
-                      <b-button 
-                        variant="success"
-                        @click="nextQuestion"
-                      >
-                        {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
-                        <b-icon-arrow-right class="ms-1"></b-icon-arrow-right>
-                      </b-button>
+                    <b-button 
+                      variant="success"
+                      @click="nextQuestion"
+                    >
+                      {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
+                      <b-icon icon="arrow-right" class="ms-1"></b-icon>
+                    </b-button>
                     </div>
                   </div>
                 </div>
@@ -304,11 +304,11 @@
                     Continue Learning
                   </b-button>
                   <b-button 
-                    variant="outline-primary" 
-                    size="lg"
+                    variant="outline-secondary" 
+                    block
                     @click="goToDashboard"
                   >
-                    Back to Dashboard
+                    <b-icon icon="house-door"></b-icon> Dashboard
                   </b-button>
                 </div>
               </div>
@@ -337,11 +337,11 @@
                       <strong>{{ word.english }}</strong><br>
                       <small class="text-muted">{{ word.spanish }}</small>
                     </div>
-                <b-icon-volumeUp 
+                <b-icon icon="volume-up" 
                     variant="primary" 
                     class="clickable"
-                    @click="pronounceWord(word.english)"
-                    ></b-icon-volumeUp>
+                    @click="pronounceWord(word.english)">
+                </b-icon>
                   </b-list-group-item>
                 </b-list-group>
               </div>
@@ -368,14 +368,13 @@
 
             <!-- Quick Actions -->
             <div class="mt-3">
-              <b-button 
-                variant="outline-danger" 
-                block 
-                class="mb-2"
-                @click="logout"
-              >
-                <b-icon-box-arrow-right></b-icon-box-arrow-right> Logout
-              </b-button>
+            <b-button 
+              variant="outline-secondary"
+              @click="hint"
+              :disabled="answerSubmitted"
+            >
+              <b-icon icon="lightbulb"></b-icon> Hint
+            </b-button>
               <b-button 
                 variant="outline-secondary" 
                 block
