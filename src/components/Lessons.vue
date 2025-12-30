@@ -183,38 +183,45 @@
                       <div class="row">
                         <div class="col-6">
                           <h6 class="text-center mb-3">English</h6>
-                          <draggable 
-                            v-model="englishWords" 
-                            group="pairs" 
-                            class="draggable-list"
-                            @end="checkPairs"
-                          >
+                          <div class="draggable-list">
                             <div 
                               v-for="word in englishWords" 
                               :key="word.id"
                               class="pair-item mb-2 p-3 bg-white border rounded"
+                              draggable="true"
+                              @dragstart="dragStart(word.id, 'english')"
+                              @dragover.prevent
+                              @drop="drop(word.id, 'english')"
                             >
                               {{ word.text }}
                             </div>
-                          </draggable>
+                          </div>
                         </div>
                         <div class="col-6">
                           <h6 class="text-center mb-3">Spanish</h6>
-                          <draggable 
-                            v-model="spanishWords" 
-                            group="pairs" 
-                            class="draggable-list"
-                            @end="checkPairs"
-                          >
+                          <div class="draggable-list">
                             <div 
                               v-for="word in spanishWords" 
                               :key="word.id"
                               class="pair-item mb-2 p-3 bg-white border rounded"
+                              draggable="true"
+                              @dragstart="dragStart(word.id, 'spanish')"
+                              @dragover.prevent
+                              @drop="drop(word.id, 'spanish')"
                             >
                               {{ word.text }}
                             </div>
-                          </draggable>
+                          </div>
                         </div>
+                      </div>
+                      <div class="text-center mt-3">
+                        <b-button 
+                          variant="primary"
+                          @click="checkPairs"
+                          :disabled="answerSubmitted"
+                        >
+                          Check Matching
+                        </b-button>
                       </div>
                     </div>
                   </div>
@@ -391,12 +398,11 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
 
 export default {
   name: "Lessons",
   components: {
-    draggable
+    // No draggable component needed
   },
   data() {
     return {
@@ -430,6 +436,7 @@ export default {
         { id: 5, text: 'Hola', pairId: 1 },
         { id: 6, text: 'Gracias', pairId: 3 }
       ],
+      draggedItem: null,
       
       // Lesson path data
       lessonPath: [
@@ -554,6 +561,52 @@ export default {
       
       this.showFeedback(allCorrect);
       this.answerSubmitted = true;
+    },
+
+    dragStart(wordId, language) {
+      if (!this.answerSubmitted) {
+        this.draggedItem = { id: wordId, language: language };
+      }
+    },
+
+    drop(targetId, targetLanguage) {
+      if (!this.draggedItem || this.answerSubmitted) return;
+      
+      const draggedLang = this.draggedItem.language;
+      const targetLang = targetLanguage;
+      
+      // Only allow swapping between different languages
+      if (draggedLang === targetLang) return;
+      
+      // Find the indices of dragged and target items
+      let draggedIndex, targetIndex;
+      
+      if (draggedLang === 'english') {
+        draggedIndex = this.englishWords.findIndex(w => w.id === this.draggedItem.id);
+      } else {
+        draggedIndex = this.spanishWords.findIndex(w => w.id === this.draggedItem.id);
+      }
+      
+      if (targetLang === 'english') {
+        targetIndex = this.englishWords.findIndex(w => w.id === targetId);
+      } else {
+        targetIndex = this.spanishWords.findIndex(w => w.id === targetId);
+      }
+      
+      // Swap positions to simulate matching
+      if (draggedLang === 'english' && targetLang === 'spanish') {
+        // Swap English word position with Spanish word position
+        const temp = this.englishWords[draggedIndex];
+        this.englishWords[draggedIndex] = this.englishWords[targetIndex];
+        this.englishWords[targetIndex] = temp;
+      } else if (draggedLang === 'spanish' && targetLang === 'english') {
+        // Swap Spanish word position with English word position
+        const temp = this.spanishWords[draggedIndex];
+        this.spanishWords[draggedIndex] = this.spanishWords[targetIndex];
+        this.spanishWords[targetIndex] = temp;
+      }
+      
+      this.draggedItem = null;
     },
     showFeedback(isCorrect) {
       if (isCorrect) {
@@ -698,7 +751,13 @@ export default {
       this.$router.push('/');
     }
   }
+
+
+
+  
 };
+
+
 </script>
 
 <style scoped>
