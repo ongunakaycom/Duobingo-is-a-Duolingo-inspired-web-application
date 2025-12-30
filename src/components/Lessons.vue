@@ -1,34 +1,9 @@
 <template>
   <div class="lessons-container">
-    <!-- Header with progress and user info -->
-    <b-navbar class="lessons-header" fixed="top" variant="light" type="light">
-      <b-container>
-        <b-navbar-brand class="d-flex align-items-center">
-          <span class="logo-text text-primary fw-bold">🌍 Duobingo</span>
-        </b-navbar-brand>
-        
-        <div class="progress-section d-flex align-items-center">
-          <div class="me-3 d-none d-md-block">
-            <span class="text-muted">Day Streak</span>
-            <div class="text-center">
-              <span class="fs-4 fw-bold text-warning">🔥 7</span>
-            </div>
-          </div>
-          
-          <div class="xp-progress me-3">
-            <span class="text-muted small">XP Today: {{ userXP }}/50</span>
-            <b-progress height="8px" :value="userXP" :max="50" class="mt-1">
-              <b-progress-bar :value="userXP" variant="success" animated></b-progress-bar>
-            </b-progress>
-          </div>
-          
-          <b-avatar variant="primary" :text="userInitials" class="fw-bold"></b-avatar>
-        </div>
-      </b-container>
-    </b-navbar>
+
 
     <!-- Main Content -->
-    <b-container class="main-content pt-5">
+    <b-container class="main-content">
       <div class="row mt-4">
         <!-- Left sidebar - Lesson path -->
         <div class="col-lg-3 mb-4">
@@ -766,21 +741,8 @@ export default {
   min-height: 100vh;
 }
 
-.lessons-header {
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  padding: 0.5rem 0;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-}
-
-.progress-section {
-  min-width: 250px;
-}
-
 .main-content {
-  padding-top: 80px;
+  padding-top: 20px;
 }
 
 /* Lesson Path Styles */
