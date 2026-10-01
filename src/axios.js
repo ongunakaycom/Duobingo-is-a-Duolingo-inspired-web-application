@@ -5,7 +5,7 @@ import axios from 'axios';
 // Axios Instance
 // =============================
 const axiosInstance = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL || 'https://duolingo-vue-backend.vercel.app/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://duolingo-vue-backend.vercel.app/api',
   headers: {
     'Content-Type': 'application/json',
   },
