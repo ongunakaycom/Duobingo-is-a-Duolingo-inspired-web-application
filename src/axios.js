@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 });
 
 // =============================
-// Request Interceptor — JWT ekle
+// Request Interceptor — JWT
 // =============================
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // =============================
-// Response Interceptor — Merkezi hata log
+// Response Interceptor — Hata log
 // =============================
 axiosInstance.interceptors.response.use(
   (res) => res,
@@ -37,57 +37,52 @@ axiosInstance.interceptors.response.use(
 );
 
 // =============================
-// Auth Endpoints
+// Auth API
 // =============================
-const authApi = {
-  signUp: (email, password) =>
-    axiosInstance
-      .post('/auth/signup', { email, password })
-      .then((res) => {
-        localStorage.setItem('token', res.data.token);
-        return res.data;
-      }),
+const signUp = (email, password) =>
+  axiosInstance.post('/auth/signup', { email, password }).then((res) => {
+    localStorage.setItem('token', res.data.token);
+    return res.data;
+  });
 
-  login: (email, password) =>
-    axiosInstance
-      .post('/auth/login', { email, password })
-      .then((res) => {
-        localStorage.setItem('token', res.data.token);
-        return res.data;
-      }),
+const login = (email, password) =>
+  axiosInstance.post('/auth/login', { email, password }).then((res) => {
+    localStorage.setItem('token', res.data.token);
+    return res.data;
+  });
 
-  logout: () => {
-    localStorage.removeItem('token');
-  },
+// =============================
+// AI API
+// =============================
+const evaluateAnswer = (sentence, targetRule = 'general') =>
+  axiosInstance.post('/ai/evaluate-answer', { sentence, targetRule }).then((res) => res.data);
+
+// =============================
+// Lessons API
+// =============================
+const lessonsApi = {
+  getAll: () => axiosInstance.get('/lessons').then((res) => res.data),
+  getById: (id) => axiosInstance.get(`/lessons?lessonId=${id}`).then((res) => res.data),
 };
 
 // =============================
-// AI Endpoints
+// Progress API
 // =============================
-const aiApi = {
-  evaluateAnswer: (sentence, targetRule = 'general') =>
-    axiosInstance
-      .post('/ai/evaluate-answer', { sentence, targetRule })
-      .then((res) => res.data),
+const progressApi = {
+  get: () => axiosInstance.get('/progress').then((res) => res.data),
+  update: (payload) => axiosInstance.post('/progress', payload).then((res) => res.data),
 };
 
 // =============================
 // Exports
 // =============================
-// Backward-compatible exports (eski kod bozulmasın)
-const signUp = authApi.signUp;
-const login = authApi.login;
-const evaluateAnswer = aiApi.evaluateAnswer;
-
 export {
   axiosInstance,
-  // Eski API (backward compatible)
   signUp,
   login,
   evaluateAnswer,
-  // Yeni API (namespaced)
-  authApi,
-  aiApi,
+  lessonsApi,
+  progressApi,
 };
 
 export default axiosInstance;
