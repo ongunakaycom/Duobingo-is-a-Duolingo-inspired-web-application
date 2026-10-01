@@ -345,7 +345,6 @@
 <script>
 import AIFeedback from './AIFeedback.vue';
 import { lessonsApi, progressApi } from '@/axios';
-import { MOCK_LESSONS, MOCK_PROGRESS } from '@/mock/lessons';
 
 export default {
   name: 'Lessons',
@@ -375,7 +374,7 @@ export default {
       feedbackIcon: 'info-circle',
       lessonCompleted: false,
 
-      // Matching pairs (dinamik)
+      // Matching pairs
       englishWords: [],
       spanishWords: [],
       draggedItem: null,
@@ -410,20 +409,27 @@ export default {
       this.error = null;
 
       try {
+        // Lessons + Progress paralel
         const [lessons, progress] = await Promise.all([
-          lessonsApi.getAll().catch(() => {
-            console.warn('[lessons] API failed, using mock');
-            return MOCK_LESSONS;
-          }),
-          progressApi.get().catch(() => {
-            console.warn('[progress] API failed, using mock');
-            return MOCK_PROGRESS;
+          lessonsApi.getAll(),
+          progressApi.get().catch((err) => {
+            // Progress endpoint yoksa boş obje dön
+            console.warn('[progress] API error, using empty:', err.message);
+            return {
+              completedLessons: [],
+              totalXP: 0,
+              streakDays: 0,
+              accuracy: 0,
+              wordsLearned: 0,
+            };
           }),
         ]);
 
         // Lesson path oluştur
         const completedIds = new Set(
-          (progress.completedLessons || []).map((l) => (typeof l === 'string' ? l : l._id))
+          (progress.completedLessons || []).map((l) =>
+            typeof l === 'string' ? l : l._id
+          )
         );
 
         this.lessonPath = lessons.map((l, idx) => ({
@@ -447,7 +453,8 @@ export default {
         };
 
         // İlk "current" dersi yükle
-        const current = this.lessonPath.find((l) => l.status === 'current') || this.lessonPath[0];
+        const current =
+          this.lessonPath.find((l) => l.status === 'current') || this.lessonPath[0];
         if (current) {
           await this.loadLesson(current.id);
         }
@@ -461,11 +468,7 @@ export default {
 
     async loadLesson(lessonId) {
       try {
-        const lesson = await lessonsApi.getById(lessonId).catch(() => {
-          // Fallback: mock'tan bul
-          return MOCK_LESSONS.find((l) => l._id === lessonId);
-        });
-
+        const lesson = await lessonsApi.getById(lessonId);
         if (!lesson) throw new Error('Lesson not found');
 
         this.currentLesson = lesson;
@@ -499,7 +502,9 @@ export default {
       if (!this.translationAnswer) return;
 
       const userAnswer = this.translationAnswer.toLowerCase().trim();
-      const correctAnswer = (this.currentQuestion.correctAnswer || '').toLowerCase().trim();
+      const correctAnswer = (this.currentQuestion.correctAnswer || '')
+        .toLowerCase()
+        .trim();
       const isCorrect = userAnswer === correctAnswer;
 
       this.showFeedback(isCorrect);
@@ -537,15 +542,15 @@ export default {
       if (!this.draggedItem || this.answerSubmitted) return;
 
       const { language: draggedLang, id: draggedId } = this.draggedItem;
-
       if (draggedLang === targetLanguage) return;
 
-      const fromList = draggedLang === 'english' ? this.englishWords : this.spanishWords;
-      const toList = targetLanguage === 'english' ? this.englishWords : this.spanishWords;
+      const fromList =
+        draggedLang === 'english' ? this.englishWords : this.spanishWords;
+      const toList =
+        targetLanguage === 'english' ? this.englishWords : this.spanishWords;
 
       const fromIdx = fromList.findIndex((w) => w.id === draggedId);
       const toIdx = toList.findIndex((w) => w.id === targetId);
-
       if (fromIdx === -1 || toIdx === -1) return;
 
       const temp = fromList[fromIdx];
@@ -597,7 +602,6 @@ export default {
         this.$refs.aiFeedback.close();
       }
 
-      // match-pairs: kelimeleri hazırla
       if (this.currentQuestion.type === 'match-pairs') {
         this.initPairs();
       }
