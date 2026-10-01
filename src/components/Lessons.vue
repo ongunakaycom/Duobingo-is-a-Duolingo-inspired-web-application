@@ -1,7 +1,11 @@
 <template>
   <div class="lessons-container">
     <!-- Loading -->
-    <div v-if="loading" class="d-flex flex-column justify-content-center align-items-center py-5" style="min-height: 60vh">
+    <div
+      v-if="loading"
+      class="d-flex flex-column justify-content-center align-items-center py-5"
+      style="min-height: 60vh"
+    >
       <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
         <span class="visually-hidden">Yükleniyor...</span>
       </div>
@@ -35,7 +39,10 @@
                     v-for="lesson in lessonPath"
                     :key="lesson.id"
                     class="path-node d-flex align-items-center mb-3"
-                    :class="{ 'active': lesson.id === currentLesson._id, 'completed': lesson.completed }"
+                    :class="{
+                      active: lesson.id === currentLesson._id,
+                      completed: lesson.completed,
+                    }"
                     @click="selectLesson(lesson)"
                   >
                     <div class="node-icon me-3">
@@ -103,7 +110,12 @@
               </div>
 
               <b-progress height="6px" :value="lessonProgress" :max="100" class="mt-2">
-                <b-progress-bar :value="lessonProgress" variant="primary" striped animated></b-progress-bar>
+                <b-progress-bar
+                  :value="lessonProgress"
+                  variant="primary"
+                  striped
+                  animated
+                ></b-progress-bar>
               </b-progress>
             </div>
 
@@ -112,7 +124,10 @@
               <div v-if="!lessonCompleted" class="question-area">
                 <div class="question mb-4">
                   <h5 class="question-text">{{ currentQuestion.question }}</h5>
-                  <div v-if="currentQuestion.example" class="example-text p-3 bg-light rounded mt-3">
+                  <div
+                    v-if="currentQuestion.example"
+                    class="example-text p-3 bg-light rounded mt-3"
+                  >
                     <em>"{{ currentQuestion.example }}"</em>
                   </div>
                 </div>
@@ -124,21 +139,36 @@
                     <b-list-group>
                       <b-list-group-item
                         v-for="(option, index) in currentQuestion.options"
-                        :key="index"
-                        href="#"
+                        :key="`${index}-${option.text}`"
+                        button
                         class="mb-2 option-item"
                         :class="{
-                          'selected': selectedAnswer === index,
-                          'correct': answerSubmitted && option.correct,
-                          'incorrect': answerSubmitted && selectedAnswer === index && !option.correct
+                          selected: selectedAnswer === index,
+                          correct: answerSubmitted && option.correct,
+                          incorrect:
+                            answerSubmitted &&
+                            selectedAnswer === index &&
+                            !option.correct,
                         }"
-                        @click="selectOption(index)"
                         :disabled="answerSubmitted"
+                        @click="selectOption(index)"
                       >
                         <div class="d-flex justify-content-between align-items-center">
                           <span>{{ option.text }}</span>
-                          <span v-if="answerSubmitted && option.correct" class="text-success">✓</span>
-                          <span v-if="answerSubmitted && selectedAnswer === index && !option.correct" class="text-danger">✗</span>
+                          <span
+                            v-if="answerSubmitted && option.correct"
+                            class="text-success"
+                            >✓</span
+                          >
+                          <span
+                            v-if="
+                              answerSubmitted &&
+                              selectedAnswer === index &&
+                              !option.correct
+                            "
+                            class="text-danger"
+                            >✗</span
+                          >
                         </div>
                       </b-list-group-item>
                     </b-list-group>
@@ -159,8 +189,8 @@
                           variant="primary"
                           size="lg"
                           :disabled="!translationAnswer || answerSubmitted"
-                          @click="checkTranslation"
                           class="w-100"
+                          @click="checkTranslation"
                         >
                           Check Answer
                         </b-button>
@@ -206,7 +236,11 @@
                         </div>
                       </div>
                       <div class="text-center mt-3">
-                        <b-button variant="primary" @click="checkPairs" :disabled="answerSubmitted">
+                        <b-button
+                          variant="primary"
+                          :disabled="answerSubmitted"
+                          @click="checkPairs"
+                        >
                           Check Matching
                         </b-button>
                       </div>
@@ -231,15 +265,19 @@
                 <!-- Action Buttons -->
                 <div class="action-buttons mt-4">
                   <div class="d-flex justify-content-between">
-                    <b-button variant="outline-secondary" @click="hint" :disabled="answerSubmitted">
+                    <b-button
+                      variant="outline-secondary"
+                      :disabled="answerSubmitted"
+                      @click="hint"
+                    >
                       <b-icon icon="lightbulb"></b-icon> Hint
                     </b-button>
 
                     <div v-if="!answerSubmitted">
                       <b-button
                         variant="primary"
-                        @click="submitAnswer"
                         :disabled="selectedAnswer === null && !translationAnswer"
+                        @click="submitAnswer"
                       >
                         Submit Answer
                       </b-button>
@@ -260,24 +298,38 @@
                   <span class="display-1">🎉</span>
                 </div>
                 <h3 class="text-success">Lesson Complete!</h3>
-                <p class="text-muted">Great job! You've completed "{{ currentLesson.title }}"</p>
+                <p class="text-muted">
+                  Great job! You've completed "{{ currentLesson.title }}"
+                </p>
 
-                <div class="rewards-card p-4 bg-light rounded mx-auto mt-4" style="max-width: 400px;">
+                <div
+                  class="rewards-card p-4 bg-light rounded mx-auto mt-4"
+                  style="max-width: 400px"
+                >
                   <h5 class="mb-3">🏆 Your Rewards</h5>
                   <div class="d-flex justify-content-around">
                     <div class="text-center">
-                      <div class="reward-value text-warning fs-3">{{ currentLesson.xpReward }}</div>
+                      <div class="reward-value text-warning fs-3">
+                        {{ currentLesson.xpReward }}
+                      </div>
                       <div class="reward-label">XP Earned</div>
                     </div>
                     <div class="text-center">
-                      <div class="reward-value text-info fs-3">{{ currentLesson.gemReward }}</div>
+                      <div class="reward-value text-info fs-3">
+                        {{ currentLesson.gemReward }}
+                      </div>
                       <div class="reward-label">Gems Earned</div>
                     </div>
                   </div>
                 </div>
 
                 <div class="mt-5">
-                  <b-button variant="primary" size="lg" class="me-3" @click="continueLearning">
+                  <b-button
+                    variant="primary"
+                    size="lg"
+                    class="me-3"
+                    @click="continueLearning"
+                  >
                     Continue Learning
                   </b-button>
                   <b-button variant="outline-secondary" block @click="goToDashboard">
@@ -296,13 +348,15 @@
               <div class="card-body">
                 <h5 class="card-title d-flex justify-content-between align-items-center">
                   <span>📖 Vocabulary</span>
-                  <b-badge variant="light">{{ currentLesson.vocabulary?.length || 0 }} words</b-badge>
+                  <b-badge variant="light">
+                    {{ currentLesson.vocabulary?.length || 0 }} words
+                  </b-badge>
                 </h5>
 
                 <b-list-group flush>
                   <b-list-group-item
                     v-for="(word, i) in currentLesson.vocabulary"
-                    :key="i"
+                    :key="`${i}-${word.english}`"
                     class="d-flex justify-content-between align-items-center"
                   >
                     <div>
@@ -326,12 +380,15 @@
                 <div class="tip-item mb-3">
                   <strong>Daily Practice</strong>
                   <p class="small text-muted mb-0">
-                    Consistent daily practice is more effective than occasional long sessions.
+                    Consistent daily practice is more effective than occasional long
+                    sessions.
                   </p>
                 </div>
                 <div class="tip-item">
                   <strong>Review Mistakes</strong>
-                  <p class="small text-muted mb-0">Review incorrect answers to reinforce learning.</p>
+                  <p class="small text-muted mb-0">
+                    Review incorrect answers to reinforce learning.
+                  </p>
                 </div>
               </div>
             </div>
@@ -391,7 +448,9 @@ export default {
     },
     lessonProgress() {
       if (!this.currentLesson?.questions?.length) return 0;
-      return ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
+      return (
+        ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100
+      );
     },
     completedLessons() {
       return this.lessonPath.filter((l) => l.completed).length;
@@ -409,11 +468,9 @@ export default {
       this.error = null;
 
       try {
-        // Lessons + Progress paralel
         const [lessons, progress] = await Promise.all([
           lessonsApi.getAll(),
           progressApi.get().catch((err) => {
-            // Progress endpoint yoksa boş obje dön
             console.warn('[progress] API error, using empty:', err.message);
             return {
               completedLessons: [],
@@ -425,7 +482,6 @@ export default {
           }),
         ]);
 
-        // Lesson path oluştur
         const completedIds = new Set(
           (progress.completedLessons || []).map((l) =>
             typeof l === 'string' ? l : l._id
@@ -452,7 +508,6 @@ export default {
           wordsLearned: progress.wordsLearned || 0,
         };
 
-        // İlk "current" dersi yükle
         const current =
           this.lessonPath.find((l) => l.status === 'current') || this.lessonPath[0];
         if (current) {
@@ -510,7 +565,6 @@ export default {
       this.showFeedback(isCorrect);
       this.answerSubmitted = true;
 
-      // AI Feedback
       try {
         if (this.$refs.aiFeedback) {
           await this.$refs.aiFeedback.evaluate(this.translationAnswer, 'translation');
@@ -573,8 +627,10 @@ export default {
         this.feedbackTitle = 'Not quite right';
 
         if (this.currentQuestion.type === 'multiple-choice') {
-          const correctOption = this.currentQuestion.options.find((opt) => opt.correct);
-          this.feedbackMessage = `The correct answer is: "${correctOption?.text || '—'}"`;
+          const correctOption = this.currentQuestion.options.find((o) => o.correct);
+          this.feedbackMessage = `The correct answer is: "${
+            correctOption?.text || '—'
+          }"`;
         } else if (this.currentQuestion.type === 'translation') {
           this.feedbackMessage = `The correct translation is: "${this.currentQuestion.correctAnswer}"`;
         } else {
@@ -636,7 +692,6 @@ export default {
       this.userStats.totalXP += this.currentLesson.xpReward || 0;
       this.userStats.wordsLearned += this.currentLesson.vocabulary?.length || 0;
 
-      // Backend'e ilerleme kaydet (fire & forget)
       try {
         await progressApi.update({
           lessonId: this.currentLesson._id,
@@ -763,6 +818,7 @@ export default {
   border: 2px solid #dee2e6;
   border-radius: 8px;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 .option-item.selected {
   border-color: #007bff;
