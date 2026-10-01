@@ -18,7 +18,7 @@ Production-grade **Vue 3 + Vite 8** frontend for an AI-native language learning 
 | Environment       | URL                                                                                     |
 | ----------------- | --------------------------------------------------------------------------------------- |
 | **Production**    | https://duobingo-is-a-duolingo-inspired-web-application.vercel.app                      |
-| **Backend API**   | https://duolingo-vue-backend.vercel.app                                                 |
+| **Backend API**   | Private Repo                                               |
 
 ---
 
