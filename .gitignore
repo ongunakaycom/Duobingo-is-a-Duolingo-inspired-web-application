@@ -1,20 +1,27 @@
+# OS
 .DS_Store
+Thumbs.db
+
+# Dependencies
 node_modules
+
+# Build
 /dist
+/build
 
-
-# local env files
+# Env files
+.env
 .env.local
 .env.*.local
 .env.production
 
-# Log files
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor directories and files
+# Editor
 .idea
 .vscode
 *.suo
@@ -22,3 +29,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Vercel
+.vercel
