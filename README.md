@@ -9,8 +9,6 @@
 
 Production-grade **Vue 3 + Vite 8** frontend for an AI-native language learning platform. Features real-time grammar evaluation via an LLM backend, gamified lesson paths, and a fully modernized build pipeline — **34x faster** than the legacy Vue CLI setup, with **0 known vulnerabilities**.
 
-> **Architecture showcase:** [`duobingo-ai`](https://github.com/ongunakaycom/duobingo-ai) · **Backend:** private
-
 ---
 
 ## 🔗 Live
