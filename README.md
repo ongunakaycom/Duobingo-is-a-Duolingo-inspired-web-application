@@ -24,26 +24,26 @@ Production-grade **Vue 3 + Vite 8** frontend for an AI-native language learning 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Vue 3 SPA (Vite 8)                            │
-│                                                                  │
+│                    Vue 3 SPA (Vite 8)                           │
+│                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │  Router (hash mode)                                       │   │
-│  │  ├── /            → Home / Login                          │   │
-│  │  ├── /dashboard   → Dashboard (auth guard)                │   │
-│  │  └── /lessons     → Lessons + Quiz + AI Feedback           │   │
+│  │  Router (hash mode)                                      │   │
+│  │  ├── /            → Home / Login                         │   │
+│  │  ├── /dashboard   → Dashboard (auth guard)               │   │
+│  │  └── /lessons     → Lessons + Quiz + AI Feedback         │   │
 │  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
+│                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  Components                                              │   │
-│  │  ├── AppHeader.vue          (nav)                         │   │
-│  │  ├── AppFooter.vue          (footer)                      │   │
-│  │  ├── Dashboard.vue          (profile + start)             │   │
-│  │  ├── Lessons.vue            (lesson path + quiz)          │   │
-│  │  ├── AIFeedback.vue         (real-time AI eval)           │   │
-│  │  ├── LanguageSelection.vue  (i18n switcher)               │   │
-│  │  └── Landing*.vue           (marketing)                   │   │
+│  │  ├── AppHeader.vue          (nav)                        │   │
+│  │  ├── AppFooter.vue          (footer)                     │   │
+│  │  ├── Dashboard.vue          (profile + start)            │   │
+│  │  ├── Lessons.vue            (lesson path + quiz)         │   │
+│  │  ├── AIFeedback.vue         (real-time AI eval)          │   │
+│  │  ├── LanguageSelection.vue  (i18n switcher)              │   │
+│  │  └── Landing*.vue           (marketing)                  │   │
 │  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
+│                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │  State (Pinia) + i18n (Vue-i18n 11) + UI (Bootstrap 5)   │   │
 │  └──────────────────────────────────────────────────────────┘   │
@@ -52,13 +52,14 @@ Production-grade **Vue 3 + Vite 8** frontend for an AI-native language learning 
                             │ Axios (JWT interceptor)
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│         Serverless Backend (Vercel Functions, Node 24)           │
-│                                                                  │
+│         Serverless Backend (Vercel Functions, Node 24)          │
+│                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │  AI Layer                                                 │   │
+│  │  AI Layer                                                │   │
 │  │  └── Gemini 3.5 Flash + MongoDB Atlas Vector Search (RAG)│   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
+
 ```
 
 ---
