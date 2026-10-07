@@ -1,9 +1,16 @@
+# Tüm metin dosyaları: checkout'ta LF
 * text=auto eol=lf
-*.md text eol=lf
-*.json text eol=lf
-*.js text eol=lf
-*.vue text eol=lf
-*.html text eol=lf
-*.png binary
-*.jpg binary
-*.svg text eol=lf
+
+# Binary dosyalar: dokunulmaz
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+
+# Fontlar: binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
