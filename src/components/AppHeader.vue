@@ -6,9 +6,6 @@
         <a class="navbar-brand" href="#" @click.prevent="handleLogoClick">
           <img src="@/assets/duobingo.png" alt="Duobingo Logo" class="logo" />
         </a>
-
-        <!-- Global Language Selector -->
-        <LanguageDropdown />
       </div>
     </nav>
   </header>
