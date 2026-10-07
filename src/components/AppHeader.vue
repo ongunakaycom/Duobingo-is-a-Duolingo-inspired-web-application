@@ -37,6 +37,7 @@ const handleLogoClick = () => {
 <style scoped>
 .logo {
   height: 40px;
-  cursor: pointer;
+  width: auto;
+  object-fit: contain;
 }
 </style>
