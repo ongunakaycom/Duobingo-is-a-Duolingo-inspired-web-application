@@ -114,12 +114,13 @@ function handleSubmit() {
   flex-direction: column;
   gap: var(--space-5);
   width: 100%;
+  padding: var(--space-4) 0;
 }
 
 .login-form__field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);                           /* ← 2 → 3 */
 }
 
 .login-form__label-row {
@@ -129,10 +130,11 @@ function handleSubmit() {
 }
 
 .login-form__label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);              /* ← sm → base */
+  font-weight: var(--font-weight-black);         /* ← bold → black */
   color: var(--color-text);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
+  margin-bottom: var(--space-1);
 }
 
 .login-form__forgot {
@@ -171,7 +173,7 @@ function handleSubmit() {
 
 .login-form__input {
   flex: 1;
-  padding: var(--space-4) var(--space-3) var(--space-4) 0;
+  padding: var(--space-5) var(--space-3) var(--space-5) 0;  /* ← 4 → 5 */
   border: none;
   background: transparent;
   font-family: var(--font-family);
