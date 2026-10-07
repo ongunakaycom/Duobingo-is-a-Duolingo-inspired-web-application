@@ -189,7 +189,7 @@ export default {
         if (token) {
           localStorage.setItem('token', token);
           setTimeout(() => {
-            this.$router.push('/dashboard');
+            this.$router.push('/lessons');
           }, 800);
         }
       } catch (err) {
