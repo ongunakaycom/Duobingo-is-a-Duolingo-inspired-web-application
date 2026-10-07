@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <AppHeader />
+    <AppHeader v-if="!isLessonsPage" />
     <router-view />
     <AppFooter />
   </div>
@@ -13,8 +13,13 @@ import AppFooter from './components/AppFooter.vue';
 export default {
   components: {
     AppHeader,
-    AppFooter
-  }
+    AppFooter,
+  },
+  computed: {
+    isLessonsPage() {
+      return this.$route.path === '/lessons';
+    },
+  },
 };
 </script>
 

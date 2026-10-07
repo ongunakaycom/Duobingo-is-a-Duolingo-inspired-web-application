@@ -1,5 +1,14 @@
 <template>
   <div class="lessons-container">
+    <!-- Dashboard Header -->
+    <DashboardHeader
+      :streak="userStats.streakDays"
+      :gems="userStats.totalXP"
+      :hearts="5"
+      :user-name="userName"
+      active-nav="learn"
+      @profile="handleProfile"
+    />
     <!-- Loading -->
     <div
       v-if="loading"
@@ -401,13 +410,17 @@
 
 <script>
 import AIFeedback from './AIFeedback.vue';
+import DashboardHeader from './dashboard/DashboardHeader.vue';
 import { lessonsApi, progressApi } from '@/axios';
 
 export default {
   name: 'Lessons',
-  components: { AIFeedback },
+  components: { AIFeedback, DashboardHeader },
   data() {
     return {
+      // User
+      userName: 'Alex',
+
       // API'den gelecek
       lessonPath: [],
       currentLesson: null,
@@ -743,6 +756,13 @@ export default {
       const next = this.lessonPath.find((l) => l.status === 'current');
       if (next) {
         await this.loadLesson(next.id);
+      }
+    },
+
+    handleProfile() {
+      if (confirm('Çıkış yapmak istiyor musun?')) {
+        localStorage.removeItem('token');
+        this.$router.push('/');
       }
     },
 
