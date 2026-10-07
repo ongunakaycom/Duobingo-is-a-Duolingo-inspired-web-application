@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
   padding-bottom: var(--space-3);
 }
 
-/* Logo */
+/* New Logo */
 .dashboard-header__logo {
   flex-shrink: 0;
   display: inline-flex;
