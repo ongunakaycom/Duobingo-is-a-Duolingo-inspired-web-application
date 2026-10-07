@@ -40,33 +40,67 @@
           <span class="dashboard-header__stat-value">{{ hearts }}</span>
         </div>
 
-        <!-- Profile -->
-        <button
-          class="dashboard-header__profile"
-          @click="$emit('profile')"
-          aria-label="Profile"
-        >
-          <span class="dashboard-header__profile-initial">
-            {{ userInitial }}
-          </span>
-        </button>
+        <!-- Profile Dropdown -->
+        <div class="dashboard-header__profile-wrapper" ref="profileWrapper">
+          <button
+            class="dashboard-header__profile"
+            @click.stop="toggleProfileMenu"
+            aria-label="Profile menu"
+            :aria-expanded="isProfileMenuOpen"
+          >
+            <span class="dashboard-header__profile-initial">
+              {{ userInitial }}
+            </span>
+          </button>
+
+          <transition name="dropdown-fade">
+            <div v-if="isProfileMenuOpen" class="profile-dropdown">
+              <div class="profile-dropdown__header">
+                <div class="profile-dropdown__avatar">
+                  {{ userInitial }}
+                </div>
+                <div class="profile-dropdown__info">
+                  <div class="profile-dropdown__name">{{ userName }}</div>
+                  <div class="profile-dropdown__email">{{ userEmail }}</div>
+                </div>
+              </div>
+
+              <div class="profile-dropdown__divider"></div>
+
+              <button
+                v-for="item in menuItems"
+                :key="item.id"
+                class="profile-dropdown__item"
+                :class="{ 'profile-dropdown__item--danger': item.danger }"
+                @click="handleMenuAction(item.id)"
+              >
+                <span class="profile-dropdown__item-icon">{{ item.icon }}</span>
+                <span class="profile-dropdown__item-label">{{ item.label }}</span>
+              </button>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
   streak: { type: Number, default: 7 },
   gems: { type: Number, default: 120 },
   hearts: { type: Number, default: 5 },
   userName: { type: String, default: 'Alex' },
+  userEmail: { type: String, default: 'alex@duobingo.app' },
   activeNav: { type: String, default: 'learn' },
 });
 
-defineEmits(['profile']);
+const emit = defineEmits(['profile', 'settings', 'change-password', 'logout']);
+
+const isProfileMenuOpen = ref(false);
+const profileWrapper = ref(null);
 
 const navItems = computed(() => [
   { id: 'learn', label: 'Learn', href: '#', active: props.activeNav === 'learn' },
@@ -76,7 +110,49 @@ const navItems = computed(() => [
   { id: 'shop', label: 'Shop', href: '#' },
 ]);
 
+const menuItems = [
+  { id: 'profile', icon: '👤', label: 'Profile' },
+  { id: 'settings', icon: '⚙️', label: 'Settings' },
+  { id: 'change-password', icon: '🔒', label: 'Change Password' },
+  { id: 'logout', icon: '🚪', label: 'Log Out', danger: true },
+];
+
 const userInitial = computed(() => props.userName.charAt(0).toUpperCase());
+
+function toggleProfileMenu() {
+  isProfileMenuOpen.value = !isProfileMenuOpen.value;
+}
+
+function closeProfileMenu() {
+  isProfileMenuOpen.value = false;
+}
+
+function handleMenuAction(actionId) {
+  closeProfileMenu();
+  emit(actionId);
+}
+
+function handleClickOutside(event) {
+  if (profileWrapper.value && !profileWrapper.value.contains(event.target)) {
+    closeProfileMenu();
+  }
+}
+
+function handleEsc(event) {
+  if (event.key === 'Escape') {
+    closeProfileMenu();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('keydown', handleEsc);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('keydown', handleEsc);
+});
 </script>
 
 <style scoped>
@@ -171,6 +247,11 @@ const userInitial = computed(() => props.userName.charAt(0).toUpperCase());
   line-height: 1;
 }
 
+/* Profile */
+.dashboard-header__profile-wrapper {
+  position: relative;
+}
+
 .dashboard-header__profile {
   width: 40px;
   height: 40px;
@@ -190,5 +271,119 @@ const userInitial = computed(() => props.userName.charAt(0).toUpperCase());
 
 .dashboard-header__profile:hover {
   transform: scale(1.05);
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 240px;
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 200;
+}
+
+.profile-dropdown__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.profile-dropdown__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-black);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-dropdown__info {
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-dropdown__name {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-black);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-dropdown__email {
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-dropdown__divider {
+  height: 1px;
+  background-color: var(--color-border-light);
+}
+
+.profile-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  text-align: left;
+  transition: background-color var(--transition-fast);
+}
+
+.profile-dropdown__item:hover {
+  background-color: rgba(88, 204, 2, 0.08);
+}
+
+.profile-dropdown__item--danger {
+  color: var(--color-error);
+}
+
+.profile-dropdown__item--danger:hover {
+  background-color: rgba(255, 75, 75, 0.08);
+}
+
+.profile-dropdown__item-icon {
+  font-size: var(--font-size-base);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.profile-dropdown__item-label {
+  flex: 1;
+}
+
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 </style>

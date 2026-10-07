@@ -6,9 +6,14 @@
       :gems="userStats.totalXP"
       :hearts="5"
       :user-name="userName"
+      :user-email="userEmail"
       active-nav="learn"
       @profile="handleProfile"
+      @settings="handleSettings"
+      @change-password="handleChangePassword"
+      @logout="handleLogout"
     />
+
     <!-- Loading -->
     <div
       v-if="loading"
@@ -420,6 +425,7 @@ export default {
     return {
       // User
       userName: 'Alex',
+      userEmail: 'alex@duobingo.app',
 
       // API'den gelecek
       lessonPath: [],
@@ -759,7 +765,22 @@ export default {
       }
     },
 
+    // =========================
+    // DROPDOWN HANDLERS
+    // =========================
     handleProfile() {
+      console.log('[profile] Profile page');
+    },
+
+    handleSettings() {
+      console.log('[settings] Settings page');
+    },
+
+    handleChangePassword() {
+      alert('Şifre değiştirme özelliği yakında eklenecek.');
+    },
+
+    handleLogout() {
       if (confirm('Çıkış yapmak istiyor musun?')) {
         localStorage.removeItem('token');
         this.$router.push('/');
