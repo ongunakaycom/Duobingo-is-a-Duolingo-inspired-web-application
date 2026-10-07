@@ -4,7 +4,7 @@
       <div class="container d-flex justify-content-between align-items-center">
         <!-- Logo -->
         <a class="navbar-brand" href="#" @click.prevent="handleLogoClick">
-          <img src="@/assets/Duolingo_logo.svg.png" alt="Duobingo Logo" class="logo" />
+          <img src="@/assets/duobingo.png" alt="Duobingo Logo" class="logo" />
         </a>
 
         <!-- Global Language Selector -->
