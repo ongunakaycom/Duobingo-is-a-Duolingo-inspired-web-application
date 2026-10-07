@@ -5,15 +5,10 @@ import router from './router';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 
-// Design tokens (must be first — overrides Bootstrap defaults)
 import './assets/tokens.css';
 
-// Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
-import { BootstrapVue3, BToastPlugin } from 'bootstrap-vue-3';
 
 import LanguageDropdown from '@/components/LanguageSelection.vue';
 
@@ -28,9 +23,6 @@ const i18n = createI18n({
 });
 
 const app = createApp(App);
-
-app.use(BootstrapVue3);
-app.use(BToastPlugin);   // ✅ Kaldı
 
 app.component('LanguageDropdown', LanguageDropdown);
 
