@@ -17,9 +17,6 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 
-// Optional: If not globally registered
-// import LanguageDropdown from '@/components/LanguageDropdown.vue'
-
 const router = useRouter()
 const route = useRoute()
 
@@ -39,5 +36,6 @@ const handleLogoClick = () => {
   height: 40px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 </style>
