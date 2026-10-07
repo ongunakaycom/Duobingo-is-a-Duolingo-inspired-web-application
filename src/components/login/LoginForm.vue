@@ -64,7 +64,9 @@
       block
       :disabled="loading"
     >
-      {{ loading ? 'Logging in...' : 'Login' }}
+      {{ loading
+          ? (isLoginMode ? 'Logging in...' : 'Creating account...')
+          : (isLoginMode ? 'Login' : 'Create Account') }}
     </TactileButton>
 
     <!-- Secondary -->
@@ -73,9 +75,9 @@
       variant="ghost"
       size="lg"
       block
-      @click="$emit('signup')"
+      @click="$emit('toggle-mode')"
     >
-      I don't have an account
+      {{ isLoginMode ? "I don't have an account" : 'I already have an account' }}
     </TactileButton>
 
     <!-- Terms -->
@@ -95,9 +97,10 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   error: { type: String, default: '' },
   initialEmail: { type: String, default: '' },
+  isLoginMode: { type: Boolean, default: true },
 });
 
-const emit = defineEmits(['submit', 'signup']);
+const emit = defineEmits(['submit', 'toggle-mode']);
 
 const email = ref(props.initialEmail);
 const password = ref('');
