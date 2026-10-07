@@ -228,21 +228,30 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-8);
-  align-items: center;
+  align-items: stretch;                        /* ← DEĞİŞTİ: center → stretch */
 }
 
 @media (min-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-12);
+    align-items: stretch;                      /* ← EKLENDİ */
   }
+}
+
+.hero-grid__hero {
+  display: flex;                               /* ← YENİ KURAL */
+  flex-direction: column;
 }
 
 .hero-grid__form {
   background-color: var(--color-bg-card);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);             /* ← DEĞİŞTİ: radius-lg → radius-xl */
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
+  display: flex;                               /* ← EKLENDİ */
+  flex-direction: column;                      /* ← EKLENDİ */
+  justify-content: center;                     /* ← EKLENDİ: Dikey ortala */
 }
 
 @media (min-width: 1024px) {

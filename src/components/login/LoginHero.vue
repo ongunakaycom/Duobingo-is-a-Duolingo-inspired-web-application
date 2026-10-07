@@ -1,8 +1,6 @@
 <template>
   <div class="login-hero">
-    <!-- Mascot card with badges -->
     <div class="login-hero__card">
-      <!-- Top row: badges -->
       <div class="login-hero__badges">
         <div class="login-hero__badge login-hero__badge--streak">
           <span class="login-hero__badge-emoji">🔥</span>
@@ -14,21 +12,18 @@
         </div>
       </div>
 
-      <!-- Mascot -->
       <img
         :src="mascotUrl"
         alt="DuoBingo mascot"
         class="login-hero__mascot"
       />
 
-      <!-- Welcome tag -->
       <div class="login-hero__welcome-tag">
         <span class="login-hero__welcome-label">Welcome to DuoBingo!</span>
         <span class="login-hero__welcome-cta">START TODAY</span>
       </div>
     </div>
 
-    <!-- Headline (Figma'ya göre) -->
     <h1 class="login-hero__title">
       Master a new language
       <span class="login-hero__title-accent">one bingo card at a time.</span>
@@ -58,21 +53,26 @@ defineProps({
   flex-direction: column;
   gap: var(--space-6);
   text-align: left;
+  height: 100%;                              /* ← YENİ */
 }
 
 /* =============================
- * Mascot Card
+ * Mascot Card (Form ile aynı yükseklik)
  * ============================= */
 .login-hero__card {
   position: relative;
   width: 100%;
-  padding: var(--space-5);
+  flex: 1;                                   /* ← YENİ: Grow */
+  padding: var(--space-6);
   background: linear-gradient(180deg, #E8F6FF 0%, #F0FAFF 100%);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-xl);           /* ✅ Aynı radius */
+  box-shadow: var(--shadow-card);            /* ← YENİ: Aynı shadow */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;                   /* ← YENİ: Dikey ortala */
   gap: var(--space-4);
+  overflow: hidden;
 }
 
 .login-hero__badges {
@@ -86,7 +86,7 @@ defineProps({
 
 .login-hero__mascot {
   width: 100%;
-  max-width: 340px;
+  max-width: 260px;                          /* ← 340 → 260 */
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 8px 20px rgba(88, 204, 2, 0.2));
@@ -148,7 +148,7 @@ defineProps({
 }
 
 /* =============================
- * Headline (Figma style)
+ * Headline
  * ============================= */
 .login-hero__title {
   font-size: var(--font-size-3xl);
