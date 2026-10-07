@@ -1,375 +1,527 @@
 <template>
-  <header class="dashboard-header">
-    <div class="container-tight dashboard-header__inner">
-      <router-link to="/lessons" class="dashboard-header__logo">
-        <img src="@/assets/duobingo.png" alt="DuoBingo" />
-      </router-link>
+  <div class="lessons-container">
+    <DashboardHeader
+      :streak="userStats.streakDays"
+      :gems="userStats.totalXP"
+      :hearts="5"
+      :user-name="userName"
+      :user-email="userEmail"
+      active-nav="learn"
+      @profile="handleProfile"
+      @settings="handleSettings"
+      @change-password="handleChangePassword"
+      @logout="handleLogout"
+    />
 
-      <nav class="dashboard-header__nav">
-        <a
-          v-for="item in navItems"
-          :key="item.id"
-          :href="item.href"
-          class="dashboard-header__nav-link"
-          :class="{ 'is-active': item.active }"
-          @click.prevent
-        >
-          {{ item.label }}
-        </a>
-      </nav>
+    <!-- Loading -->
+    <div
+      v-if="loading"
+      class="d-flex flex-column justify-content-center align-items-center py-5"
+      style="min-height: 60vh"
+    >
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
+        <span class="visually-hidden">Yükleniyor...</span>
+      </div>
+      <p class="mt-3 text-muted">Dersler yükleniyor...</p>
+    </div>
 
-      <div class="dashboard-header__right">
-        <div class="dashboard-header__stat">
-          <span class="dashboard-header__stat-icon">🔥</span>
-          <span class="dashboard-header__stat-value">{{ streak }}</span>
+    <!-- Error -->
+    <div v-else-if="error" class="container-tight py-5">
+      <div class="alert alert-danger">
+        <h5>⚠️ Hata</h5>
+        <p>{{ error }}</p>
+        <button class="btn btn-primary" @click="loadData">Tekrar Dene</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div v-else-if="currentLesson" class="container-tight main-content">
+      <div class="row mt-4">
+        <!-- LEFT -->
+        <div class="col-lg-3 mb-4">
+          <div class="sticky-top pt-3">
+            <LessonPathCard
+              :lesson-path="lessonPath"
+              :current-lesson-id="currentLesson._id"
+              :stats="userStats"
+              @select="selectLesson"
+            />
+          </div>
         </div>
-        <div class="dashboard-header__stat">
-          <span class="dashboard-header__stat-icon">💎</span>
-          <span class="dashboard-header__stat-value">{{ gems }}</span>
-        </div>
-        <div class="dashboard-header__stat">
-          <span class="dashboard-header__stat-icon">❤️</span>
-          <span class="dashboard-header__stat-value">{{ hearts }}</span>
-        </div>
 
-        <div class="dashboard-header__profile-wrapper" ref="profileWrapper">
-          <button
-            class="dashboard-header__profile"
-            @click.stop="toggleProfileMenu"
-            aria-label="Profile menu"
-            :aria-expanded="isProfileMenuOpen"
-          >
-            <span class="dashboard-header__profile-initial">
-              {{ userInitial }}
-            </span>
-          </button>
+        <!-- CENTER -->
+        <div class="col-lg-6 mb-4">
+          <div class="card border-0 shadow-sm lesson-card">
+            <div class="card-header bg-white border-0 pt-4">
+              <h4 class="card-title mb-1">{{ currentLesson.title }}</h4>
+              <p class="text-muted mb-0">{{ currentLesson.description }}</p>
 
-          <transition name="dropdown-fade">
-            <div v-if="isProfileMenuOpen" class="profile-dropdown">
-              <div class="profile-dropdown__header">
-                <div class="profile-dropdown__avatar">
-                  {{ userInitial }}
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <b-badge variant="light" class="me-2 p-2">
+                    <span class="text-primary">⭐ XP:</span> {{ currentLesson.xpReward }}
+                  </b-badge>
+                  <b-badge variant="light" class="p-2">
+                    <span class="text-success">💎 Gems:</span> {{ currentLesson.gemReward }}
+                  </b-badge>
                 </div>
-                <div class="profile-dropdown__info">
-                  <div class="profile-dropdown__name">{{ userName }}</div>
-                  <div class="profile-dropdown__email">{{ userEmail }}</div>
+                <div>
+                  <span class="text-muted small">
+                    Question {{ currentQuestionIndex + 1 }} of {{ currentLesson.questions.length }}
+                  </span>
                 </div>
               </div>
 
-              <div class="profile-dropdown__divider"></div>
-
-              <button
-                v-for="item in menuItems"
-                :key="item.id"
-                class="profile-dropdown__item"
-                :class="{ 'profile-dropdown__item--danger': item.danger }"
-                @click="handleMenuAction(item.id)"
-              >
-                <span class="profile-dropdown__item-icon">{{ item.icon }}</span>
-                <span class="profile-dropdown__item-label">{{ item.label }}</span>
-              </button>
+              <b-progress height="6px" :value="lessonProgress" :max="100" class="mt-2">
+                <b-progress-bar :value="lessonProgress" variant="primary" striped animated></b-progress-bar>
+              </b-progress>
             </div>
-          </transition>
+
+            <div class="card-body">
+              <QuestionCard
+                v-if="!lessonCompleted"
+                :question="currentQuestion"
+                :selected-answer="selectedAnswer"
+                :translation-answer="translationAnswer"
+                :answer-submitted="answerSubmitted"
+                :english-words="englishWords"
+                :spanish-words="spanishWords"
+                @select-option="selectOption"
+                @update:translationAnswer="translationAnswer = $event"
+                @check-translation="checkTranslation"
+                @drag-start="dragStart"
+                @drop="drop"
+                @check-pairs="checkPairs"
+              />
+
+              <div v-if="feedbackMessage && !lessonCompleted" class="feedback mt-4">
+                <b-alert :variant="feedbackType" show class="d-flex align-items-center">
+                  <b-icon :icon="feedbackIcon" scale="1.5" class="me-3"></b-icon>
+                  <div>
+                    <strong>{{ feedbackTitle }}</strong><br />
+                    {{ feedbackMessage }}
+                  </div>
+                </b-alert>
+              </div>
+
+              <AIFeedback v-if="!lessonCompleted" ref="aiFeedback" />
+
+              <div v-if="!lessonCompleted" class="action-buttons mt-4">
+                <div class="d-flex justify-content-between">
+                  <b-button variant="outline-secondary" :disabled="answerSubmitted" @click="hint">
+                    <b-icon icon="lightbulb"></b-icon> Hint
+                  </b-button>
+
+                  <div v-if="!answerSubmitted">
+                    <b-button
+                      variant="primary"
+                      :disabled="selectedAnswer === null && !translationAnswer"
+                      @click="submitAnswer"
+                    >
+                      Submit Answer
+                    </b-button>
+                  </div>
+                  <div v-else>
+                    <b-button variant="success" @click="nextQuestion">
+                      {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
+                      <b-icon icon="arrow-right" class="ms-1"></b-icon>
+                    </b-button>
+                  </div>
+                </div>
+              </div>
+
+              <LessonComplete
+                v-if="lessonCompleted"
+                :lesson-title="currentLesson.title"
+                :xp-reward="currentLesson.xpReward"
+                :gem-reward="currentLesson.gemReward"
+                @continue="continueLearning"
+                @dashboard="continueLearning"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-3 mb-4">
+          <div class="sticky-top pt-3">
+            <VocabularyCard
+              :vocabulary="currentLesson.vocabulary || []"
+              class="mb-4"
+              @pronounce="pronounceWord"
+            />
+            <TipsCard />
+          </div>
         </div>
       </div>
     </div>
-  </header>
+  </div>
 </template>
 
-<script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
+<script>
+import AIFeedback from './AIFeedback.vue';
+import DashboardHeader from './dashboard/DashboardHeader.vue';
+import LessonPathCard from './dashboard/LessonPathCard.vue';
+import QuestionCard from './dashboard/QuestionCard.vue';
+import VocabularyCard from './dashboard/VocabularyCard.vue';
+import TipsCard from './dashboard/TipsCard.vue';
+import LessonComplete from './dashboard/LessonComplete.vue';
+import { lessonsApi, progressApi } from '@/axios';
 
-const props = defineProps({
-  streak: { type: Number, default: 7 },
-  gems: { type: Number, default: 120 },
-  hearts: { type: Number, default: 5 },
-  userName: { type: String, default: 'Alex' },
-  userEmail: { type: String, default: 'alex@duobingo.app' },
-  activeNav: { type: String, default: 'learn' },
-});
+export default {
+  name: 'Lessons',
+  components: {
+    AIFeedback,
+    DashboardHeader,
+    LessonPathCard,
+    QuestionCard,
+    VocabularyCard,
+    TipsCard,
+    LessonComplete,
+  },
+  data() {
+    return {
+      userName: '',
+      userEmail: '',
+      lessonPath: [],
+      currentLesson: null,
+      userStats: {
+        totalXP: 0,
+        streakDays: 0,
+        accuracy: 0,
+        wordsLearned: 0,
+      },
+      loading: true,
+      error: null,
+      currentQuestionIndex: 0,
+      selectedAnswer: null,
+      translationAnswer: '',
+      answerSubmitted: false,
+      feedbackMessage: '',
+      feedbackTitle: '',
+      feedbackType: 'info',
+      feedbackIcon: 'info-circle',
+      lessonCompleted: false,
+      englishWords: [],
+      spanishWords: [],
+      draggedItem: null,
+    };
+  },
+  computed: {
+    currentQuestion() {
+      if (!this.currentLesson?.questions?.length) return {};
+      return this.currentLesson.questions[this.currentQuestionIndex] || {};
+    },
+    isLastQuestion() {
+      if (!this.currentLesson?.questions) return false;
+      return this.currentQuestionIndex === this.currentLesson.questions.length - 1;
+    },
+    lessonProgress() {
+      if (!this.currentLesson?.questions?.length) return 0;
+      return ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
+    },
+  },
+  methods: {
+    async loadData() {
+      this.loading = true;
+      this.error = null;
 
-const emit = defineEmits(['profile', 'settings', 'change-password', 'logout']);
+      try {
+        const [lessons, progress] = await Promise.all([
+          lessonsApi.getAll(),
+          progressApi.get().catch(() => ({
+            completedLessons: [],
+            totalXP: 0,
+            streakDays: 0,
+            accuracy: 0,
+            wordsLearned: 0,
+          })),
+        ]);
 
-const isProfileMenuOpen = ref(false);
-const profileWrapper = ref(null);
+        const completedIds = new Set(
+          (progress.completedLessons || []).map((l) =>
+            typeof l === 'string' ? l : l._id
+          )
+        );
 
-const navItems = computed(() => [
-  { id: 'learn', label: 'Learn', href: '#', active: props.activeNav === 'learn' },
-  { id: 'bingo-arena', label: 'Bingo Arena', href: '#' },
-  { id: 'leaderboards', label: 'Leaderboards', href: '#' },
-  { id: 'quests', label: 'Quests', href: '#' },
-  { id: 'shop', label: 'Shop', href: '#' },
-]);
+        this.lessonPath = lessons.map((l, idx) => ({
+          id: l._id,
+          title: l.title,
+          description: l.description,
+          order: l.order || idx + 1,
+          completed: completedIds.has(l._id),
+          status: completedIds.has(l._id)
+            ? 'completed'
+            : idx === 0 || completedIds.has(lessons[idx - 1]?._id)
+            ? 'current'
+            : 'locked',
+        }));
 
-const menuItems = [
-  { id: 'profile', icon: '👤', label: 'Profile' },
-  { id: 'settings', icon: '⚙️', label: 'Settings' },
-  { id: 'change-password', icon: '🔒', label: 'Change Password' },
-  { id: 'logout', icon: '🚪', label: 'Log Out', danger: true },
-];
+        this.userStats = {
+          totalXP: progress.totalXP || 0,
+          streakDays: progress.streakDays || 0,
+          accuracy: progress.accuracy || 0,
+          wordsLearned: progress.wordsLearned || 0,
+        };
 
-const userInitial = computed(() => props.userName.charAt(0).toUpperCase());
+        const current =
+          this.lessonPath.find((l) => l.status === 'current') || this.lessonPath[0];
+        if (current) {
+          await this.loadLesson(current.id);
+        }
+      } catch (e) {
+        console.error('[loadData] error:', e);
+        this.error = e.message || 'Veri yüklenemedi.';
+      } finally {
+        this.loading = false;
+      }
+    },
 
-function toggleProfileMenu() {
-  isProfileMenuOpen.value = !isProfileMenuOpen.value;
-}
+    async loadLesson(lessonId) {
+      try {
+        const lesson = await lessonsApi.getById(lessonId);
+        if (!lesson) throw new Error('Lesson not found');
 
-function closeProfileMenu() {
-  isProfileMenuOpen.value = false;
-}
+        this.currentLesson = lesson;
+        this.currentQuestionIndex = 0;
+        this.lessonCompleted = false;
+        this.resetQuestionState();
+      } catch (e) {
+        this.error = e.message;
+      }
+    },
 
-function handleMenuAction(actionId) {
-  closeProfileMenu();
-  emit(actionId);
-}
+    selectOption(index) {
+      if (!this.answerSubmitted) this.selectedAnswer = index;
+    },
 
-function handleClickOutside(event) {
-  if (profileWrapper.value && !profileWrapper.value.contains(event.target)) {
-    closeProfileMenu();
-  }
-}
+    submitAnswer() {
+      if (this.currentQuestion.type === 'multiple-choice') {
+        const isCorrect = this.currentQuestion.options[this.selectedAnswer].correct;
+        this.showFeedback(isCorrect);
+      }
+      this.answerSubmitted = true;
+    },
 
-function handleEsc(event) {
-  if (event.key === 'Escape') {
-    closeProfileMenu();
-  }
-}
+    async checkTranslation() {
+      if (!this.translationAnswer) return;
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
-  document.addEventListener('keydown', handleEsc);
-});
+      const userAnswer = this.translationAnswer.toLowerCase().trim();
+      const correctAnswer = (this.currentQuestion.correctAnswer || '').toLowerCase().trim();
+      const isCorrect = userAnswer === correctAnswer;
 
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside);
-  document.removeEventListener('keydown', handleEsc);
-});
+      this.showFeedback(isCorrect);
+      this.answerSubmitted = true;
+
+      try {
+        if (this.$refs.aiFeedback) {
+          await this.$refs.aiFeedback.evaluate(this.translationAnswer, 'translation');
+        }
+      } catch (e) {
+        console.error('AI evaluation failed:', e);
+      }
+    },
+
+    checkPairs() {
+      let allCorrect = true;
+      for (let i = 0; i < this.englishWords.length; i++) {
+        if (this.englishWords[i].pairId !== this.spanishWords[i].pairId) {
+          allCorrect = false;
+          break;
+        }
+      }
+      this.showFeedback(allCorrect);
+      this.answerSubmitted = true;
+    },
+
+    dragStart(wordId, language) {
+      if (!this.answerSubmitted) {
+        this.draggedItem = { id: wordId, language };
+      }
+    },
+
+    drop(targetId, targetLanguage) {
+      if (!this.draggedItem || this.answerSubmitted) return;
+
+      const { language: draggedLang, id: draggedId } = this.draggedItem;
+      if (draggedLang === targetLanguage) return;
+
+      const fromList = draggedLang === 'english' ? this.englishWords : this.spanishWords;
+      const toList = targetLanguage === 'english' ? this.englishWords : this.spanishWords;
+
+      const fromIdx = fromList.findIndex((w) => w.id === draggedId);
+      const toIdx = toList.findIndex((w) => w.id === targetId);
+      if (fromIdx === -1 || toIdx === -1) return;
+
+      const temp = fromList[fromIdx];
+      fromList[fromIdx] = toList[toIdx];
+      toList[toIdx] = temp;
+
+      this.draggedItem = null;
+    },
+
+    showFeedback(isCorrect) {
+      if (isCorrect) {
+        this.feedbackType = 'success';
+        this.feedbackIcon = 'check-circle';
+        this.feedbackTitle = 'Correct!';
+        this.feedbackMessage = 'Great job! You earned 5 XP.';
+        this.userStats.totalXP += 5;
+      } else {
+        this.feedbackType = 'danger';
+        this.feedbackIcon = 'exclamation-circle';
+        this.feedbackTitle = 'Not quite right';
+
+        if (this.currentQuestion.type === 'multiple-choice') {
+          const correctOption = this.currentQuestion.options.find((o) => o.correct);
+          this.feedbackMessage = `The correct answer is: "${correctOption?.text || '—'}"`;
+        } else if (this.currentQuestion.type === 'translation') {
+          this.feedbackMessage = `The correct translation is: "${this.currentQuestion.correctAnswer}"`;
+        } else {
+          this.feedbackMessage = 'Try matching the pairs again.';
+        }
+      }
+    },
+
+    nextQuestion() {
+      if (this.isLastQuestion) {
+        this.completeLesson();
+      } else {
+        this.currentQuestionIndex++;
+        this.resetQuestionState();
+      }
+    },
+
+    resetQuestionState() {
+      this.selectedAnswer = null;
+      this.translationAnswer = '';
+      this.answerSubmitted = false;
+      this.feedbackMessage = '';
+
+      if (this.$refs.aiFeedback) this.$refs.aiFeedback.close();
+
+      if (this.currentQuestion.type === 'match-pairs') this.initPairs();
+    },
+
+    initPairs() {
+      const pairs = this.currentQuestion.pairs || [];
+      this.englishWords = this.shuffleArray(
+        pairs.map((p, i) => ({ id: i, text: p.english, pairId: i }))
+      );
+      this.spanishWords = this.shuffleArray(
+        pairs.map((p, i) => ({ id: i + 100, text: p.spanish, pairId: i }))
+      );
+    },
+
+    shuffleArray(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    },
+
+    async completeLesson() {
+      this.lessonCompleted = true;
+
+      const idx = this.lessonPath.findIndex((l) => l.id === this.currentLesson._id);
+      if (idx !== -1) {
+        this.lessonPath[idx].completed = true;
+        this.lessonPath[idx].status = 'completed';
+        if (idx + 1 < this.lessonPath.length) {
+          this.lessonPath[idx + 1].status = 'current';
+        }
+      }
+
+      this.userStats.totalXP += this.currentLesson.xpReward || 0;
+      this.userStats.wordsLearned += this.currentLesson.vocabulary?.length || 0;
+
+      try {
+        await progressApi.update({
+          lessonId: this.currentLesson._id,
+          xp: this.currentLesson.xpReward || 0,
+          words: this.currentLesson.vocabulary?.length || 0,
+        });
+      } catch (e) {
+        console.warn('Progress update failed:', e);
+      }
+    },
+
+    hint() {
+      this.feedbackType = 'warning';
+      this.feedbackIcon = 'lightbulb';
+      this.feedbackTitle = 'Hint';
+
+      if (this.currentQuestion.type === 'multiple-choice') {
+        const correctIdx = this.currentQuestion.options.findIndex((o) => o.correct);
+        this.feedbackMessage = correctIdx % 2 === 0
+          ? 'The correct answer is in the first or third position.'
+          : 'The correct answer is in the second or fourth position.';
+      } else if (this.currentQuestion.type === 'translation') {
+        const answer = this.currentQuestion.correctAnswer || '';
+        const hint = answer.substring(0, Math.floor(answer.length / 2)) + '...';
+        this.feedbackMessage = `Starts with: "${hint}"`;
+      } else {
+        this.feedbackMessage = 'Try matching the first pair.';
+      }
+    },
+
+    async selectLesson(lesson) {
+      if (lesson.status === 'locked') return;
+      await this.loadLesson(lesson.id);
+    },
+
+    pronounceWord(word) {
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(word);
+        u.lang = 'en-US';
+        speechSynthesis.speak(u);
+      }
+    },
+
+    async continueLearning() {
+      const next = this.lessonPath.find((l) => l.status === 'current');
+      if (next) await this.loadLesson(next.id);
+    },
+
+    handleProfile() { console.log('[profile]'); },
+    handleSettings() { console.log('[settings]'); },
+    handleChangePassword() { alert('Yakında eklenecek.'); },
+    handleLogout() {
+      if (confirm('Çıkış yapmak istiyor musun?')) {
+        localStorage.removeItem('token');
+        this.$router.push('/');
+      }
+    },
+  },
+  async mounted() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.$router.push('/');
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.userEmail = payload.email || '';
+      this.userName = this.userEmail ? this.userEmail.split('@')[0] : 'User';
+    } catch (e) {
+      console.warn('[auth] Invalid token:', e.message);
+    }
+
+    await this.loadData();
+  },
+};
 </script>
 
 <style scoped>
-.dashboard-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--color-border-light);
-  position: sticky;
-  top: 0;
-  z-index: 1030;                     /* ← YÜKSELTİLDİ (100 → 1030) */
+.lessons-container {
+  background-color: #FFFFFF;
+  min-height: 100vh;
 }
 
-.dashboard-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
+.main-content {
+  padding-top: 20px;
+  padding-bottom: 40px;
 }
 
-.dashboard-header__logo {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-}
-
-.dashboard-header__logo img {
-  height: 40px;
-  width: auto;
-  display: block;
-}
-
-.dashboard-header__nav {
-  display: none;
-  align-items: center;
-  gap: var(--space-1);
-  flex: 1;
-  justify-content: center;
-}
-
-@media (min-width: 768px) {
-  .dashboard-header__nav {
-    display: flex;
-  }
-}
-
-.dashboard-header__nav-link {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
-  font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-black);
-  color: var(--color-text);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  transition: background-color var(--transition-fast);
-  white-space: nowrap;
-}
-
-.dashboard-header__nav-link:hover {
-  background-color: rgba(88, 204, 2, 0.1);
-}
-
-.dashboard-header__nav-link.is-active {
-  background-color: var(--color-primary);
-  color: #ffffff;
-}
-
-.dashboard-header__right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-shrink: 0;
-}
-
-.dashboard-header__stat {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-family: var(--font-family);
-  font-weight: var(--font-weight-black);
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-}
-
-.dashboard-header__stat-icon {
-  font-size: var(--font-size-lg);
-  line-height: 1;
-}
-
-.dashboard-header__profile-wrapper {
-  position: relative;
-}
-
-.dashboard-header__profile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-black);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--transition-fast);
-}
-
-.dashboard-header__profile:hover {
-  transform: scale(1.05);
-}
-
-.profile-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 240px;
-  background-color: #ffffff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  z-index: 1031;                     /* ← YÜKSELTİLDİ (200 → 1031) */
-}
-
-.profile-dropdown__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
-}
-
-.profile-dropdown__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  font-family: var(--font-family);
-  font-weight: var(--font-weight-black);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.profile-dropdown__info {
-  min-width: 0;
-  flex: 1;
-}
-
-.profile-dropdown__name {
-  font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-black);
-  color: var(--color-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.profile-dropdown__email {
-  font-family: var(--font-family);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.profile-dropdown__divider {
-  height: 1px;
-  background-color: var(--color-border-light);
-}
-
-.profile-dropdown__item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  text-align: left;
-  transition: background-color var(--transition-fast);
-}
-
-.profile-dropdown__item:hover {
-  background-color: rgba(88, 204, 2, 0.08);
-}
-
-.profile-dropdown__item--danger {
-  color: var(--color-error);
-}
-
-.profile-dropdown__item--danger:hover {
-  background-color: rgba(255, 75, 75, 0.08);
-}
-
-.profile-dropdown__item-icon {
-  font-size: var(--font-size-base);
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.profile-dropdown__item-label {
-  flex: 1;
-}
-
-.dropdown-fade-enter-active,
-.dropdown-fade-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.dropdown-fade-enter-from,
-.dropdown-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
+:deep(.sticky-top) {
+  z-index: 1 !important;
 }
 </style>
