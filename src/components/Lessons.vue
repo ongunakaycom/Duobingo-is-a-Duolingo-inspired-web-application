@@ -1,6 +1,5 @@
 <template>
   <div class="lessons-container">
-    <!-- Dashboard Header -->
     <DashboardHeader
       :streak="userStats.streakDays"
       :gems="userStats.totalXP"
@@ -15,11 +14,7 @@
     />
 
     <!-- Loading -->
-    <div
-      v-if="loading"
-      class="d-flex flex-column justify-content-center align-items-center py-5"
-      style="min-height: 60vh"
-    >
+    <div v-if="loading" class="d-flex flex-column justify-content-center align-items-center py-5" style="min-height: 60vh">
       <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
         <span class="visually-hidden">Yükleniyor...</span>
       </div>
@@ -27,7 +22,7 @@
     </div>
 
     <!-- Error -->
-    <div v-else-if="error" class="container py-5">
+    <div v-else-if="error" class="container-tight py-5">
       <div class="alert alert-danger">
         <h5>⚠️ Hata</h5>
         <p>{{ error }}</p>
@@ -36,71 +31,21 @@
     </div>
 
     <!-- Main Content -->
-    <b-container v-else-if="currentLesson" class="main-content">
+    <div v-else-if="currentLesson" class="container-tight main-content">
       <div class="row mt-4">
-        <!-- LEFT: Lesson Path + Stats -->
+        <!-- LEFT -->
         <div class="col-lg-3 mb-4">
           <div class="sticky-top pt-3">
-            <div class="card border-0 shadow-sm mb-4">
-              <div class="card-body">
-                <h5 class="card-title d-flex justify-content-between align-items-center">
-                  <span>📚 Your Path</span>
-                  <b-badge variant="info" pill>{{ completedLessons }}/{{ totalLessons }}</b-badge>
-                </h5>
-
-                <div class="lesson-path mt-3">
-                  <div
-                    v-for="lesson in lessonPath"
-                    :key="lesson.id"
-                    class="path-node d-flex align-items-center mb-3"
-                    :class="{
-                      active: lesson.id === currentLesson._id,
-                      completed: lesson.completed,
-                    }"
-                    @click="selectLesson(lesson)"
-                  >
-                    <div class="node-icon me-3">
-                      <div class="circle" :class="lesson.status">
-                        <span v-if="lesson.completed">✓</span>
-                        <span v-else>{{ lesson.order }}</span>
-                      </div>
-                    </div>
-                    <div class="node-info">
-                      <div class="node-title">{{ lesson.title }}</div>
-                      <div class="node-desc small text-muted">{{ lesson.description }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card border-0 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">📊 Your Stats</h5>
-                <div class="stats-grid">
-                  <div class="stat-item text-center p-2">
-                    <div class="stat-value text-primary fw-bold">{{ userStats.streakDays }}</div>
-                    <div class="stat-label small">Day Streak</div>
-                  </div>
-                  <div class="stat-item text-center p-2">
-                    <div class="stat-value text-success fw-bold">{{ userStats.totalXP }}</div>
-                    <div class="stat-label small">Total XP</div>
-                  </div>
-                  <div class="stat-item text-center p-2">
-                    <div class="stat-value text-info fw-bold">{{ userStats.accuracy }}%</div>
-                    <div class="stat-label small">Accuracy</div>
-                  </div>
-                  <div class="stat-item text-center p-2">
-                    <div class="stat-value text-warning fw-bold">{{ userStats.wordsLearned }}</div>
-                    <div class="stat-label small">Words Learned</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <LessonPathCard
+              :lesson-path="lessonPath"
+              :current-lesson-id="currentLesson._id"
+              :stats="userStats"
+              @select="selectLesson"
+            />
           </div>
         </div>
 
-        <!-- CENTER: Current Lesson -->
+        <!-- CENTER -->
         <div class="col-lg-6 mb-4">
           <div class="card border-0 shadow-sm lesson-card">
             <div class="card-header bg-white border-0 pt-4">
@@ -124,310 +69,121 @@
               </div>
 
               <b-progress height="6px" :value="lessonProgress" :max="100" class="mt-2">
-                <b-progress-bar
-                  :value="lessonProgress"
-                  variant="primary"
-                  striped
-                  animated
-                ></b-progress-bar>
+                <b-progress-bar :value="lessonProgress" variant="primary" striped animated></b-progress-bar>
               </b-progress>
             </div>
 
             <div class="card-body">
-              <!-- Question Area -->
-              <div v-if="!lessonCompleted" class="question-area">
-                <div class="question mb-4">
-                  <h5 class="question-text">{{ currentQuestion.question }}</h5>
-                  <div
-                    v-if="currentQuestion.example"
-                    class="example-text p-3 bg-light rounded mt-3"
-                  >
-                    <em>"{{ currentQuestion.example }}"</em>
+              <!-- Question Card -->
+              <QuestionCard
+                v-if="!lessonCompleted"
+                :question="currentQuestion"
+                :selected-answer="selectedAnswer"
+                :translation-answer="translationAnswer"
+                :answer-submitted="answerSubmitted"
+                :english-words="englishWords"
+                :spanish-words="spanishWords"
+                @select-option="selectOption"
+                @update:translationAnswer="translationAnswer = $event"
+                @check-translation="checkTranslation"
+                @drag-start="dragStart"
+                @drop="drop"
+                @check-pairs="checkPairs"
+              />
+
+              <!-- Feedback -->
+              <div v-if="feedbackMessage && !lessonCompleted" class="feedback mt-4">
+                <b-alert :variant="feedbackType" show class="d-flex align-items-center">
+                  <b-icon :icon="feedbackIcon" scale="1.5" class="me-3"></b-icon>
+                  <div>
+                    <strong>{{ feedbackTitle }}</strong><br />
+                    {{ feedbackMessage }}
                   </div>
-                </div>
+                </b-alert>
+              </div>
 
-                <!-- Answer Options -->
-                <div class="answer-options">
-                  <!-- Multiple Choice -->
-                  <div v-if="currentQuestion.type === 'multiple-choice'">
-                    <b-list-group>
-                      <b-list-group-item
-                        v-for="(option, index) in currentQuestion.options"
-                        :key="`${index}-${option.text}`"
-                        button
-                        class="mb-2 option-item"
-                        :class="{
-                          selected: selectedAnswer === index,
-                          correct: answerSubmitted && option.correct,
-                          incorrect:
-                            answerSubmitted &&
-                            selectedAnswer === index &&
-                            !option.correct,
-                        }"
-                        :disabled="answerSubmitted"
-                        @click="selectOption(index)"
-                      >
-                        <div class="d-flex justify-content-between align-items-center">
-                          <span>{{ option.text }}</span>
-                          <span
-                            v-if="answerSubmitted && option.correct"
-                            class="text-success"
-                            >✓</span
-                          >
-                          <span
-                            v-if="
-                              answerSubmitted &&
-                              selectedAnswer === index &&
-                              !option.correct
-                            "
-                            class="text-danger"
-                            >✗</span
-                          >
-                        </div>
-                      </b-list-group-item>
-                    </b-list-group>
-                  </div>
+              <!-- AI Feedback -->
+              <AIFeedback v-if="!lessonCompleted" ref="aiFeedback" />
 
-                  <!-- Translation -->
-                  <div v-else-if="currentQuestion.type === 'translation'">
-                    <b-form-group>
-                      <b-form-input
-                        v-model="translationAnswer"
-                        placeholder="Type the translation here..."
-                        size="lg"
-                        :disabled="answerSubmitted"
-                        @keyup.enter="checkTranslation"
-                      ></b-form-input>
-                      <div class="mt-3">
-                        <b-button
-                          variant="primary"
-                          size="lg"
-                          :disabled="!translationAnswer || answerSubmitted"
-                          class="w-100"
-                          @click="checkTranslation"
-                        >
-                          Check Answer
-                        </b-button>
-                      </div>
-                    </b-form-group>
-                  </div>
+              <!-- Actions -->
+              <div v-if="!lessonCompleted" class="action-buttons mt-4">
+                <div class="d-flex justify-content-between">
+                  <b-button variant="outline-secondary" :disabled="answerSubmitted" @click="hint">
+                    <b-icon icon="lightbulb"></b-icon> Hint
+                  </b-button>
 
-                  <!-- Match Pairs -->
-                  <div v-else-if="currentQuestion.type === 'match-pairs'">
-                    <div class="pairs-container">
-                      <div class="row">
-                        <div class="col-6">
-                          <h6 class="text-center mb-3">English</h6>
-                          <div class="draggable-list">
-                            <div
-                              v-for="word in englishWords"
-                              :key="word.id"
-                              class="pair-item mb-2 p-3 bg-white border rounded"
-                              draggable="true"
-                              @dragstart="dragStart(word.id, 'english')"
-                              @dragover.prevent
-                              @drop="drop(word.id, 'english')"
-                            >
-                              {{ word.text }}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <h6 class="text-center mb-3">Spanish</h6>
-                          <div class="draggable-list">
-                            <div
-                              v-for="word in spanishWords"
-                              :key="word.id"
-                              class="pair-item mb-2 p-3 bg-white border rounded"
-                              draggable="true"
-                              @dragstart="dragStart(word.id, 'spanish')"
-                              @dragover.prevent
-                              @drop="drop(word.id, 'spanish')"
-                            >
-                              {{ word.text }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="text-center mt-3">
-                        <b-button
-                          variant="primary"
-                          :disabled="answerSubmitted"
-                          @click="checkPairs"
-                        >
-                          Check Matching
-                        </b-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Feedback Message -->
-                <div v-if="feedbackMessage" class="feedback mt-4">
-                  <b-alert :variant="feedbackType" show class="d-flex align-items-center">
-                    <b-icon :icon="feedbackIcon" scale="1.5" class="me-3"></b-icon>
-                    <div>
-                      <strong>{{ feedbackTitle }}</strong><br />
-                      {{ feedbackMessage }}
-                    </div>
-                  </b-alert>
-                </div>
-
-                <!-- AI Feedback -->
-                <AIFeedback ref="aiFeedback" />
-
-                <!-- Action Buttons -->
-                <div class="action-buttons mt-4">
-                  <div class="d-flex justify-content-between">
+                  <div v-if="!answerSubmitted">
                     <b-button
-                      variant="outline-secondary"
-                      :disabled="answerSubmitted"
-                      @click="hint"
+                      variant="primary"
+                      :disabled="selectedAnswer === null && !translationAnswer"
+                      @click="submitAnswer"
                     >
-                      <b-icon icon="lightbulb"></b-icon> Hint
+                      Submit Answer
                     </b-button>
-
-                    <div v-if="!answerSubmitted">
-                      <b-button
-                        variant="primary"
-                        :disabled="selectedAnswer === null && !translationAnswer"
-                        @click="submitAnswer"
-                      >
-                        Submit Answer
-                      </b-button>
-                    </div>
-                    <div v-else>
-                      <b-button variant="success" @click="nextQuestion">
-                        {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
-                        <b-icon icon="arrow-right" class="ms-1"></b-icon>
-                      </b-button>
-                    </div>
+                  </div>
+                  <div v-else>
+                    <b-button variant="success" @click="nextQuestion">
+                      {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
+                      <b-icon icon="arrow-right" class="ms-1"></b-icon>
+                    </b-button>
                   </div>
                 </div>
               </div>
 
-              <!-- Lesson Completed -->
-              <div v-else class="lesson-completed text-center py-5">
-                <div class="celebration mb-4">
-                  <span class="display-1">🎉</span>
-                </div>
-                <h3 class="text-success">Lesson Complete!</h3>
-                <p class="text-muted">
-                  Great job! You've completed "{{ currentLesson.title }}"
-                </p>
-
-                <div
-                  class="rewards-card p-4 bg-light rounded mx-auto mt-4"
-                  style="max-width: 400px"
-                >
-                  <h5 class="mb-3">🏆 Your Rewards</h5>
-                  <div class="d-flex justify-content-around">
-                    <div class="text-center">
-                      <div class="reward-value text-warning fs-3">
-                        {{ currentLesson.xpReward }}
-                      </div>
-                      <div class="reward-label">XP Earned</div>
-                    </div>
-                    <div class="text-center">
-                      <div class="reward-value text-info fs-3">
-                        {{ currentLesson.gemReward }}
-                      </div>
-                      <div class="reward-label">Gems Earned</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mt-5">
-                  <b-button
-                    variant="primary"
-                    size="lg"
-                    class="me-3"
-                    @click="continueLearning"
-                  >
-                    Continue Learning
-                  </b-button>
-                  <b-button variant="outline-secondary" block @click="goToDashboard">
-                    <b-icon icon="house-door"></b-icon> Dashboard
-                  </b-button>
-                </div>
-              </div>
+              <!-- Lesson Complete -->
+              <LessonComplete
+                v-if="lessonCompleted"
+                :lesson-title="currentLesson.title"
+                :xp-reward="currentLesson.xpReward"
+                :gem-reward="currentLesson.gemReward"
+                @continue="continueLearning"
+                @dashboard="goToDashboard"
+              />
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Vocabulary + Tips -->
+        <!-- RIGHT -->
         <div class="col-lg-3 mb-4">
           <div class="sticky-top pt-3">
-            <div class="card border-0 shadow-sm mb-4">
-              <div class="card-body">
-                <h5 class="card-title d-flex justify-content-between align-items-center">
-                  <span>📖 Vocabulary</span>
-                  <b-badge variant="light">
-                    {{ currentLesson.vocabulary?.length || 0 }} words
-                  </b-badge>
-                </h5>
-
-                <b-list-group flush>
-                  <b-list-group-item
-                    v-for="(word, i) in currentLesson.vocabulary"
-                    :key="`${i}-${word.english}`"
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <strong>{{ word.english }}</strong><br />
-                      <small class="text-muted">{{ word.spanish }}</small>
-                    </div>
-                    <b-icon
-                      icon="volume-up"
-                      variant="primary"
-                      class="clickable"
-                      @click="pronounceWord(word.english)"
-                    ></b-icon>
-                  </b-list-group-item>
-                </b-list-group>
-              </div>
-            </div>
-
-            <div class="card border-0 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">💡 Tips</h5>
-                <div class="tip-item mb-3">
-                  <strong>Daily Practice</strong>
-                  <p class="small text-muted mb-0">
-                    Consistent daily practice is more effective than occasional long
-                    sessions.
-                  </p>
-                </div>
-                <div class="tip-item">
-                  <strong>Review Mistakes</strong>
-                  <p class="small text-muted mb-0">
-                    Review incorrect answers to reinforce learning.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <VocabularyCard
+              :vocabulary="currentLesson.vocabulary || []"
+              class="mb-4"
+              @pronounce="pronounceWord"
+            />
+            <TipsCard />
           </div>
         </div>
       </div>
-    </b-container>
+    </div>
   </div>
 </template>
 
 <script>
 import AIFeedback from './AIFeedback.vue';
 import DashboardHeader from './dashboard/DashboardHeader.vue';
+import LessonPathCard from './dashboard/LessonPathCard.vue';
+import QuestionCard from './dashboard/QuestionCard.vue';
+import VocabularyCard from './dashboard/VocabularyCard.vue';
+import TipsCard from './dashboard/TipsCard.vue';
+import LessonComplete from './dashboard/LessonComplete.vue';
 import { lessonsApi, progressApi } from '@/axios';
 
 export default {
   name: 'Lessons',
-  components: { AIFeedback, DashboardHeader },
+  components: {
+    AIFeedback,
+    DashboardHeader,
+    LessonPathCard,
+    QuestionCard,
+    VocabularyCard,
+    TipsCard,
+    LessonComplete,
+  },
   data() {
     return {
-      // User (token'dan doldurulacak)
       userName: '',
       userEmail: '',
-
-      // API'den gelecek
       lessonPath: [],
       currentLesson: null,
       userStats: {
@@ -436,8 +192,6 @@ export default {
         accuracy: 0,
         wordsLearned: 0,
       },
-
-      // UI state
       loading: true,
       error: null,
       currentQuestionIndex: 0,
@@ -449,8 +203,6 @@ export default {
       feedbackType: 'info',
       feedbackIcon: 'info-circle',
       lessonCompleted: false,
-
-      // Matching pairs
       englishWords: [],
       spanishWords: [],
       draggedItem: null,
@@ -467,21 +219,10 @@ export default {
     },
     lessonProgress() {
       if (!this.currentLesson?.questions?.length) return 0;
-      return (
-        ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100
-      );
-    },
-    completedLessons() {
-      return this.lessonPath.filter((l) => l.completed).length;
-    },
-    totalLessons() {
-      return this.lessonPath.length;
+      return ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
     },
   },
   methods: {
-    // =========================
-    // DATA LOADING
-    // =========================
     async loadData() {
       this.loading = true;
       this.error = null;
@@ -489,16 +230,13 @@ export default {
       try {
         const [lessons, progress] = await Promise.all([
           lessonsApi.getAll(),
-          progressApi.get().catch((err) => {
-            console.warn('[progress] API error, using empty:', err.message);
-            return {
-              completedLessons: [],
-              totalXP: 0,
-              streakDays: 0,
-              accuracy: 0,
-              wordsLearned: 0,
-            };
-          }),
+          progressApi.get().catch(() => ({
+            completedLessons: [],
+            totalXP: 0,
+            streakDays: 0,
+            accuracy: 0,
+            wordsLearned: 0,
+          })),
         ]);
 
         const completedIds = new Set(
@@ -550,18 +288,12 @@ export default {
         this.lessonCompleted = false;
         this.resetQuestionState();
       } catch (e) {
-        console.error('[loadLesson] error:', e);
         this.error = e.message;
       }
     },
 
-    // =========================
-    // ANSWER HANDLING
-    // =========================
     selectOption(index) {
-      if (!this.answerSubmitted) {
-        this.selectedAnswer = index;
-      }
+      if (!this.answerSubmitted) this.selectedAnswer = index;
     },
 
     submitAnswer() {
@@ -576,9 +308,7 @@ export default {
       if (!this.translationAnswer) return;
 
       const userAnswer = this.translationAnswer.toLowerCase().trim();
-      const correctAnswer = (this.currentQuestion.correctAnswer || '')
-        .toLowerCase()
-        .trim();
+      const correctAnswer = (this.currentQuestion.correctAnswer || '').toLowerCase().trim();
       const isCorrect = userAnswer === correctAnswer;
 
       this.showFeedback(isCorrect);
@@ -617,10 +347,8 @@ export default {
       const { language: draggedLang, id: draggedId } = this.draggedItem;
       if (draggedLang === targetLanguage) return;
 
-      const fromList =
-        draggedLang === 'english' ? this.englishWords : this.spanishWords;
-      const toList =
-        targetLanguage === 'english' ? this.englishWords : this.spanishWords;
+      const fromList = draggedLang === 'english' ? this.englishWords : this.spanishWords;
+      const toList = targetLanguage === 'english' ? this.englishWords : this.spanishWords;
 
       const fromIdx = fromList.findIndex((w) => w.id === draggedId);
       const toIdx = toList.findIndex((w) => w.id === targetId);
@@ -647,9 +375,7 @@ export default {
 
         if (this.currentQuestion.type === 'multiple-choice') {
           const correctOption = this.currentQuestion.options.find((o) => o.correct);
-          this.feedbackMessage = `The correct answer is: "${
-            correctOption?.text || '—'
-          }"`;
+          this.feedbackMessage = `The correct answer is: "${correctOption?.text || '—'}"`;
         } else if (this.currentQuestion.type === 'translation') {
           this.feedbackMessage = `The correct translation is: "${this.currentQuestion.correctAnswer}"`;
         } else {
@@ -673,13 +399,9 @@ export default {
       this.answerSubmitted = false;
       this.feedbackMessage = '';
 
-      if (this.$refs.aiFeedback) {
-        this.$refs.aiFeedback.close();
-      }
+      if (this.$refs.aiFeedback) this.$refs.aiFeedback.close();
 
-      if (this.currentQuestion.type === 'match-pairs') {
-        this.initPairs();
-      }
+      if (this.currentQuestion.type === 'match-pairs') this.initPairs();
     },
 
     initPairs() {
@@ -729,10 +451,9 @@ export default {
 
       if (this.currentQuestion.type === 'multiple-choice') {
         const correctIdx = this.currentQuestion.options.findIndex((o) => o.correct);
-        this.feedbackMessage =
-          correctIdx % 2 === 0
-            ? 'The correct answer is in the first or third position.'
-            : 'The correct answer is in the second or fourth position.';
+        this.feedbackMessage = correctIdx % 2 === 0
+          ? 'The correct answer is in the first or third position.'
+          : 'The correct answer is in the second or fourth position.';
       } else if (this.currentQuestion.type === 'translation') {
         const answer = this.currentQuestion.correctAnswer || '';
         const hint = answer.substring(0, Math.floor(answer.length / 2)) + '...';
@@ -742,9 +463,6 @@ export default {
       }
     },
 
-    // =========================
-    // NAVIGATION
-    // =========================
     async selectLesson(lesson) {
       if (lesson.status === 'locked') return;
       await this.loadLesson(lesson.id);
@@ -760,36 +478,19 @@ export default {
 
     async continueLearning() {
       const next = this.lessonPath.find((l) => l.status === 'current');
-      if (next) {
-        await this.loadLesson(next.id);
-      }
+      if (next) await this.loadLesson(next.id);
     },
 
-    // =========================
-    // DROPDOWN HANDLERS
-    // =========================
-    handleProfile() {
-      console.log('[profile] Profile page');
-    },
-
-    handleSettings() {
-      console.log('[settings] Settings page');
-    },
-
-    handleChangePassword() {
-      alert('Şifre değiştirme özelliği yakında eklenecek.');
-    },
-
+    handleProfile() { console.log('[profile]'); },
+    handleSettings() { console.log('[settings]'); },
+    handleChangePassword() { alert('Yakında eklenecek.'); },
     handleLogout() {
       if (confirm('Çıkış yapmak istiyor musun?')) {
         localStorage.removeItem('token');
         this.$router.push('/');
       }
     },
-
-    goToDashboard() {
-      this.$router.push('/dashboard');
-    },
+    goToDashboard() { this.$router.push('/dashboard'); },
   },
   async mounted() {
     const token = localStorage.getItem('token');
@@ -798,14 +499,10 @@ export default {
       return;
     }
 
-    // Token'dan kullanıcı bilgisi al
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       this.userEmail = payload.email || '';
-      // Email'in başından isim çıkar (ongunakayofficial@gmail.com → ongunakayofficial)
-      this.userName = this.userEmail
-        ? this.userEmail.split('@')[0]
-        : 'User';
+      this.userName = this.userEmail ? this.userEmail.split('@')[0] : 'User';
     } catch (e) {
       console.warn('[auth] Invalid token:', e.message);
     }
@@ -817,110 +514,12 @@ export default {
 
 <style scoped>
 .lessons-container {
-  background-color: #f8f9fa;
+  background-color: #FFFFFF;
   min-height: 100vh;
 }
+
 .main-content {
   padding-top: 20px;
-}
-.path-node {
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-.path-node:hover:not(.active) {
-  background-color: rgba(0, 123, 255, 0.1);
-}
-.path-node.active {
-  background-color: rgba(0, 123, 255, 0.15);
-  border-left: 4px solid #007bff;
-}
-.circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
-}
-.circle.completed {
-  background-color: #28a745;
-}
-.circle.current {
-  background-color: #007bff;
-}
-.circle.locked {
-  background-color: #6c757d;
-  opacity: 0.6;
-}
-.node-title {
-  font-weight: 600;
-}
-.question-text {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-.example-text {
-  font-size: 1rem;
-  color: #6c757d;
-  border-left: 3px solid #007bff;
-}
-.option-item {
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-.option-item.selected {
-  border-color: #007bff;
-  background-color: rgba(0, 123, 255, 0.1);
-}
-.option-item.correct {
-  border-color: #28a745;
-  background-color: rgba(40, 167, 69, 0.1);
-}
-.option-item.incorrect {
-  border-color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.1);
-}
-.pairs-container {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 8px;
-}
-.draggable-list {
-  min-height: 200px;
-}
-.pair-item {
-  cursor: move;
-  user-select: none;
-  transition: all 0.2s ease;
-}
-.pair-item:hover {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-.stat-item {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-.stat-value {
-  font-size: 1.5rem;
-}
-.rewards-card {
-  border: 2px dashed #dee2e6;
-}
-.reward-value {
-  font-weight: bold;
-}
-.clickable {
-  cursor: pointer;
+  padding-bottom: 40px;
 }
 </style>
