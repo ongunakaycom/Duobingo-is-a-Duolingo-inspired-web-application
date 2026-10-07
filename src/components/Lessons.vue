@@ -155,6 +155,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Confirm Modals -->
+    <ConfirmModal
+      :visible="showLogoutModal"
+      icon="🚪"
+      title="Çıkış yapmak istiyor musun?"
+      message="Hesabından çıkış yapmak üzeresin. Devam etmek istiyor musun?"
+      confirm-text="Çıkış Yap"
+      cancel-text="İptal"
+      @confirm="confirmLogout"
+      @update:visible="showLogoutModal = $event"
+    />
+
+    <ConfirmModal
+      :visible="showChangePasswordModal"
+      icon="🔒"
+      title="Şifre Değiştir"
+      message="Şifre değiştirme özelliği yakında eklenecek."
+      confirm-text="Tamam"
+      cancel-text="Kapat"
+      @confirm="showChangePasswordModal = false"
+      @update:visible="showChangePasswordModal = $event"
+    />
   </div>
 </template>
 
@@ -166,6 +189,7 @@ import QuestionCard from './dashboard/QuestionCard.vue';
 import VocabularyCard from './dashboard/VocabularyCard.vue';
 import TipsCard from './dashboard/TipsCard.vue';
 import LessonComplete from './dashboard/LessonComplete.vue';
+import ConfirmModal from './ui/ConfirmModal.vue';
 import { lessonsApi, progressApi } from '@/axios';
 
 export default {
@@ -178,11 +202,15 @@ export default {
     VocabularyCard,
     TipsCard,
     LessonComplete,
+    ConfirmModal,
   },
   data() {
     return {
+      // User
       userName: '',
       userEmail: '',
+
+      // Data
       lessonPath: [],
       currentLesson: null,
       userStats: {
@@ -191,6 +219,8 @@ export default {
         accuracy: 0,
         wordsLearned: 0,
       },
+
+      // UI state
       loading: true,
       error: null,
       currentQuestionIndex: 0,
@@ -202,9 +232,15 @@ export default {
       feedbackType: 'info',
       feedbackIcon: 'info-circle',
       lessonCompleted: false,
+
+      // Matching pairs
       englishWords: [],
       spanishWords: [],
       draggedItem: null,
+
+      // Modals
+      showLogoutModal: false,
+      showChangePasswordModal: false,
     };
   },
   computed: {
@@ -222,6 +258,9 @@ export default {
     },
   },
   methods: {
+    // =========================
+    // DATA LOADING
+    // =========================
     async loadData() {
       this.loading = true;
       this.error = null;
@@ -291,6 +330,9 @@ export default {
       }
     },
 
+    // =========================
+    // ANSWER HANDLING
+    // =========================
     selectOption(index) {
       if (!this.answerSubmitted) this.selectedAnswer = index;
     },
@@ -462,6 +504,9 @@ export default {
       }
     },
 
+    // =========================
+    // NAVIGATION
+    // =========================
     async selectLesson(lesson) {
       if (lesson.status === 'locked') return;
       await this.loadLesson(lesson.id);
@@ -480,14 +525,28 @@ export default {
       if (next) await this.loadLesson(next.id);
     },
 
-    handleProfile() { console.log('[profile]'); },
-    handleSettings() { console.log('[settings]'); },
-    handleChangePassword() { alert('Yakında eklenecek.'); },
+    // =========================
+    // DROPDOWN / MODAL HANDLERS
+    // =========================
+    handleProfile() {
+      console.log('[profile] Profile page');
+    },
+
+    handleSettings() {
+      console.log('[settings] Settings page');
+    },
+
+    handleChangePassword() {
+      this.showChangePasswordModal = true;
+    },
+
     handleLogout() {
-      if (confirm('Çıkış yapmak istiyor musun?')) {
-        localStorage.removeItem('token');
-        this.$router.push('/');
-      }
+      this.showLogoutModal = true;
+    },
+
+    confirmLogout() {
+      localStorage.removeItem('token');
+      this.$router.push('/');
     },
   },
   async mounted() {
