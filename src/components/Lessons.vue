@@ -423,9 +423,9 @@ export default {
   components: { AIFeedback, DashboardHeader },
   data() {
     return {
-      // User
-      userName: 'Alex',
-      userEmail: 'alex@duobingo.app',
+      // User (token'dan doldurulacak)
+      userName: '',
+      userEmail: '',
 
       // API'den gelecek
       lessonPath: [],
@@ -797,6 +797,19 @@ export default {
       this.$router.push('/');
       return;
     }
+
+    // Token'dan kullanıcı bilgisi al
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      this.userEmail = payload.email || '';
+      // Email'in başından isim çıkar (ongunakayofficial@gmail.com → ongunakayofficial)
+      this.userName = this.userEmail
+        ? this.userEmail.split('@')[0]
+        : 'User';
+    } catch (e) {
+      console.warn('[auth] Invalid token:', e.message);
+    }
+
     await this.loadData();
   },
 };
