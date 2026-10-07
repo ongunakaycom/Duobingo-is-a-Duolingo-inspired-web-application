@@ -8,27 +8,23 @@
         <div class="hero-grid">
           <!-- Left: Hero (mascot + streak + gems) -->
           <div class="hero-grid__hero">
-            <LoginHero
-              :streak="7"
-              :gems="120"
-              :title="isLoginMode ? 'Welcome Back!' : 'Create Your Account'"
-              :subtitle="
-                isLoginMode
-                  ? 'Login to continue your playful language quest and keep your streak alive.'
-                  : 'Join DuoBingo and start mastering languages the fun way.'
-              "
-            />
+          <LoginHero
+            :streak="7"
+            :gems="120"
+            :is-login-mode="isLoginMode"
+          />
           </div>
 
           <!-- Right: Form -->
           <div class="hero-grid__form">
-            <LoginForm
-              :loading="isLoading"
-              :error="error"
-              :initial-email="email"
-              @submit="handleLogin"
-              @signup="toggleMode"
-            />
+          <LoginForm
+            :loading="isLoading"
+            :error="error"
+            :initial-email="email"
+            :is-login-mode="isLoginMode"
+            @submit="handleLogin"
+            @toggle-mode="toggleMode"
+          />
           </div>
         </div>
       </div>
