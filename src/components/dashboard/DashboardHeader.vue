@@ -273,7 +273,7 @@ onBeforeUnmount(() => {
   transform: scale(1.05);
 }
 
-/* Dropdown */
+/* Dropdown new */
 .profile-dropdown {
   position: absolute;
   top: calc(100% + 8px);
