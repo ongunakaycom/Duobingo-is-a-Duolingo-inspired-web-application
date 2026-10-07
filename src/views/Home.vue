@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <LandingWrapper />
+    <LandingNew />
   </div>
 </template>
 
 <script>
-import LandingWrapper from '@/components/LandingWrapper.vue';
+import LandingNew from '@/components/landing/LandingNew.vue';
 
 export default {
   name: 'Home',
   components: {
-    LandingWrapper
-  }
+    LandingNew,
+  },
 };
 </script>
 
