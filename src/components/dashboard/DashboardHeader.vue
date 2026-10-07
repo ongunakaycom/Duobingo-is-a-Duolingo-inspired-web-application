@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 200;
+  z-index: 1001;                    /* ← 200 → 1001 */
 }
 
 .profile-dropdown__header {
