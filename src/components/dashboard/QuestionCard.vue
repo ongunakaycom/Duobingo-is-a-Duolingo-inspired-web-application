@@ -152,6 +152,32 @@ defineEmits([
   border-left: 3px solid var(--color-primary);
 }
 
+/* --- YENİ EKLENEN INPUT STİLLERİ --- */
+/* BootstrapVue inputunu hedeflemek için deep selector kullanıyoruz */
+:deep(.form-control) {
+  cursor: text; /* Mouse metin imleci olsun */
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+:deep(.form-control:hover) {
+  border-color: #adb5bd; /* Hover'da hafif koyulaşma */
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.05);
+}
+
+:deep(.form-control:focus) {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.25rem rgba(88, 204, 2, 0.25); /* Duolingo yeşili parlama */
+  outline: none;
+}
+
+:deep(.form-control:disabled) {
+  cursor: not-allowed;
+  background-color: #e9ecef;
+}
+/* ----------------------------------- */
+
 .option-item {
   border: 2px solid #dee2e6;
   border-radius: 8px;

@@ -102,6 +102,38 @@
   box-sizing: border-box;
 }
 
+/* =============================
+ * Form Elements (Input & Button)
+ * ============================= */
+input,
+textarea,
+select {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  cursor: text;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);

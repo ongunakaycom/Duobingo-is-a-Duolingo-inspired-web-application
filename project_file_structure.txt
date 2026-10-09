@@ -1,9 +1,11 @@
+.gitignore
+.yarnrc
+eslint.config.js
 index.html
 jsconfig.json
 LICENSE
 package-lock.json
 package.json
-pnpm-lock.yaml
 public\
 public\favicon.ico
 public\logo192.png
@@ -18,7 +20,7 @@ src\App.vue
 src\assets\
 src\assets\duo-banner.png
 src\assets\duo.png
-src\assets\Duolingo_logo.svg.png
+src\assets\duobingo.png
 src\assets\german-flag.png
 src\assets\logo.png
 src\assets\tokens.css
@@ -29,6 +31,13 @@ src\components\
 src\components\AIFeedback.vue
 src\components\AppFooter.vue
 src\components\AppHeader.vue
+src\components\dashboard\
+src\components\dashboard\DashboardHeader.vue
+src\components\dashboard\LessonComplete.vue
+src\components\dashboard\LessonPathCard.vue
+src\components\dashboard\QuestionCard.vue
+src\components\dashboard\TipsCard.vue
+src\components\dashboard\VocabularyCard.vue
 src\components\Dashboard.vue
 src\components\landing\
 src\components\landing\AppFooter.vue
@@ -36,6 +45,7 @@ src\components\landing\AppHeader.vue
 src\components\landing\LandingCTA.vue
 src\components\landing\LandingFeatures.vue
 src\components\landing\LandingHero.vue
+src\components\landing\LandingNew.vue
 src\components\LandingFeatures.vue
 src\components\LandingJumbotron.vue
 src\components\LandingWrapper.vue
@@ -46,6 +56,7 @@ src\components\login\
 src\components\login\LoginForm.vue
 src\components\login\LoginHero.vue
 src\components\ui\
+src\components\ui\ConfirmModal.vue
 src\components\ui\FeatureCard.vue
 src\components\ui\IconBadge.vue
 src\components\ui\StatsBar.vue
@@ -67,4 +78,3 @@ src\views\
 src\views\Home.vue
 src\vitals.js
 vite.config.js
-yarn.lock
