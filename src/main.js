@@ -10,8 +10,6 @@ import './assets/tokens.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import LanguageDropdown from '@/components/LanguageSelection.vue';
-
 import en from './locales/en.json';
 import es from './locales/es.json';
 
@@ -23,8 +21,6 @@ const i18n = createI18n({
 });
 
 const app = createApp(App);
-
-app.component('LanguageDropdown', LanguageDropdown);
 
 app.use(createPinia());
 app.use(router);
