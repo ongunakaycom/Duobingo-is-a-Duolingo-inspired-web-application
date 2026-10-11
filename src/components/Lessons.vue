@@ -73,7 +73,12 @@
               </div>
 
               <b-progress height="6px" :value="lessonProgress" :max="100" class="mt-2">
-                <b-progress-bar :value="lessonProgress" variant="primary" striped animated></b-progress-bar>
+                <b-progress-bar
+                  :value="lessonProgress"
+                  variant="primary"
+                  striped
+                  animated
+                ></b-progress-bar>
               </b-progress>
             </div>
 
@@ -115,18 +120,21 @@
 
               <!-- Action Buttons -->
               <div v-if="!lessonCompleted" class="action-buttons mt-4">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                   <b-button
                     variant="outline-secondary"
+                    class="btn-action btn-hint"
                     :disabled="answerSubmitted"
                     @click="hint"
                   >
-                    <b-icon icon="lightbulb"></b-icon> Hint
+                    <b-icon icon="lightbulb" class="me-1"></b-icon>
+                    <span>Hint</span>
                   </b-button>
 
                   <div v-if="!answerSubmitted">
                     <b-button
                       variant="primary"
+                      class="btn-action btn-submit"
                       :disabled="!canSubmit"
                       @click="submitAnswer"
                     >
@@ -134,9 +142,13 @@
                     </b-button>
                   </div>
                   <div v-else>
-                    <b-button variant="success" @click="nextQuestion">
-                      {{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}
-                      <b-icon icon="arrow-right" class="ms-1"></b-icon>
+                    <b-button
+                      variant="success"
+                      class="btn-action btn-next"
+                      @click="nextQuestion"
+                    >
+                      <span>{{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}</span>
+                      <b-icon icon="arrow-right" class="ms-2"></b-icon>
                     </b-button>
                   </div>
                 </div>
@@ -631,5 +643,39 @@ export default {
 
 :deep(.sticky-top) {
   z-index: 1 !important;
+}
+
+/* =============================
+   Action Buttons Bar
+   ============================= */
+.action-buttons {
+  padding-top: var(--space-4, 16px);
+  border-top: 2px solid var(--color-border-light, #f0f0f0);
+}
+
+.action-buttons .btn-action {
+  min-width: 150px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hint button — icon turns orange on hover */
+.action-buttons .btn-hint .b-icon {
+  color: var(--color-warning, #FF9600);
+  transition: color var(--transition-fast, 0.1s ease);
+}
+
+.action-buttons .btn-hint:hover:not(:disabled) {
+  border-color: var(--color-warning, #FF9600) !important;
+  border-bottom-color: var(--color-warning, #FF9600) !important;
+  color: var(--color-warning, #FF9600) !important;
+  background-color: rgba(255, 150, 0, 0.05) !important;
+}
+
+/* Submit / Next buttons */
+.action-buttons .btn-submit,
+.action-buttons .btn-next {
+  min-width: 180px;
 }
 </style>
