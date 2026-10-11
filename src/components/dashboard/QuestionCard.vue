@@ -5,7 +5,7 @@
       <h5 class="question-text">{{ question.question }}</h5>
       <div
         v-if="question.example"
-        class="example-text p-3 bg-light rounded mt-3"
+        class="example-text p-3 rounded mt-3"
       >
         <em>"{{ question.example }}"</em>
       </div>
@@ -13,7 +13,9 @@
 
     <!-- Answer Options -->
     <div class="answer-options">
-      <!-- Multiple Choice -->
+      <!-- =============================
+           Multiple Choice
+           ============================= -->
       <div v-if="question.type === 'multiple-choice'">
         <b-list-group>
           <b-list-group-item
@@ -43,32 +45,39 @@
         </b-list-group>
       </div>
 
-      <!-- Translation -->
+      <!-- =============================
+           Translation
+           ============================= -->
       <div v-else-if="question.type === 'translation'">
-        <b-form-group>
-          <b-form-input
-            :model-value="translationAnswer"
+        <div class="mb-3">
+          <input
+            :value="translationAnswer"
+            type="text"
+            class="form-control form-control-lg translation-input"
             placeholder="Type the translation here..."
-            size="lg"
             :disabled="answerSubmitted"
-            @update:model-value="$emit('update:translationAnswer', $event)"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            @input="$emit('update:translation-answer', $event.target.value)"
             @keyup.enter="$emit('check-translation')"
-          ></b-form-input>
-          <div class="mt-3">
-            <b-button
-              variant="primary"
-              size="lg"
-              :disabled="!translationAnswer || answerSubmitted"
-              class="w-100"
-              @click="$emit('check-translation')"
-            >
-              Check Answer
-            </b-button>
-          </div>
-        </b-form-group>
+          />
+        </div>
+        <b-button
+          variant="primary"
+          size="lg"
+          :disabled="!translationAnswer || answerSubmitted"
+          class="w-100"
+          @click="$emit('check-translation')"
+        >
+          Check Answer
+        </b-button>
       </div>
 
-      <!-- Match Pairs -->
+      <!-- =============================
+           Match Pairs
+           ============================= -->
       <div v-else-if="question.type === 'match-pairs'">
         <div class="pairs-container">
           <div class="row">
@@ -132,7 +141,7 @@ defineProps({
 
 defineEmits([
   'select-option',
-  'update:translationAnswer',
+  'update:translation-answer', // Vue 3 kebab-case convention
   'check-translation',
   'drag-start',
   'drop',
@@ -141,52 +150,77 @@ defineEmits([
 </script>
 
 <style scoped>
+/* =============================
+   Question / Example
+   ============================= */
 .question-text {
   font-size: 1.5rem;
+  font-weight: var(--font-weight-bold, 700);
   margin-bottom: 1rem;
 }
 
 .example-text {
   font-size: 1rem;
-  color: #6c757d;
-  border-left: 3px solid var(--color-primary);
+  color: var(--color-text-secondary, #6c757d);
+  background-color: var(--color-bg-input, #f7f7f7);
+  border-left: 3px solid var(--color-primary, #58cc02);
+  border-radius: var(--radius-sm, 8px);
 }
 
-/* --- YENİ EKLENEN INPUT STİLLERİ --- */
-/* BootstrapVue inputunu hedeflemek için deep selector kullanıyoruz */
-:deep(.form-control) {
-  cursor: text; /* Mouse metin imleci olsun */
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
+/* =============================
+   Translation Input (native)
+   ============================= */
+.translation-input {
+  cursor: text;
+  border: 2px solid var(--color-border, #e5e5e5);
+  border-radius: var(--radius-md, 12px);
+  background-color: var(--color-bg-input, #f7f7f7);
+  color: var(--color-text, #3c3c3c);
+  font-size: var(--font-size-lg, 18px);
+  padding: var(--space-4, 16px);
   transition: all 0.2s ease;
 }
 
-:deep(.form-control:hover) {
-  border-color: #adb5bd; /* Hover'da hafif koyulaşma */
-  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.05);
+.translation-input::placeholder {
+  color: var(--color-text-muted, #afafaf);
 }
 
-:deep(.form-control:focus) {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 0.25rem rgba(88, 204, 2, 0.25); /* Duolingo yeşili parlama */
+.translation-input:hover:not(:disabled) {
+  border-color: #c4c4c4;
+  background-color: #ffffff;
+}
+
+.translation-input:focus {
+  border-color: var(--color-primary, #58cc02);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 0.25rem rgba(88, 204, 2, 0.25);
   outline: none;
 }
 
-:deep(.form-control:disabled) {
+.translation-input:disabled {
   cursor: not-allowed;
-  background-color: #e9ecef;
+  background-color: #f0f0f0;
+  color: var(--color-text-muted, #afafaf);
 }
-/* ----------------------------------- */
 
+/* =============================
+   Multiple-Choice Options
+   ============================= */
 .option-item {
   border: 2px solid #dee2e6;
   border-radius: 8px;
   transition: all 0.2s ease;
   cursor: pointer;
+  background-color: #ffffff;
+}
+
+.option-item:hover:not(:disabled) {
+  background-color: #f7f7f7;
+  border-color: #c4c4c4;
 }
 
 .option-item.selected {
-  border-color: var(--color-primary);
+  border-color: var(--color-primary, #58cc02);
   background-color: rgba(88, 204, 2, 0.1);
 }
 
@@ -200,6 +234,13 @@ defineEmits([
   background-color: rgba(220, 53, 69, 0.1);
 }
 
+.option-item:disabled {
+  cursor: not-allowed;
+}
+
+/* =============================
+   Match Pairs
+   ============================= */
 .pairs-container {
   background-color: #f8f9fa;
   padding: 1rem;
@@ -211,12 +252,20 @@ defineEmits([
 }
 
 .pair-item {
-  cursor: move;
+  cursor: grab;
   user-select: none;
   transition: all 0.2s ease;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 
 .pair-item:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-color: #c4c4c4;
+}
+
+.pair-item:active {
+  cursor: grabbing;
 }
 </style>

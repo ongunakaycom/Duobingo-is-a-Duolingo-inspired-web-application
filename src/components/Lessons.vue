@@ -20,24 +20,24 @@
       style="min-height: 60vh"
     >
       <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
-        <span class="visually-hidden">Yükleniyor...</span>
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-3 text-muted">Dersler yükleniyor...</p>
+      <p class="mt-3 text-muted">Loading lessons...</p>
     </div>
 
     <!-- Error -->
     <div v-else-if="error" class="container-tight py-5">
       <div class="alert alert-danger">
-        <h5>⚠️ Hata</h5>
+        <h5>⚠️ Error</h5>
         <p>{{ error }}</p>
-        <button class="btn btn-primary" @click="loadData">Tekrar Dene</button>
+        <button class="btn btn-primary" @click="loadData">Retry</button>
       </div>
     </div>
 
     <!-- Main Content -->
     <div v-else-if="currentLesson" class="container-tight main-content">
       <div class="row mt-4">
-        <!-- LEFT -->
+        <!-- LEFT: Lesson Path -->
         <div class="col-lg-3 mb-4">
           <div class="sticky-top pt-3">
             <LessonPathCard
@@ -49,7 +49,7 @@
           </div>
         </div>
 
-        <!-- CENTER -->
+        <!-- CENTER: Question Card -->
         <div class="col-lg-6 mb-4">
           <div class="card border-0 shadow-sm lesson-card">
             <div class="card-header bg-white border-0 pt-4">
@@ -78,8 +78,13 @@
             </div>
 
             <div class="card-body">
+              <!--
+                NOTE: `:key` ensures the card resets when the question changes,
+                so the translation input doesn't keep stale values.
+              -->
               <QuestionCard
                 v-if="!lessonCompleted"
+                :key="`${currentLesson._id}-${currentQuestionIndex}`"
                 :question="currentQuestion"
                 :selected-answer="selectedAnswer"
                 :translation-answer="translationAnswer"
@@ -87,13 +92,14 @@
                 :english-words="englishWords"
                 :spanish-words="spanishWords"
                 @select-option="selectOption"
-                @update:translationAnswer="translationAnswer = $event"
+                @update:translation-answer="translationAnswer = $event"
                 @check-translation="checkTranslation"
                 @drag-start="dragStart"
                 @drop="drop"
                 @check-pairs="checkPairs"
               />
 
+              <!-- Feedback -->
               <div v-if="feedbackMessage && !lessonCompleted" class="feedback mt-4">
                 <b-alert :variant="feedbackType" show class="d-flex align-items-center">
                   <b-icon :icon="feedbackIcon" scale="1.5" class="me-3"></b-icon>
@@ -104,18 +110,24 @@
                 </b-alert>
               </div>
 
+              <!-- AI Feedback -->
               <AIFeedback v-if="!lessonCompleted" ref="aiFeedback" />
 
+              <!-- Action Buttons -->
               <div v-if="!lessonCompleted" class="action-buttons mt-4">
                 <div class="d-flex justify-content-between">
-                  <b-button variant="outline-secondary" :disabled="answerSubmitted" @click="hint">
+                  <b-button
+                    variant="outline-secondary"
+                    :disabled="answerSubmitted"
+                    @click="hint"
+                  >
                     <b-icon icon="lightbulb"></b-icon> Hint
                   </b-button>
 
                   <div v-if="!answerSubmitted">
                     <b-button
                       variant="primary"
-                      :disabled="selectedAnswer === null && !translationAnswer"
+                      :disabled="!canSubmit"
                       @click="submitAnswer"
                     >
                       Submit Answer
@@ -130,6 +142,7 @@
                 </div>
               </div>
 
+              <!-- Lesson Complete -->
               <LessonComplete
                 v-if="lessonCompleted"
                 :lesson-title="currentLesson.title"
@@ -142,7 +155,7 @@
           </div>
         </div>
 
-        <!-- RIGHT -->
+        <!-- RIGHT: Vocabulary + Tips -->
         <div class="col-lg-3 mb-4">
           <div class="sticky-top pt-3">
             <VocabularyCard
@@ -160,10 +173,10 @@
     <ConfirmModal
       :visible="showLogoutModal"
       icon="🚪"
-      title="Çıkış yapmak istiyor musun?"
-      message="Hesabından çıkış yapmak üzeresin. Devam etmek istiyor musun?"
-      confirm-text="Çıkış Yap"
-      cancel-text="İptal"
+      title="Are you sure you want to log out?"
+      message="You are about to log out of your account. Continue?"
+      confirm-text="Log Out"
+      cancel-text="Cancel"
       @confirm="confirmLogout"
       @update:visible="showLogoutModal = $event"
     />
@@ -171,10 +184,10 @@
     <ConfirmModal
       :visible="showChangePasswordModal"
       icon="🔒"
-      title="Şifre Değiştir"
-      message="Şifre değiştirme özelliği yakında eklenecek."
-      confirm-text="Tamam"
-      cancel-text="Kapat"
+      title="Change Password"
+      message="Password change feature is coming soon."
+      confirm-text="OK"
+      cancel-text="Close"
       @confirm="showChangePasswordModal = false"
       @update:visible="showChangePasswordModal = $event"
     />
@@ -256,6 +269,20 @@ export default {
       if (!this.currentLesson?.questions?.length) return 0;
       return ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
     },
+    /**
+     * Whether the "Submit Answer" button should be enabled.
+     * Depends on the question type:
+     *  - multiple-choice: an option must be selected
+     *  - translation:     the input must not be empty
+     *  - match-pairs:     always enabled (button handled inside QuestionCard)
+     */
+    canSubmit() {
+      const type = this.currentQuestion?.type;
+      if (type === 'multiple-choice') return this.selectedAnswer !== null;
+      if (type === 'translation') return this.translationAnswer.trim().length > 0;
+      if (type === 'match-pairs') return true;
+      return false;
+    },
   },
   methods: {
     // =========================
@@ -310,7 +337,7 @@ export default {
         }
       } catch (e) {
         console.error('[loadData] error:', e);
-        this.error = e.message || 'Veri yüklenemedi.';
+        this.error = e.message || 'Failed to load data.';
       } finally {
         this.loading = false;
       }
@@ -337,19 +364,40 @@ export default {
       if (!this.answerSubmitted) this.selectedAnswer = index;
     },
 
+    /**
+     * Unified submit handler for all question types.
+     * Delegates to the correct checker based on the question type.
+     */
     submitAnswer() {
-      if (this.currentQuestion.type === 'multiple-choice') {
-        const isCorrect = this.currentQuestion.options[this.selectedAnswer].correct;
+      const type = this.currentQuestion?.type;
+
+      if (type === 'multiple-choice') {
+        if (this.selectedAnswer === null) return;
+        const option = this.currentQuestion.options?.[this.selectedAnswer];
+        const isCorrect = !!option?.correct;
         this.showFeedback(isCorrect);
+        this.answerSubmitted = true;
+        return;
       }
-      this.answerSubmitted = true;
+
+      if (type === 'translation') {
+        this.checkTranslation();
+        return;
+      }
+
+      if (type === 'match-pairs') {
+        this.checkPairs();
+        return;
+      }
     },
 
     async checkTranslation() {
       if (!this.translationAnswer) return;
 
       const userAnswer = this.translationAnswer.toLowerCase().trim();
-      const correctAnswer = (this.currentQuestion.correctAnswer || '').toLowerCase().trim();
+      const correctAnswer = (this.currentQuestion.correctAnswer || '')
+        .toLowerCase()
+        .trim();
       const isCorrect = userAnswer === correctAnswer;
 
       this.showFeedback(isCorrect);
@@ -492,13 +540,14 @@ export default {
 
       if (this.currentQuestion.type === 'multiple-choice') {
         const correctIdx = this.currentQuestion.options.findIndex((o) => o.correct);
-        this.feedbackMessage = correctIdx % 2 === 0
-          ? 'The correct answer is in the first or third position.'
-          : 'The correct answer is in the second or fourth position.';
+        this.feedbackMessage =
+          correctIdx % 2 === 0
+            ? 'The correct answer is in the first or third position.'
+            : 'The correct answer is in the second or fourth position.';
       } else if (this.currentQuestion.type === 'translation') {
         const answer = this.currentQuestion.correctAnswer || '';
-        const hint = answer.substring(0, Math.floor(answer.length / 2)) + '...';
-        this.feedbackMessage = `Starts with: "${hint}"`;
+        const partial = answer.substring(0, Math.floor(answer.length / 2)) + '...';
+        this.feedbackMessage = `Starts with: "${partial}"`;
       } else {
         this.feedbackMessage = 'Try matching the first pair.';
       }
@@ -526,7 +575,7 @@ export default {
     },
 
     // =========================
-    // DROPDOWN / MODAL HANDLERS
+    // MODAL / DROPDOWN HANDLERS
     // =========================
     handleProfile() {
       console.log('[profile] Profile page');
