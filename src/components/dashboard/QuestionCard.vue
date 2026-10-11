@@ -3,10 +3,7 @@
     <!-- Question -->
     <div class="question mb-4">
       <h5 class="question-text">{{ question.question }}</h5>
-      <div
-        v-if="question.example"
-        class="example-text p-3 rounded mt-3"
-      >
+      <div v-if="question.example" class="example-text p-3 rounded mt-3">
         <em>"{{ question.example }}"</em>
       </div>
     </div>
@@ -17,12 +14,12 @@
            Multiple Choice
            ============================= -->
       <div v-if="question.type === 'multiple-choice'">
-        <b-list-group>
-          <b-list-group-item
+        <div class="options-list">
+          <button
             v-for="(option, index) in question.options"
             :key="`${index}-${option.text}`"
-            button
-            class="mb-2 option-item"
+            type="button"
+            class="option-item"
             :class="{
               selected: selectedAnswer === index,
               correct: answerSubmitted && option.correct,
@@ -32,17 +29,19 @@
             :disabled="answerSubmitted"
             @click="$emit('select-option', index)"
           >
-            <div class="d-flex justify-content-between align-items-center">
-              <span>{{ option.text }}</span>
-              <span v-if="answerSubmitted && option.correct" class="text-success">✓</span>
-              <span
-                v-if="answerSubmitted && selectedAnswer === index && !option.correct"
-                class="text-danger"
-                >✗</span
-              >
-            </div>
-          </b-list-group-item>
-        </b-list-group>
+            <span class="option-text">{{ option.text }}</span>
+            <span
+              v-if="answerSubmitted && option.correct"
+              class="option-mark correct-mark"
+              >✓</span
+            >
+            <span
+              v-if="answerSubmitted && selectedAnswer === index && !option.correct"
+              class="option-mark incorrect-mark"
+              >✗</span
+            >
+          </button>
+        </div>
       </div>
 
       <!-- =============================
@@ -64,15 +63,14 @@
             @keyup.enter="$emit('check-translation')"
           />
         </div>
-        <b-button
-          variant="primary"
-          size="lg"
+        <button
+          type="button"
+          class="btn-duo btn-duo-primary w-100"
           :disabled="!translationAnswer || answerSubmitted"
-          class="w-100"
           @click="$emit('check-translation')"
         >
           Check Answer
-        </b-button>
+        </button>
       </div>
 
       <!-- =============================
@@ -87,7 +85,7 @@
                 <div
                   v-for="word in englishWords"
                   :key="word.id"
-                  class="pair-item mb-2 p-3 bg-white border rounded"
+                  class="pair-item mb-2 p-3"
                   draggable="true"
                   @dragstart="$emit('drag-start', word.id, 'english')"
                   @dragover.prevent
@@ -103,7 +101,7 @@
                 <div
                   v-for="word in spanishWords"
                   :key="word.id"
-                  class="pair-item mb-2 p-3 bg-white border rounded"
+                  class="pair-item mb-2 p-3"
                   draggable="true"
                   @dragstart="$emit('drag-start', word.id, 'spanish')"
                   @dragover.prevent
@@ -115,13 +113,14 @@
             </div>
           </div>
           <div class="text-center mt-3">
-            <b-button
-              variant="primary"
+            <button
+              type="button"
+              class="btn-duo btn-duo-primary"
               :disabled="answerSubmitted"
               @click="$emit('check-pairs')"
             >
               Check Matching
-            </b-button>
+            </button>
           </div>
         </div>
       </div>
@@ -141,7 +140,7 @@ defineProps({
 
 defineEmits([
   'select-option',
-  'update:translation-answer', // Vue 3 kebab-case convention
+  'update:translation-answer',
   'check-translation',
   'drag-start',
   'drop',
@@ -206,45 +205,88 @@ defineEmits([
 /* =============================
    Multiple-Choice Options
    ============================= */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .option-item {
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 20px;
   background-color: #ffffff;
+  border: 2px solid var(--color-border, #e5e5e5);
+  border-bottom: 4px solid var(--color-border, #e5e5e5);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--color-text, #3c3c3c);
+  text-align: left;
+  transition: transform 0.1s ease,
+              background-color 0.15s ease,
+              border-color 0.15s ease,
+              border-bottom-width 0.1s ease;
 }
 
 .option-item:hover:not(:disabled) {
-  background-color: #f7f7f7;
-  border-color: #c4c4c4;
+  background-color: var(--color-bg-hover, #f7f7f7);
+  border-color: var(--color-border-hover, #c4c4c4);
+  border-bottom-color: var(--color-border-hover, #c4c4c4);
+}
+
+.option-item:active:not(:disabled) {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
 }
 
 .option-item.selected {
   border-color: var(--color-primary, #58cc02);
-  background-color: rgba(88, 204, 2, 0.1);
+  border-bottom-color: var(--color-primary-dark, #3d9900);
+  background-color: rgba(88, 204, 2, 0.08);
+  color: var(--color-primary-dark, #3d9900);
 }
 
 .option-item.correct {
-  border-color: #28a745;
-  background-color: rgba(40, 167, 69, 0.1);
+  border-color: var(--color-success, #58cc02);
+  border-bottom-color: var(--color-success-dark, #3d9900);
+  background-color: rgba(88, 204, 2, 0.12);
+  color: var(--color-success-dark, #3d9900);
 }
 
 .option-item.incorrect {
-  border-color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.1);
+  border-color: var(--color-error, #ff4b4b);
+  border-bottom-color: #cc3b3b;
+  background-color: rgba(255, 75, 75, 0.08);
+  color: #cc3b3b;
 }
 
 .option-item:disabled {
   cursor: not-allowed;
 }
 
+.option-text {
+  flex: 1;
+}
+
+.option-mark {
+  font-size: 20px;
+  font-weight: 900;
+  margin-left: 12px;
+}
+.correct-mark { color: var(--color-success, #58cc02); }
+.incorrect-mark { color: var(--color-error, #ff4b4b); }
+
 /* =============================
    Match Pairs
    ============================= */
 .pairs-container {
-  background-color: #f8f9fa;
+  background-color: var(--color-bg-input, #f7f7f7);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .draggable-list {
@@ -255,14 +297,14 @@ defineEmits([
   cursor: grab;
   user-select: none;
   transition: all 0.2s ease;
-  border: 2px solid #dee2e6;
+  border: 2px solid var(--color-border, #e5e5e5);
   border-radius: 8px;
   background-color: #ffffff;
 }
 
 .pair-item:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-color: #c4c4c4;
+  border-color: var(--color-border-hover, #c4c4c4);
 }
 
 .pair-item:active {
