@@ -156,6 +156,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* =============================
+   Header shell — sticky, NO overflow clipping
+   ============================= */
 .dashboard-header {
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-border-light);
@@ -164,7 +167,7 @@ onBeforeUnmount(() => {
   z-index: 1000;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  /* ⚠️ NO `overflow: hidden` here — it would clip the profile dropdown */
 }
 
 .dashboard-header__inner {
@@ -176,6 +179,8 @@ onBeforeUnmount(() => {
   max-width: var(--container-max, 1200px);
   margin: 0 auto;
   width: 100%;
+  position: relative;                /* anchor for absolute children */
+  overflow: visible;                 /* ensure dropdown escapes */
 }
 
 /* =============================
@@ -201,15 +206,16 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: var(--space-1, 4px);
   flex: 1;
+  min-width: 0;                      /* allow shrinking so scroll works */
   justify-content: center;
   overflow-x: auto;
-  scrollbar-width: none;         /* Firefox */
-  -ms-overflow-style: none;      /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 2px 0;
 }
 
 .dashboard-header__nav::-webkit-scrollbar {
-  display: none;                 /* Chrome/Safari */
+  display: none;
 }
 
 .dashboard-header__nav-link {
@@ -263,11 +269,12 @@ onBeforeUnmount(() => {
 }
 
 /* =============================
-   Profile button
+   Profile button + dropdown anchor
    ============================= */
 .dashboard-header__profile-wrapper {
   position: relative;
   flex-shrink: 0;
+  z-index: 10;                       /* above adjacent stats */
 }
 
 .dashboard-header__profile {
@@ -305,7 +312,7 @@ onBeforeUnmount(() => {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
+  overflow: hidden;                  /* keeps rounded corners */
   z-index: 1001;
 }
 
@@ -410,7 +417,7 @@ onBeforeUnmount(() => {
 }
 
 /* =============================
-   Mobile (≤ 640px) — compact layout
+   Mobile (≤ 640px)
    ============================= */
 @media (max-width: 640px) {
   .dashboard-header__inner {
@@ -447,13 +454,12 @@ onBeforeUnmount(() => {
   }
 
   .profile-dropdown {
-    min-width: 220px;
+    min-width: 200px;
   }
 }
 
 /* =============================
-   Small mobile (≤ 400px) — hide nav labels, show icons only? 
-   For now, just keep it scrollable and tiny.
+   Small mobile (≤ 400px)
    ============================= */
 @media (max-width: 400px) {
   .dashboard-header__nav-link {
