@@ -1,6 +1,6 @@
 <template>
   <header class="dashboard-header">
-    <div class="container-tight dashboard-header__inner">
+    <div class="dashboard-header__inner">
       <!-- Logo -->
       <router-link to="/lessons" class="dashboard-header__logo">
         <img src="@/assets/duobingo.png" alt="DuoBingo" />
@@ -161,19 +161,26 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid var(--color-border-light);
   position: sticky;
   top: 0;
-  z-index: 1000;                    /* ← 100 → 1000 */
+  z-index: 1000;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .dashboard-header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
+  gap: var(--space-4, 16px);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  max-width: var(--container-max, 1200px);
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* New Logo */
+/* =============================
+   Logo
+   ============================= */
 .dashboard-header__logo {
   flex-shrink: 0;
   display: inline-flex;
@@ -186,33 +193,38 @@ onBeforeUnmount(() => {
   display: block;
 }
 
-/* Nav */
+/* =============================
+   Nav
+   ============================= */
 .dashboard-header__nav {
-  display: none;
+  display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-1, 4px);
   flex: 1;
   justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE/Edge */
+  padding: 2px 0;
 }
 
-@media (min-width: 768px) {
-  .dashboard-header__nav {
-    display: flex;
-  }
+.dashboard-header__nav::-webkit-scrollbar {
+  display: none;                 /* Chrome/Safari */
 }
 
 .dashboard-header__nav-link {
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  border-radius: var(--radius-md, 12px);
   font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-black);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-black, 800);
   color: var(--color-text);
   text-decoration: none;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  transition: background-color var(--transition-fast);
+  letter-spacing: 0.6px;
+  transition: background-color var(--transition-fast, 0.1s ease);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .dashboard-header__nav-link:hover {
@@ -224,32 +236,38 @@ onBeforeUnmount(() => {
   color: #ffffff;
 }
 
-/* Right side */
+/* =============================
+   Right side (stats + profile)
+   ============================= */
 .dashboard-header__right {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2, 8px);
   flex-shrink: 0;
 }
 
 .dashboard-header__stat {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 2px;
   font-family: var(--font-family);
-  font-weight: var(--font-weight-black);
-  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-black, 800);
+  font-size: var(--font-size-sm, 14px);
   color: var(--color-text);
+  white-space: nowrap;
 }
 
 .dashboard-header__stat-icon {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base, 16px);
   line-height: 1;
 }
 
-/* Profile */
+/* =============================
+   Profile button
+   ============================= */
 .dashboard-header__profile-wrapper {
   position: relative;
+  flex-shrink: 0;
 }
 
 .dashboard-header__profile {
@@ -261,37 +279,41 @@ onBeforeUnmount(() => {
   border: none;
   cursor: pointer;
   font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-black);
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-black, 800);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast, 0.1s ease);
+  padding: 0;
 }
 
 .dashboard-header__profile:hover {
   transform: scale(1.05);
 }
 
-/* Dropdown new */
+/* =============================
+   Profile dropdown
+   ============================= */
 .profile-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   min-width: 240px;
+  max-width: calc(100vw - 24px);
   background-color: #ffffff;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md, 12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 1001;                    /* ← 200 → 1001 */
+  z-index: 1001;
 }
 
 .profile-dropdown__header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: var(--space-3, 12px);
+  padding: var(--space-4, 16px);
 }
 
 .profile-dropdown__avatar {
@@ -301,7 +323,7 @@ onBeforeUnmount(() => {
   background-color: var(--color-primary);
   color: #ffffff;
   font-family: var(--font-family);
-  font-weight: var(--font-weight-black);
+  font-weight: var(--font-weight-black, 800);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -315,8 +337,8 @@ onBeforeUnmount(() => {
 
 .profile-dropdown__name {
   font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-black);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-black, 800);
   color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
@@ -325,7 +347,7 @@ onBeforeUnmount(() => {
 
 .profile-dropdown__email {
   font-family: var(--font-family);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xs, 12px);
   color: var(--color-text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -340,18 +362,18 @@ onBeforeUnmount(() => {
 .profile-dropdown__item {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-3, 12px);
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
   background: transparent;
   border: none;
   cursor: pointer;
   font-family: var(--font-family);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
   color: var(--color-text);
   text-align: left;
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--transition-fast, 0.1s ease);
 }
 
 .profile-dropdown__item:hover {
@@ -367,7 +389,7 @@ onBeforeUnmount(() => {
 }
 
 .profile-dropdown__item-icon {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-base, 16px);
   line-height: 1;
   flex-shrink: 0;
 }
@@ -385,5 +407,66 @@ onBeforeUnmount(() => {
 .dropdown-fade-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+/* =============================
+   Mobile (≤ 640px) — compact layout
+   ============================= */
+@media (max-width: 640px) {
+  .dashboard-header__inner {
+    gap: var(--space-2, 8px);
+    padding: var(--space-2, 8px) var(--space-3, 12px);
+  }
+
+  .dashboard-header__logo img {
+    height: 32px;
+  }
+
+  .dashboard-header__nav {
+    gap: 2px;
+  }
+
+  .dashboard-header__nav-link {
+    font-size: 10px;
+    padding: 6px 8px;
+    letter-spacing: 0.4px;
+  }
+
+  .dashboard-header__stat {
+    font-size: 12px;
+  }
+
+  .dashboard-header__stat-icon {
+    font-size: 14px;
+  }
+
+  .dashboard-header__profile {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .profile-dropdown {
+    min-width: 220px;
+  }
+}
+
+/* =============================
+   Small mobile (≤ 400px) — hide nav labels, show icons only? 
+   For now, just keep it scrollable and tiny.
+   ============================= */
+@media (max-width: 400px) {
+  .dashboard-header__nav-link {
+    font-size: 9px;
+    padding: 5px 6px;
+  }
+
+  .dashboard-header__stat {
+    font-size: 11px;
+  }
+
+  .dashboard-header__stat-icon {
+    font-size: 13px;
+  }
 }
 </style>

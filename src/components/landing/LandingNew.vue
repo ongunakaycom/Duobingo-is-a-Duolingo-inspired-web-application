@@ -8,23 +8,23 @@
         <div class="hero-grid">
           <!-- Left: Hero (mascot + streak + gems) -->
           <div class="hero-grid__hero">
-          <LoginHero
-            :streak="7"
-            :gems="120"
-            :is-login-mode="isLoginMode"
-          />
+            <LoginHero
+              :streak="7"
+              :gems="120"
+              :is-login-mode="isLoginMode"
+            />
           </div>
 
           <!-- Right: Form -->
           <div class="hero-grid__form">
-          <LoginForm
-            :loading="isLoading"
-            :error="error"
-            :initial-email="email"
-            :is-login-mode="isLoginMode"
-            @submit="handleLogin"
-            @toggle-mode="toggleMode"
-          />
+            <LoginForm
+              :loading="isLoading"
+              :error="error"
+              :initial-email="email"
+              :is-login-mode="isLoginMode"
+              @submit="handleLogin"
+              @toggle-mode="toggleMode"
+            />
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default {
       isLoading: false,
       error: '',
 
-      // Feature kartları
+      // Feature cards
       features: [
         {
           icon: 'controller',
@@ -202,16 +202,22 @@ export default {
 </script>
 
 <style scoped>
+/* =============================
+ * Wrapper — overflow safety
+ * ============================= */
 .landing-new {
   background-color: var(--color-bg);
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* =============================
  * Hero Section
  * ============================= */
 .hero-section {
-  padding: var(--space-8) 0;
+  padding: var(--space-6) 0;
 }
 
 @media (min-width: 1024px) {
@@ -223,31 +229,42 @@ export default {
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-8);
-  align-items: stretch;                        /* ← DEĞİŞTİ: center → stretch */
+  gap: var(--space-6);
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Critical: allow grid children to shrink below their content size */
+.hero-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (min-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-12);
-    align-items: stretch;                      /* ← EKLENDİ */
   }
 }
 
 .hero-grid__hero {
-  display: flex;                               /* ← YENİ KURAL */
+  display: flex;
   flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .hero-grid__form {
   background-color: var(--color-bg-card);
-  border-radius: var(--radius-xl);             /* ← DEĞİŞTİ: radius-lg → radius-xl */
-  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
   box-shadow: var(--shadow-card);
-  display: flex;                               /* ← EKLENDİ */
-  flex-direction: column;                      /* ← EKLENDİ */
-  justify-content: center;                     /* ← EKLENDİ: Dikey ortala */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (min-width: 1024px) {
@@ -260,7 +277,7 @@ export default {
  * Sections
  * ============================= */
 .section {
-  padding: var(--space-8) 0;
+  padding: var(--space-6) 0;
 }
 
 @media (min-width: 1024px) {
@@ -275,7 +292,8 @@ export default {
 .features-header {
   text-align: center;
   max-width: 640px;
-  margin: 0 auto var(--space-10);
+  margin: 0 auto var(--space-8);
+  padding: 0 var(--space-2);
 }
 
 .features-eyebrow {
@@ -294,11 +312,19 @@ export default {
 }
 
 .features-title {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-black);
   color: var(--color-text);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
   line-height: var(--line-height-tight);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .features-title {
+    font-size: var(--font-size-3xl);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -312,12 +338,18 @@ export default {
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-5);
+  width: 100%;
+}
+
+.features-grid > * {
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
@@ -329,6 +361,32 @@ export default {
 @media (min-width: 1024px) {
   .features-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =============================
+ * Mobile Safety Net
+ * ============================= */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: var(--space-4) 0;
+  }
+
+  .section {
+    padding: var(--space-5) 0;
+  }
+
+  .hero-grid__form {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+
+  .features-title {
+    font-size: 22px;
+  }
+
+  .features-subtitle {
+    font-size: 14px;
   }
 }
 </style>

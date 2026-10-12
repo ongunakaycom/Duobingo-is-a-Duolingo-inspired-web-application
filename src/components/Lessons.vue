@@ -118,7 +118,7 @@
               <AIFeedback v-if="!lessonCompleted" ref="aiFeedback" />
 
               <!-- Action Buttons -->
-              <div v-if="!lessonCompleted" class="action-buttons mt-4">
+              <div v-if="!lessonCompleted" class="action-buttons">
                 <div class="d-flex justify-content-between align-items-center">
                   <button
                     type="button"
@@ -617,6 +617,9 @@ export default {
 .lessons-container {
   background-color: #ffffff;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .main-content {
@@ -642,6 +645,10 @@ export default {
   color: #991B1B;
   margin-bottom: var(--space-2, 8px);
 }
+.alert-error p {
+  margin-bottom: var(--space-3, 12px);
+  word-break: break-word;
+}
 
 /* =============================
    Lesson Card
@@ -651,6 +658,7 @@ export default {
   border-radius: var(--radius-lg, 16px);
   box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.06));
   overflow: hidden;
+  width: 100%;
 }
 
 .lesson-card__header {
@@ -674,22 +682,27 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-top: var(--space-3, 12px);
+  gap: var(--space-2, 8px);
+  flex-wrap: wrap;
 }
 
 .lesson-card__badges {
   display: flex;
   gap: var(--space-2, 8px);
+  flex-wrap: wrap;
 }
 
 .badge-duo {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1, 4px);
+  gap: 4px;
   padding: 4px 10px;
   background-color: #f7f7f7;
   border-radius: var(--radius-pill, 999px);
   font-size: var(--font-size-sm, 14px);
   font-weight: var(--font-weight-medium, 500);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .badge-duo__label {
@@ -699,6 +712,8 @@ export default {
 .lesson-card__progress-text {
   color: var(--color-text-secondary, #777);
   font-size: var(--font-size-sm, 14px);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .progress-duo {
@@ -726,11 +741,30 @@ export default {
    ============================= */
 .feedback-alert {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3, 12px);
-  padding: var(--space-3, 12px) var(--space-4, 16px);
+  padding: var(--space-4, 16px);
   border-radius: var(--radius-md, 12px);
   border-left: 4px solid transparent;
+  margin-top: var(--space-4, 16px);
+  margin-bottom: var(--space-5, 20px);   /* ← Kritik: butonlarla arası */
+  animation: slideInFeedback 0.25s ease;
+}
+
+@keyframes slideInFeedback {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feedback-alert__icon {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .feedback-alert--success {
@@ -765,12 +799,84 @@ export default {
   border-left-color: #3B82F6;
   color: #1E40AF;
 }
+.feedback-alert--info .feedback-alert__icon {
+  color: #3B82F6;
+}
 
 /* =============================
    Action Buttons Bar
    ============================= */
 .action-buttons {
-  padding-top: var(--space-4, 16px);
+  padding-top: var(--space-5, 20px);
+  margin-top: var(--space-4, 16px);
   border-top: 2px solid var(--color-border-light, #f0f0f0);
+}
+
+.action-buttons .btn-duo {
+  min-width: 140px;
+}
+
+/* =============================
+   Mobile tweaks
+   ============================= */
+@media (max-width: 480px) {
+  .lesson-card {
+    border-radius: var(--radius-md, 12px);
+  }
+
+  .lesson-card__header {
+    padding: var(--space-4, 16px) var(--space-4, 16px) 0;
+  }
+
+  .lesson-card__body {
+    padding: var(--space-4, 16px);
+  }
+
+  /* Meta stacks vertically on mobile */
+  .lesson-card__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2, 8px);
+  }
+
+  .lesson-card__progress-text {
+    font-size: 12px;
+  }
+
+  .badge-duo {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  /* Feedback alert: compact on mobile */
+  .feedback-alert {
+    padding: var(--space-3, 12px);
+    gap: var(--space-2, 8px);
+    font-size: 14px;
+    margin-top: var(--space-3, 12px);
+    margin-bottom: var(--space-4, 16px);
+  }
+
+  .feedback-alert__icon {
+    font-size: 14px;
+  }
+
+  /* Action buttons: smaller on mobile */
+  .action-buttons {
+    padding-top: var(--space-4, 16px);
+    margin-top: var(--space-3, 12px);
+  }
+
+  .action-buttons .btn-duo {
+    min-width: 0;
+    flex: 1;
+    font-size: 12px;
+    padding: 12px 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .action-buttons .d-flex {
+    gap: var(--space-2, 8px);
+  }
 }
 </style>
