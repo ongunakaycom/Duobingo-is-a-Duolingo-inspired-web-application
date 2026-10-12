@@ -27,10 +27,12 @@
 
     <!-- Error -->
     <div v-else-if="error" class="container-tight py-5">
-      <div class="alert alert-danger">
+      <div class="alert-error">
         <h5>⚠️ Error</h5>
         <p>{{ error }}</p>
-        <button class="btn btn-primary" @click="loadData">Retry</button>
+        <button type="button" class="btn-duo btn-duo-primary" @click="loadData">
+          Retry
+        </button>
       </div>
     </div>
 
@@ -51,38 +53,33 @@
 
         <!-- CENTER: Question Card -->
         <div class="col-lg-6 mb-4">
-          <div class="card border-0 shadow-sm lesson-card">
-            <div class="card-header bg-white border-0 pt-4">
-              <h4 class="card-title mb-1">{{ currentLesson.title }}</h4>
-              <p class="text-muted mb-0">{{ currentLesson.description }}</p>
+          <div class="lesson-card">
+            <div class="lesson-card__header">
+              <h4 class="lesson-card__title">{{ currentLesson.title }}</h4>
+              <p class="lesson-card__desc">{{ currentLesson.description }}</p>
 
-              <div class="d-flex justify-content-between align-items-center mt-3">
-                <div>
-                  <b-badge variant="light" class="me-2 p-2">
-                    <span class="text-primary">⭐ XP:</span> {{ currentLesson.xpReward }}
-                  </b-badge>
-                  <b-badge variant="light" class="p-2">
-                    <span class="text-success">💎 Gems:</span> {{ currentLesson.gemReward }}
-                  </b-badge>
-                </div>
-                <div>
-                  <span class="text-muted small">
-                    Question {{ currentQuestionIndex + 1 }} of {{ currentLesson.questions.length }}
+              <div class="lesson-card__meta">
+                <div class="lesson-card__badges">
+                  <span class="badge-duo">
+                    <span class="badge-duo__label text-primary">⭐ XP:</span>
+                    {{ currentLesson.xpReward }}
                   </span>
+                  <span class="badge-duo">
+                    <span class="badge-duo__label text-success">💎 Gems:</span>
+                    {{ currentLesson.gemReward }}
+                  </span>
+                </div>
+                <div class="lesson-card__progress-text">
+                  Question {{ currentQuestionIndex + 1 }} of {{ currentLesson.questions.length }}
                 </div>
               </div>
 
-              <b-progress height="6px" :value="lessonProgress" :max="100" class="mt-2">
-                <b-progress-bar
-                  :value="lessonProgress"
-                  variant="primary"
-                  striped
-                  animated
-                ></b-progress-bar>
-              </b-progress>
+              <div class="progress-duo">
+                <div class="progress-duo__bar" :style="{ width: lessonProgress + '%' }"></div>
+              </div>
             </div>
 
-            <div class="card-body">
+            <div class="lesson-card__body">
               <!--
                 NOTE: `:key` ensures the card resets when the question changes,
                 so the translation input doesn't keep stale values.
@@ -105,14 +102,16 @@
               />
 
               <!-- Feedback -->
-              <div v-if="feedbackMessage && !lessonCompleted" class="feedback mt-4">
-                <b-alert :variant="feedbackType" show class="d-flex align-items-center">
-                  <b-icon :icon="feedbackIcon" scale="1.5" class="me-3"></b-icon>
-                  <div>
-                    <strong>{{ feedbackTitle }}</strong><br />
-                    {{ feedbackMessage }}
-                  </div>
-                </b-alert>
+              <div
+                v-if="feedbackMessage && !lessonCompleted"
+                class="feedback-alert"
+                :class="`feedback-alert--${feedbackType}`"
+              >
+                <b-icon :icon="feedbackIcon" scale="1.5" class="feedback-alert__icon"></b-icon>
+                <div>
+                  <strong>{{ feedbackTitle }}</strong><br />
+                  {{ feedbackMessage }}
+                </div>
               </div>
 
               <!-- AI Feedback -->
@@ -121,35 +120,35 @@
               <!-- Action Buttons -->
               <div v-if="!lessonCompleted" class="action-buttons mt-4">
                 <div class="d-flex justify-content-between align-items-center">
-                  <b-button
-                    variant="outline-secondary"
-                    class="btn-action btn-hint"
+                  <button
+                    type="button"
+                    class="btn-duo btn-duo-outline"
                     :disabled="answerSubmitted"
                     @click="hint"
                   >
                     <b-icon icon="lightbulb" class="me-1"></b-icon>
                     <span>Hint</span>
-                  </b-button>
+                  </button>
 
                   <div v-if="!answerSubmitted">
-                    <b-button
-                      variant="primary"
-                      class="btn-action btn-submit"
+                    <button
+                      type="button"
+                      class="btn-duo btn-duo-primary"
                       :disabled="!canSubmit"
                       @click="submitAnswer"
                     >
                       Submit Answer
-                    </b-button>
+                    </button>
                   </div>
                   <div v-else>
-                    <b-button
-                      variant="success"
-                      class="btn-action btn-next"
+                    <button
+                      type="button"
+                      class="btn-duo btn-duo-success"
                       @click="nextQuestion"
                     >
                       <span>{{ isLastQuestion ? 'Complete Lesson' : 'Next Question' }}</span>
                       <b-icon icon="arrow-right" class="ms-2"></b-icon>
-                    </b-button>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -231,11 +230,9 @@ export default {
   },
   data() {
     return {
-      // User
       userName: '',
       userEmail: '',
 
-      // Data
       lessonPath: [],
       currentLesson: null,
       userStats: {
@@ -245,7 +242,6 @@ export default {
         wordsLearned: 0,
       },
 
-      // UI state
       loading: true,
       error: null,
       currentQuestionIndex: 0,
@@ -258,12 +254,10 @@ export default {
       feedbackIcon: 'info-circle',
       lessonCompleted: false,
 
-      // Matching pairs
       englishWords: [],
       spanishWords: [],
       draggedItem: null,
 
-      // Modals
       showLogoutModal: false,
       showChangePasswordModal: false,
     };
@@ -281,13 +275,6 @@ export default {
       if (!this.currentLesson?.questions?.length) return 0;
       return ((this.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
     },
-    /**
-     * Whether the "Submit Answer" button should be enabled.
-     * Depends on the question type:
-     *  - multiple-choice: an option must be selected
-     *  - translation:     the input must not be empty
-     *  - match-pairs:     always enabled (button handled inside QuestionCard)
-     */
     canSubmit() {
       const type = this.currentQuestion?.type;
       if (type === 'multiple-choice') return this.selectedAnswer !== null;
@@ -376,10 +363,6 @@ export default {
       if (!this.answerSubmitted) this.selectedAnswer = index;
     },
 
-    /**
-     * Unified submit handler for all question types.
-     * Delegates to the correct checker based on the question type.
-     */
     submitAnswer() {
       const type = this.currentQuestion?.type;
 
@@ -632,7 +615,7 @@ export default {
 
 <style scoped>
 .lessons-container {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   min-height: 100vh;
 }
 
@@ -646,36 +629,148 @@ export default {
 }
 
 /* =============================
+   Error Box
+   ============================= */
+.alert-error {
+  background-color: #FEF2F2;
+  border: 2px solid #FCA5A5;
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-5, 20px);
+  color: #991B1B;
+}
+.alert-error h5 {
+  color: #991B1B;
+  margin-bottom: var(--space-2, 8px);
+}
+
+/* =============================
+   Lesson Card
+   ============================= */
+.lesson-card {
+  background-color: var(--color-bg-card, #ffffff);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.06));
+  overflow: hidden;
+}
+
+.lesson-card__header {
+  background-color: #ffffff;
+  padding: var(--space-5, 20px) var(--space-5, 20px) 0;
+}
+
+.lesson-card__title {
+  font-size: var(--font-size-xl, 20px);
+  font-weight: var(--font-weight-bold, 700);
+  margin-bottom: var(--space-1, 4px);
+}
+
+.lesson-card__desc {
+  color: var(--color-text-secondary, #777);
+  margin: 0;
+}
+
+.lesson-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3, 12px);
+}
+
+.lesson-card__badges {
+  display: flex;
+  gap: var(--space-2, 8px);
+}
+
+.badge-duo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+  padding: 4px 10px;
+  background-color: #f7f7f7;
+  border-radius: var(--radius-pill, 999px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.badge-duo__label {
+  font-weight: var(--font-weight-bold, 700);
+}
+
+.lesson-card__progress-text {
+  color: var(--color-text-secondary, #777);
+  font-size: var(--font-size-sm, 14px);
+}
+
+.progress-duo {
+  width: 100%;
+  height: 6px;
+  background-color: #f0f0f0;
+  border-radius: var(--radius-pill, 999px);
+  margin-top: var(--space-3, 12px);
+  overflow: hidden;
+}
+
+.progress-duo__bar {
+  height: 100%;
+  background-color: var(--color-primary, #58cc02);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.lesson-card__body {
+  padding: var(--space-5, 20px);
+}
+
+/* =============================
+   Feedback Alert
+   ============================= */
+.feedback-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  border-radius: var(--radius-md, 12px);
+  border-left: 4px solid transparent;
+}
+
+.feedback-alert--success {
+  background-color: #F0FDF4;
+  border-left-color: #22C55E;
+  color: #166534;
+}
+.feedback-alert--success .feedback-alert__icon {
+  color: #22C55E;
+}
+
+.feedback-alert--danger {
+  background-color: #FEF2F2;
+  border-left-color: #EF4444;
+  color: #991B1B;
+}
+.feedback-alert--danger .feedback-alert__icon {
+  color: #EF4444;
+}
+
+.feedback-alert--warning {
+  background-color: #FFFBEB;
+  border-left-color: #F59E0B;
+  color: #92400E;
+}
+.feedback-alert--warning .feedback-alert__icon {
+  color: #F59E0B;
+}
+
+.feedback-alert--info {
+  background-color: #EFF6FF;
+  border-left-color: #3B82F6;
+  color: #1E40AF;
+}
+
+/* =============================
    Action Buttons Bar
    ============================= */
 .action-buttons {
   padding-top: var(--space-4, 16px);
   border-top: 2px solid var(--color-border-light, #f0f0f0);
-}
-
-.action-buttons .btn-action {
-  min-width: 150px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Hint button — icon turns orange on hover */
-.action-buttons .btn-hint .b-icon {
-  color: var(--color-warning, #FF9600);
-  transition: color var(--transition-fast, 0.1s ease);
-}
-
-.action-buttons .btn-hint:hover:not(:disabled) {
-  border-color: var(--color-warning, #FF9600) !important;
-  border-bottom-color: var(--color-warning, #FF9600) !important;
-  color: var(--color-warning, #FF9600) !important;
-  background-color: rgba(255, 150, 0, 0.05) !important;
-}
-
-/* Submit / Next buttons */
-.action-buttons .btn-submit,
-.action-buttons .btn-next {
-  min-width: 180px;
 }
 </style>
