@@ -112,18 +112,21 @@ function handleSubmit() {
 </script>
 
 <style scoped>
+/* =============================
+ * Form shell
+ * ============================= */
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-5, 20px);
   width: 100%;
-  padding: var(--space-4) 0;
+  padding: var(--space-4, 16px) 0;
 }
 
 .login-form__field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);                           /* ← 2 → 3 */
+  gap: var(--space-3, 12px);
 }
 
 .login-form__label-row {
@@ -132,17 +135,20 @@ function handleSubmit() {
   justify-content: space-between;
 }
 
+/* =============================
+ * Labels
+ * ============================= */
 .login-form__label {
-  font-size: var(--font-size-base);              /* ← sm → base */
-  font-weight: var(--font-weight-black);         /* ← bold → black */
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-black, 800);
   color: var(--color-text);
   letter-spacing: 0.3px;
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-1, 4px);
 }
 
 .login-form__forgot {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-bold, 700);
   color: var(--color-secondary);
   text-decoration: none;
 }
@@ -151,54 +157,57 @@ function handleSubmit() {
   text-decoration: underline;
 }
 
+/* =============================
+ * Input wrapper
+ * ============================= */
 .login-form__input-wrap {
   position: relative;
   display: flex;
   align-items: center;
-  background-color: var(--color-bg-input);
+  background-color: var(--color-bg-input, #F7F7F7);
   border: 2px solid transparent;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  border-radius: var(--radius-md, 12px);
+  transition: all var(--transition-fast, 0.1s ease);
 }
 
 .login-form__input-wrap:focus-within {
   background-color: #ffffff;
-  border-color: var(--color-secondary);
+  border-color: var(--color-secondary, #1CB0F6);
   box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.1);
 }
 
 .login-form__icon {
-  padding: 0 var(--space-3) 0 var(--space-4);
-  font-size: var(--font-size-lg);
-  color: var(--color-text-muted);
+  padding: 0 var(--space-3, 12px) 0 var(--space-4, 16px);
+  font-size: var(--font-size-lg, 18px);
+  color: var(--color-text-muted, #AFAFAF);
   flex-shrink: 0;
 }
 
 .login-form__input {
   flex: 1;
-  padding: var(--space-5) var(--space-3) var(--space-5) 0;  /* ← 4 → 5 */
+  padding: var(--space-5, 20px) var(--space-3, 12px) var(--space-5, 20px) 0;
   border: none;
   background: transparent;
   font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-medium, 500);
   color: var(--color-text);
   outline: none;
   min-width: 0;
 }
 
 .login-form__input::placeholder {
-  color: var(--color-text-muted);
-  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted, #AFAFAF);
+  font-weight: var(--font-weight-regular, 400);
 }
 
 .login-form__toggle-password {
-  padding: 0 var(--space-4) 0 var(--space-2);
+  padding: 0 var(--space-4, 16px) 0 var(--space-2, 8px);
   background: transparent;
   border: none;
-  color: var(--color-text-muted);
+  color: var(--color-text-muted, #AFAFAF);
   cursor: pointer;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-lg, 18px);
   display: flex;
   align-items: center;
 }
@@ -207,31 +216,97 @@ function handleSubmit() {
   color: var(--color-text);
 }
 
+/* =============================
+ * Error
+ * ============================= */
 .login-form__error {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3, 12px) var(--space-4, 16px);
   background-color: rgba(255, 75, 75, 0.1);
   border: 1px solid rgba(255, 75, 75, 0.2);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md, 12px);
   color: var(--color-error);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
 }
 
+/* =============================
+ * Terms
+ * ============================= */
 .login-form__terms {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-text-muted, #AFAFAF);
   text-align: center;
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-relaxed, 1.7);
   margin: 0;
 }
 
 .login-form__terms a {
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary, #777);
   text-decoration: underline;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-semibold, 600);
 }
 
 .login-form__terms a:hover {
   color: var(--color-text);
+}
+
+/* =============================
+ * Mobile (≤ 480px) — compact typography
+ * ============================= */
+@media (max-width: 480px) {
+  .login-form {
+    gap: var(--space-4, 16px);
+    padding: var(--space-3, 12px) 0;
+  }
+
+  .login-form__field {
+    gap: var(--space-2, 8px);
+  }
+
+  .login-form__label {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+  }
+
+  .login-form__forgot {
+    font-size: 12px;
+  }
+
+  .login-form__input-wrap {
+    border-radius: var(--radius-md, 10px);
+  }
+
+  .login-form__icon {
+    font-size: 15px;
+    padding: 0 10px 0 14px;
+  }
+
+  .login-form__input {
+    padding: 14px 10px 14px 0;
+    font-size: 14px;
+  }
+
+  .login-form__toggle-password {
+    font-size: 15px;
+    padding: 0 12px 0 6px;
+  }
+
+  .login-form__error {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .login-form__terms {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  /* Compact buttons on mobile */
+  :deep(.tactile-button) {
+    font-size: 12px;
+    padding: 12px 16px;
+    letter-spacing: 0.4px;
+    min-height: 44px;
+  }
 }
 </style>
