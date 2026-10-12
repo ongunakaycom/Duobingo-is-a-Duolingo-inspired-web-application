@@ -159,4 +159,31 @@ defineEmits(['click']);
   transform: none !important;
   box-shadow: none !important;
 }
+
+/* =============================
+ * Mobile — compact buttons (≤ 480px)
+ * ============================= */
+@media (max-width: 480px) {
+  .tactile-btn {
+    gap: 6px;
+    letter-spacing: 0.4px;
+  }
+
+  .tactile-btn--sm {
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+
+  .tactile-btn--md {
+    padding: 11px 18px;
+    font-size: 12px;
+  }
+
+  .tactile-btn--lg {
+    padding: 13px 20px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    min-height: 44px;         /* WCAG touch target */
+  }
+}
 </style>
