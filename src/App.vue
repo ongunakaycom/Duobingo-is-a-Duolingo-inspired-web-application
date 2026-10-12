@@ -56,26 +56,30 @@ export default {
 }
 
 /* =============================
- * Main content area — fills the gap between header and footer
+ * Main content area
+ * - grows to fill available space between header and footer
+ * - centers its children horizontally
+ * - provides breathing room on all sides
  * ============================= */
 .app-main {
-  flex: 1 0 auto;              /* grow, don't shrink below content */
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;                 /* ← center children horizontally */
   width: 100%;
   max-width: 100%;
+  padding: var(--space-6, 24px) var(--space-4, 16px) 0;  /* ← breathing room */
   overflow-x: hidden;
 }
 
-/* router-view renders the actual page inside app-main */
+/* Pages fill the available width (their own max-width still applies) */
 .app-main > :deep(*) {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 /* =============================
- * Prevent horizontal overflow at root
+ * Root overflow safety
  * ============================= */
 :deep(html),
 :deep(body) {
